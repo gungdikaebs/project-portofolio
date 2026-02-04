@@ -2,14 +2,43 @@
 @import "tailwindcss";
 
 @theme {
-    /* Colors - Mapping to variables from variables.css */
     --color-background: var(--color-background);
     --color-surface: var(--color-surface);
     --color-primary: var(--color-text-primary);
     --color-secondary: var(--color-text-secondary);
     --color-accent: var(--color-accent);
 
-    /* Font Family */
     --font-heading: 'Sora', sans-serif;
     --font-body: 'Inter', sans-serif;
+}
+
+:root {
+    /* Colors */
+    --color-background: #0B0D10;
+    --color-surface: #11141A;
+    --color-text-primary: #EDEDED;
+    --color-text-secondary: #9AA0AA;
+    --color-accent: #6AE3FF;
+
+    /* Fonts */
+    --font-heading: 'Sora', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+/* Base Styles */
+body {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
 }

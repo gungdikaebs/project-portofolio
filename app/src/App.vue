@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
 import Lenis from 'lenis'
-import Hero from './components/Hero.vue'
-import AssetSection from './sections/AssetSection.vue'
+import Hero from './sections/Hero.vue'
+import Navbar from './components/Navbar.vue'
+import About from './sections/About.vue'
 
 // Lenis Setup
 let lenis: Lenis | null = null
@@ -22,8 +23,9 @@ onUnmounted(() => {
 
 <template>
   <main>
+    <Navbar />
     <Hero />
-    <AssetSection />
+    <About />
   </main>
 </template>
 
