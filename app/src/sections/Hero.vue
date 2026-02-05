@@ -49,7 +49,7 @@
 
         <!-- Scroll Indicator -->
         <div ref="scrollIndicator"
-            class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0">
+            class="hidden md:flex absolute bottom-10 left-1/2 -translate-x-1/2 flex-col items-center gap-2 opacity-0">
             <span class="text-xs font-medium text-secondary tracking-widest uppercase">Scroll</span>
             <div class="w-[30px] h-[50px] border-2 border-secondary/50 rounded-full flex justify-center p-2">
                 <div class="w-1.5 h-1.5 bg-accent rounded-full animate-bounce"></div>
