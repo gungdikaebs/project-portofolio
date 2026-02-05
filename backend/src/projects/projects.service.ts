@@ -8,36 +8,31 @@ export class ProjectsService {
     constructor(private prisma: PrismaService) { }
 
     create(createProjectDto: CreateProjectDto) {
-        // return this.prisma.project.create({
-        //   data: createProjectDto,
-        // });
-        return { message: 'Project creation disabled for Auth testing' };
+        return this.prisma.project.create({
+            data: createProjectDto,
+        });
     }
 
     findAll() {
-        // return this.prisma.project.findMany();
-        return [];
+        return this.prisma.project.findMany();
     }
 
     findOne(id: string) {
-        // return this.prisma.project.findUnique({
-        //   where: { id },
-        // });
-        return {};
+        return this.prisma.project.findUnique({
+            where: { id },
+        });
     }
 
     update(id: string, updateProjectDto: UpdateProjectDto) {
-        // return this.prisma.project.update({
-        //   where: { id },
-        //   data: updateProjectDto,
-        // });
-        return {};
+        return this.prisma.project.update({
+            where: { id },
+            data: updateProjectDto,
+        });
     }
 
     remove(id: string) {
-        // return this.prisma.project.delete({
-        //   where: { id },
-        // });
-        return {};
+        return this.prisma.project.delete({
+            where: { id },
+        });
     }
 }
