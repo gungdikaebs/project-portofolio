@@ -22,16 +22,16 @@
                     </h2>
 
                     <div class="flex flex-col gap-8 reveal-contact">
-                        <div class="flex items-center gap-6">
+                        <div class="flex items-center gap-3 md:gap-6">
                             <!-- Magnetic Email Button -->
                             <a href="mailto:contact@gungdika.com"
-                                class="group relative inline-flex items-center gap-4 px-8 py-4 bg-white text-black rounded-full overflow-hidden transition-transform duration-300 hover:scale-105 active:scale-95">
-                                <span class="relative z-10 font-bold text-lg">contact@gungdika.com</span>
+                                class="group relative inline-flex items-center gap-3 md:gap-4 px-5 py-3 md:px-8 md:py-4 bg-white text-black rounded-full overflow-hidden transition-transform duration-300 hover:scale-105 active:scale-95 shrink-0">
+                                <span class="relative z-10 font-bold text-sm md:text-lg">contact@gungdika.com</span>
                                 <div
-                                    class="relative z-10 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-300">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    class="relative z-10 w-6 h-6 md:w-8 md:h-8 bg-black text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
+                                        stroke-linejoin="round" class="w-3 h-3 md:w-4 md:h-4">
                                         <line x1="7" y1="17" x2="17" y2="7"></line>
                                         <polyline points="7 7 17 7 17 17"></polyline>
                                     </svg>
@@ -40,17 +40,17 @@
 
                             <!-- Copy Email Button -->
                             <button @click="copyEmail"
-                                class="w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-secondary hover:text-white hover:border-white hover:bg-white/5 transition-all active:scale-90"
+                                class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/10 flex items-center justify-center text-secondary hover:text-white hover:border-white hover:bg-white/5 transition-all active:scale-90 shrink-0"
                                 aria-label="Copy Email">
-                                <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
+                                    stroke-linecap="round" stroke-linejoin="round" class="md:w-5 md:h-5">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                                 </svg>
-                                <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="text-green-400">
+                                    stroke-linecap="round" stroke-linejoin="round" class="text-green-400 md:w-5 md:h-5">
                                     <polyline points="20 6 9 17 4 12"></polyline>
                                 </svg>
                             </button>
@@ -59,13 +59,13 @@
                         <!-- Phone / WhatsApp Button -->
                         <div class="flex items-center gap-6">
                             <a href="https://wa.me/6281234567890" target="_blank"
-                                class="group relative inline-flex items-center gap-4 px-8 py-4 bg-white/5 border border-white/10 text-white rounded-full overflow-hidden transition-all duration-300 hover:bg-white hover:text-black hover:scale-105 active:scale-95">
-                                <span class="relative z-10 font-bold text-lg">+62 812 3456 7890</span>
+                                class="group relative inline-flex items-center gap-3 md:gap-4 px-5 py-3 md:px-8 md:py-4 bg-white/5 border border-white/10 text-white rounded-full overflow-hidden transition-all duration-300 hover:bg-white hover:text-black hover:scale-105 active:scale-95">
+                                <span class="relative z-10 font-bold text-sm md:text-lg">+62 812 3456 7890</span>
                                 <div
-                                    class="relative z-10 w-8 h-8 bg-white/10 group-hover:bg-black group-hover:text-white text-white rounded-full flex items-center justify-center transition-colors duration-300">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    class="relative z-10 w-6 h-6 md:w-8 md:h-8 bg-white/10 group-hover:bg-black group-hover:text-white text-white rounded-full flex items-center justify-center transition-colors duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
+                                        stroke-linejoin="round" class="w-3 h-3 md:w-4 md:h-4">
                                         <path
                                             d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
                                         </path>
