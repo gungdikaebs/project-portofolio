@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Profile {
+  id              String  @id @default(uuid())
+  bio             String  @db.Text
+  yearsExperience Int
+  projectsDone    Int
+  location        String
+  cvUrl           String?
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  description String   @db.Text
+  category    String
+  year        String
+  techStack   Json
+  imageUrl    String
+  projectUrl  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Experience {
+  id          String   @id @default(uuid())
+  role        String
+  company     String
+  date        String
+  description String   @db.Text
+  stack       Json
+  createdAt   DateTime @default(now())
+}
+
+model Education {
+  id          String   @id @default(uuid())
+  degree      String
+  institution String
+  year        String
+  description String   @db.Text
+  createdAt   DateTime @default(now())
+}
+
+model Certification {
+  id            String   @id @default(uuid())
+  name          String
+  issuer        String
+  year          String
+  description   String   @db.Text
+  credentialUrl String?
+  createdAt     DateTime @default(now())
+}
+
+model Skill {
+  id         String   @id @default(uuid())
+  category   String
+  name       String
+  svgContent String   @db.Text
+  createdAt  DateTime @default(now())
+}
