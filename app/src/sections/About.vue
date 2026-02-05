@@ -47,13 +47,13 @@
                         <div class="overflow-hidden">
                             <h2 ref="headingLine1"
                                 class="font-heading font-bold text-5xl md:text-7xl text-primary translate-y-full opacity-0">
-                                Creative
+                                Full-Stack
                             </h2>
                         </div>
                         <div class="overflow-hidden">
                             <h2 ref="headingLine2"
                                 class="font-heading font-bold text-5xl md:text-7xl text-white translate-y-full opacity-0">
-                                Developer<span class="text-accent">.</span>
+                                Web Developer<span class="text-accent">.</span>
                             </h2>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                     </div>
 
                     <!-- Interactive Stats -->
-                    <div class="grid grid-cols-2 gap-12 mt-4 border-t border-white/5 pt-10">
+                    <!-- <div class="grid grid-cols-2 gap-12 mt-4 border-t border-white/5 pt-10">
                         <div class="stat-item opacity-0 translate-y-4">
                             <h3 class="font-heading font-bold text-5xl text-white flex items-baseline">
                                 <span ref="stat1">0</span>+
@@ -85,6 +85,21 @@
                             </h3>
                             <p class="text-sm text-secondary mt-2 tracking-widest uppercase">Projects Done</p>
                         </div>
+                    </div> -->
+
+                    <!-- Download CV Button -->
+                    <div class="mt-8 reveal-btn opacity-0 translate-y-4 border-white/5 border-t pt-10">
+                        <a href="/cv.pdf" download
+                            class="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-accent transition-all duration-300 group">
+                            <span class="group-hover:-translate-y-0.5 transition-transform">Download CV</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="group-hover:translate-y-0.5 transition-transform">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg>
+                        </a>
                     </div>
                 </div>
 
@@ -123,12 +138,23 @@ onMounted(() => {
     })
 
     // 2. Image Reveal & Parallax
+    // Combine Entrance with Scroll Parallax
+    const imageTl = gsap.timeline({
+        scrollTrigger: {
+            trigger: '.about-image-wrapper',
+            start: 'top 80%',
+            end: 'bottom top',
+            scrub: 1
+        }
+    })
+
+    // Entrance
     gsap.fromTo(imageFrame.value,
-        { scale: 0.8, opacity: 0 },
+        { scale: 0.9, opacity: 0 },
         {
             scale: 1,
             opacity: 1,
-            duration: 1.2,
+            duration: 1,
             ease: 'power3.out',
             scrollTrigger: {
                 trigger: '.about-image-wrapper',
@@ -137,17 +163,27 @@ onMounted(() => {
         }
     )
 
-    // Floating Badge Animation
-    gsap.from(floatingBadge.value, {
+    // Parallax Movement (Image moves slower than scroll)
+    imageTl.to(imageFrame.value, {
         y: 50,
-        opacity: 0,
-        duration: 1,
-        delay: 0.5,
-        scrollTrigger: {
-            trigger: '.about-image-wrapper',
-            start: 'top 60%'
-        }
+        ease: 'none'
     })
+
+    // Floating Badge Parallax (Moves faster/independently)
+    gsap.fromTo(floatingBadge.value,
+        { y: 50, opacity: 0 },
+        {
+            y: -30, // Moves up as we scroll down
+            opacity: 1,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '.about-image-wrapper',
+                start: 'top 70%',
+                end: 'bottom top',
+                scrub: 1.5
+            }
+        }
+    )
 
     // 3. Text Staggered Reveal
     const textTl = gsap.timeline({
@@ -177,6 +213,12 @@ onMounted(() => {
             stagger: 0.1,
             duration: 0.5
         }, '-=0.5')
+        .to('.reveal-btn', {
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            ease: 'back.out(1.7)'
+        }, '-=0.3')
 
     // 4. Number Counter Animation
     ScrollTrigger.create({

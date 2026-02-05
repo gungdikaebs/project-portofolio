@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import gsap from 'gsap'
+
+const router = useRouter()
+const route = useRoute()
 
 const isMobileMenuOpen = ref(false)
 const isScrolled = ref(false)
@@ -45,9 +49,42 @@ const toggleMenu = async () => {
 const navLinks = [
     { href: '#home', label: 'Home' },
     { href: '#about', label: 'About' },
-    { href: '#project', label: 'Project' },
+    { href: '/projects', label: 'Projects' },
     { href: '#skills', label: 'Skills' },
+    { href: '#education', label: 'Education' },
 ]
+
+const handleNavClick = async (href: string) => {
+    // If mobile menu is open, close it first
+    if (isMobileMenuOpen.value) {
+        toggleMenu()
+    }
+
+    // Handle Route Navigation (e.g. /projects)
+    if (href.charAt(0) !== '#') {
+        router.push(href)
+        return
+    }
+
+    // Handle Hash Navigation (e.g. #home)
+    // Check if we are on the home page
+    if (route.path !== '/') {
+        await router.push('/')
+        // Wait for navigation + slight delay for DOM to render
+        setTimeout(() => {
+            const element = document.querySelector(href)
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' })
+            }
+        }, 300)
+    } else {
+        // We are already on home, just scroll
+        const element = document.querySelector(href)
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' })
+        }
+    }
+}
 
 const handleScroll = () => {
     isScrolled.value = window.scrollY > 20
@@ -69,23 +106,24 @@ onUnmounted(() => {
         <div class="max-w-[1350px] mx-auto px-6 h-full flex items-center justify-between">
 
             <!-- Logo -->
-            <a href="#"
+            <router-link to="/"
                 class="font-heading font-bold text-2xl tracking-tight text-primary hover:text-accent transition-colors z-[60] relative">
                 Gung Dika<span class="text-accent">.</span>
-            </a>
+            </router-link>
 
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex items-center gap-10">
                 <a v-for="link in navLinks" :key="link.href" :href="link.href"
-                    class="group relative text-sm font-medium text-secondary hover:text-primary transition-colors py-2">
+                    @click.prevent="handleNavClick(link.href)"
+                    class="group relative text-sm font-medium text-secondary hover:text-primary transition-colors py-2 cursor-pointer">
                     {{ link.label }}
                     <span
                         class="absolute bottom-0 left-0 w-0 h-[2px] bg-accent transition-all duration-300 group-hover:w-full"></span>
                 </a>
 
                 <!-- CTA Button -->
-                <a href="#contact" style="color: black !important;"
-                    class="px-5 py-2.5 text-sm font-bold bg-accent rounded-full hover:bg-primary transition-all duration-300 transform hover:scale-105 shadow-[0_0_15px_rgba(106,227,255,0.3)]">
+                <a href="#contact" @click.prevent="handleNavClick('#contact')" style="color: black !important;"
+                    class="px-5 py-2.5 text-sm font-bold bg-accent rounded-full hover:bg-primary transition-all duration-300 transform hover:scale-105 shadow-[0_0_15px_rgba(106,227,255,0.3)] cursor-pointer">
                     Let's Talk
                 </a>
             </nav>
@@ -132,7 +170,8 @@ onUnmounted(() => {
 
                     <!-- Navigation Links -->
                     <nav class="flex flex-col gap-6">
-                        <a v-for="(link, index) in navLinks" :key="link.href" :href="link.href" @click="toggleMenu"
+                        <a v-for="link in navLinks" :key="link.href" :href="link.href"
+                            @click.prevent="handleNavClick(link.href)"
                             class="sidebar-link text-4xl font-heading font-bold text-secondary hover:text-primary transition-colors opacity-0 translate-y-4">
                             {{ link.label }}
                         </a>
@@ -140,7 +179,7 @@ onUnmounted(() => {
 
                     <!-- Bottom Section -->
                     <div class="flex flex-col gap-6 sidebar-footer opacity-0 translate-y-4">
-                        <a href="#contact" @click="toggleMenu" style="color: black !important;"
+                        <a href="#contact" @click.prevent="handleNavClick('#contact')" style="color: black !important;"
                             class="w-full py-4 text-center text-base font-bold bg-accent rounded-full hover:bg-primary transition-colors shadow-lg">
                             Let's Talk
                         </a>

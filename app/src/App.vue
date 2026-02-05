@@ -1,31 +1,43 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted } from 'vue'
 import Lenis from 'lenis'
-import Hero from './sections/Hero.vue'
 import Navbar from './components/Navbar.vue'
-import About from './sections/About.vue'
+import gsap from 'gsap'
+import ScrollTrigger from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 // Lenis Setup
 let lenis: Lenis | null = null
 
 onMounted(() => {
   lenis = new Lenis({
-    autoRaf: true,
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothWheel: true
   })
-})
 
-onUnmounted(() => {
-  if (lenis) {
-    lenis.destroy()
-  }
+  // Synchronize Lenis scrolling with GSAP's ScrollTrigger
+  lenis.on('scroll', ScrollTrigger.update)
+
+  // Use GSAP's ticker to drive Lenis updates
+  gsap.ticker.add((time) => {
+    lenis?.raf(time * 1000)
+  })
+
+  // Disable GSAP lag smoothing to ensure smooth scrolling
+  gsap.ticker.lagSmoothing(0)
 })
 </script>
 
 <template>
   <main>
     <Navbar />
-    <Hero />
-    <About />
+    <router-view v-slot="{ Component }">
+      <transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </main>
 </template>
 
