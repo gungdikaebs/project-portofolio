@@ -60,14 +60,18 @@
 
                     <!-- Bio Text -->
                     <div class="flex flex-col gap-6 text-secondary text-lg leading-relaxed font-body max-w-xl">
+
                         <p ref="para1" class="opacity-0 translate-y-4">
-                            I'm not just writing code; I'm crafting <span class="text-white">digital experiences</span>.
-                            My approach combines technical precision with artistic direction to build
-                            interfaces that feel natural and engaging.
+                            Hi, I'm <span class="text-accent">Gung Dika</span>, a Full-Stack Web Developer passionate
+                            about building reliable and
+                            user-focused
+                            digital products.
                         </p>
                         <p ref="para2" class="opacity-0 translate-y-4">
-                            Specializing in the <span class="text-accent">Vue.js ecosystem</span>,
-                            I bridge the gap between complex backend logic and silky-smooth frontend animations.
+                            I specialize in developing modern web applications that combine solid backend architecture
+                            with clean and intuitive user interfaces.
+                            My goal is to turn complex ideas into scalable, maintainable, and meaningful solutions that
+                            deliver real value.
                         </p>
                     </div>
 

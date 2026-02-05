@@ -25,7 +25,7 @@
                 </h1>
 
                 <!-- Caption -->
-                <div class="overflow-hidden">
+                <div ref="captionContainer" class="overflow-hidden">
                     <p ref="caption"
                         class="font-body text-base md:text-lg lg:text-xl text-secondary max-w-xl md:max-w-2xl leading-relaxed translate-y-[100%] opacity-0">
                         Frontend developer focused on modern web architectures,
@@ -68,6 +68,7 @@ const line1 = ref(null)
 const line2 = ref(null)
 const line3 = ref(null)
 const caption = ref(null)
+const captionContainer = ref(null)
 const cta = ref(null)
 const scrollIndicator = ref(null)
 const canvas = ref<HTMLCanvasElement | null>(null)
@@ -229,7 +230,7 @@ onMounted(() => {
         }
     })
 
-    gsap.to(caption.value, {
+    gsap.to(captionContainer.value, {
         yPercent: 50, // Moves down slightly
         opacity: 0,
         ease: 'none',
