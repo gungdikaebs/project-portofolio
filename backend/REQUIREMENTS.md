@@ -8,7 +8,7 @@
 5. **Skills**: Manage technical skills and categories (CRUD).
 6. **Media**: Image/File upload handling.
 
-## Database Schema (Draft)
+## Database Schema (Scalable)
 
 ### Table: `users` (Admin)
 - `id`: UUID
@@ -23,6 +23,7 @@
 - `projects_done`: Integer
 - `location`: String
 - `cv_url`: String
+- `available_for_hi`: Boolean
 
 ### Table: `projects`
 - `id`: UUID
@@ -30,42 +31,67 @@
 - `slug`: String (Unique)
 - `description`: Text
 - `category`: String
-- `year`: String
-- `tech_stack`: JSON (Array of strings)
+- `year`: Integer
 - `image_url`: String
 - `project_url`: String (Optional)
+- `sort_order`: Integer (Default: 0)
+- `status`: Enum('DRAFT', 'PUBLISHED')
+- `featured`: Boolean (Default: false)
 - `created_at`: Timestamp
 - `updated_at`: Timestamp
+
+### Table: `skills` (Master Table)
+- `id`: UUID
+- `name`: String
+- `category_id`: UUID (FK -> skill_categories.id)
+- `svg_content`: Text
+- `sort_order`: Integer (Default: 0)
+- `created_at`: Timestamp
+
+### Table: `skill_categories`
+- `id`: UUID
+- `name`: String
+- `created_at`: Timestamp
+
+### Table: `project_skills` (Pivot Project <-> Skill)
+- `project_id`: UUID
+- `skill_id`: UUID
 
 ### Table: `experiences` (Work History)
 - `id`: UUID
 - `role`: String
 - `company`: String
-- `date`: String (e.g., "2023 - Present" or separate start/end dates)
+- `start_date`: Date
+- `end_date`: Date (Nullable)
+- `is_current`: Boolean (Default: false)
 - `description`: Text
-- `stack`: JSON (Array of strings)
+- `sort_order`: Integer (Default: 0)
 - `created_at`: Timestamp
 
 ### Table: `educations`
 - `id`: UUID
 - `degree`: String
 - `institution`: String
-- `year`: String
+- `start_year`: Integer
+- `end_year`: Integer (Nullable)
 - `description`: Text
+- `sort_order`: Integer (Default: 0)
 - `created_at`: Timestamp
 
 ### Table: `certifications`
 - `id`: UUID
 - `name`: String
 - `issuer`: String
-- `year`: String
+- `year`: Integer
 - `description`: Text
 - `credential_url`: String (Optional)
+- `sort_order`: Integer (Default: 0)
 - `created_at`: Timestamp
 
-### Table: `skills`
+### Table: `media`
 - `id`: UUID
-- `category`: String (e.g., "Frontend", "Backend & Tools")
-- `name`: String
-- `svg_content`: Text (Raw SVG string)
+- `file_name`: String
+- `file_url`: String
+- `mime_type`: String
+- `size`: Integer
 - `created_at`: Timestamp

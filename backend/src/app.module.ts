@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
 import { ProfileModule } from './profile/profile.module';
@@ -13,8 +15,23 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
-  imports: [UsersModule, ProjectsModule, ProfileModule, ExperienceModule, EducationModule, CertificationsModule, SkillsModule, MediaModule, AuthModule, PrismaModule],
+  imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads',
+    }),
+    PrismaModule,
+    AuthModule,
+    UsersModule,
+    ProjectsModule,
+    ProfileModule,
+    ExperienceModule,
+    EducationModule,
+    CertificationsModule,
+    SkillsModule,
+    MediaModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

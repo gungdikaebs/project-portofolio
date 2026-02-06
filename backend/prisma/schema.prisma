@@ -15,12 +15,18 @@ model User {
 }
 
 model Profile {
-  id              String  @id @default(uuid())
-  bio             String  @db.Text
-  yearsExperience Int
-  projectsDone    Int
-  location        String
-  cvUrl           String?
+  id               String  @id @default(uuid())
+  bio              String  @db.Text
+  yearsExperience  Int
+  projectsDone     Int
+  location         String
+  cvUrl            String?
+  availableForHi   Boolean @default(true)
+}
+
+enum ProjectStatus {
+  DRAFT
+  PUBLISHED
 }
 
 model Project {
@@ -29,21 +35,59 @@ model Project {
   slug        String   @unique
   description String   @db.Text
   category    String
-  year        String
-  techStack   Json
+  year        Int
   imageUrl    String
   projectUrl  String?
+  sortOrder   Int      @default(0)
+  status      ProjectStatus @default(DRAFT)
+  featured    Boolean  @default(false)
+  
+  skills      ProjectSkill[]
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model SkillCategory {
+  id        String   @id @default(uuid())
+  name      String
+  skills    Skill[]
+  createdAt DateTime @default(now())
+}
+
+model Skill {
+  id          String   @id @default(uuid())
+  name        String
+  svgContent  String   @db.Text
+  sortOrder   Int      @default(0)
+  
+  categoryId  String
+  category    SkillCategory @relation(fields: [categoryId], references: [id])
+  
+  projects    ProjectSkill[]
+
+  createdAt   DateTime @default(now())
+}
+
+model ProjectSkill {
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  skillId   String
+  skill     Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, skillId])
 }
 
 model Experience {
   id          String   @id @default(uuid())
   role        String
   company     String
-  date        String
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean  @default(false)
   description String   @db.Text
-  stack       Json
+  sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
 }
 
@@ -51,8 +95,10 @@ model Education {
   id          String   @id @default(uuid())
   degree      String
   institution String
-  year        String
+  startYear   Int
+  endYear     Int?
   description String   @db.Text
+  sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
 }
 
@@ -60,16 +106,18 @@ model Certification {
   id            String   @id @default(uuid())
   name          String
   issuer        String
-  year          String
+  year          Int
   description   String   @db.Text
   credentialUrl String?
+  sortOrder     Int      @default(0)
   createdAt     DateTime @default(now())
 }
 
-model Skill {
-  id         String   @id @default(uuid())
-  category   String
-  name       String
-  svgContent String   @db.Text
-  createdAt  DateTime @default(now())
+model Media {
+  id        String   @id @default(uuid())
+  fileName  String
+  fileUrl   String
+  mimeType  String
+  size      Int
+  createdAt DateTime @default(now())
 }

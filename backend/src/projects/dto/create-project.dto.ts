@@ -1,4 +1,9 @@
-import { IsString, IsNotEmpty, IsOptional, IsArray } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsInt, IsBoolean, IsEnum, IsArray, IsUUID } from 'class-validator';
+
+export enum ProjectStatus {
+    DRAFT = 'DRAFT',
+    PUBLISHED = 'PUBLISHED',
+}
 
 export class CreateProjectDto {
     @IsString()
@@ -17,13 +22,9 @@ export class CreateProjectDto {
     @IsNotEmpty()
     category: string;
 
-    @IsString()
+    @IsInt()
     @IsNotEmpty()
-    year: string;
-
-    @IsArray()
-    @IsNotEmpty()
-    techStack: string[];
+    year: number;
 
     @IsString()
     @IsNotEmpty()
@@ -32,4 +33,21 @@ export class CreateProjectDto {
     @IsOptional()
     @IsString()
     projectUrl?: string;
+
+    @IsOptional()
+    @IsInt()
+    sortOrder?: number;
+
+    @IsOptional()
+    @IsEnum(ProjectStatus)
+    status?: ProjectStatus;
+
+    @IsOptional()
+    @IsBoolean()
+    featured?: boolean;
+
+    @IsOptional()
+    @IsArray()
+    @IsUUID('4', { each: true })
+    skillIds?: string[];
 }
