@@ -47,7 +47,7 @@
                                 <td class="py-4 px-6">
                                     <div
                                         class="h-12 w-16 bg-[#0B0D10] rounded-lg overflow-hidden border border-white/5 relative">
-                                        <img v-if="project.imageUrl" :src="project.imageUrl"
+                                        <img v-if="project.imageUrl" :src="getImageUrl(project.imageUrl)"
                                             class="w-full h-full object-cover" alt="">
                                         <div v-else
                                             class="w-full h-full flex items-center justify-center text-gray-700 text-[10px]">
@@ -150,6 +150,13 @@ const fetchProjects = async () => {
     } finally {
         loading.value = false;
     }
+};
+
+const getImageUrl = (path: string) => {
+    if (!path) return '';
+    if (path.startsWith('http')) return path;
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    return `${baseUrl}${path}`;
 };
 
 const deleteProject = async (id: string) => {

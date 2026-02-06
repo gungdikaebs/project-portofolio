@@ -51,6 +51,12 @@ const routes = [
         name: 'AdminProjectEdit',
         component: () => import('../views/admin/ProjectForm.vue'),
         meta: { requiresAuth: true }
+    },
+    {
+        path: '/admin/profile',
+        name: 'AdminProfile',
+        component: () => import('../views/admin/Profile.vue'),
+        meta: { requiresAuth: true }
     }
 ]
 
