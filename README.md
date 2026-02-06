@@ -20,6 +20,8 @@ A high-performance, dark-themed developer portfolio website built with a **Mini 
     -   **Media Management**: Local file upload system for project images and CVs.
     -   **Data Normalization**: Scalable database schema (e.g., Skills linked via categories).
 
+### **Admin**
+- **UNDER CONSTRUCTION**
 ---
 
 ## 🛠️ Project Structure
@@ -93,4 +95,4 @@ npm run dev
 
 ---
 
-Built with ❤️ by **Gung Dika Dika**.
+Built with ❤️ by **Gung Dika Ebs**.
