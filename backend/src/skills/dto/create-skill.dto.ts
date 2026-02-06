@@ -10,8 +10,8 @@ export class CreateSkillDto {
     categoryId: string;
 
     @IsString()
-    @IsNotEmpty()
-    svgContent: string;
+    @IsOptional()
+    svgContent?: string;
 
     @IsOptional()
     @IsInt()

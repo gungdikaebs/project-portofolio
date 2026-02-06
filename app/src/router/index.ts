@@ -16,6 +16,29 @@ const routes = [
         path: '/projects',
         name: 'ProjectsIndex',
         component: () => import('../views/ProjectsIndex.vue')
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: () => import('../views/Login.vue')
+    },
+    {
+        path: '/admin',
+        name: 'AdminDashboard',
+        component: () => import('../views/admin/Dashboard.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/admin/skills',
+        name: 'AdminSkills',
+        component: () => import('../views/admin/SkillsIndex.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/admin/projects',
+        name: 'AdminProjects',
+        component: () => import('../views/admin/ProjectsIndex.vue'),
+        meta: { requiresAuth: true }
     }
 ]
 
@@ -30,5 +53,18 @@ const router = createRouter({
         }
     }
 })
+
+// Navigation Guard
+router.beforeEach((to, _from, next) => {
+    const isAuthenticated = !!localStorage.getItem('token');
+
+    if (to.meta.requiresAuth && !isAuthenticated) {
+        next('/login');
+    } else if (to.name === 'Login' && isAuthenticated) {
+        next('/admin');
+    } else {
+        next();
+    }
+});
 
 export default router

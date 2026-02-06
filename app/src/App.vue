@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import Lenis from 'lenis'
 import Navbar from './components/Navbar.vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
+
+const route = useRoute()
+const showNavbar = computed(() => {
+  // Hide navbar on login and admin routes
+  return route.path !== '/login' && !route.path.startsWith('/admin')
+})
 
 // Lenis Setup
 let lenis: Lenis | null = null
@@ -32,7 +39,7 @@ onMounted(() => {
 
 <template>
   <main>
-    <Navbar />
+    <Navbar v-if="showNavbar" />
     <router-view v-slot="{ Component }">
       <transition name="fade" mode="out-in">
         <component :is="Component" />
