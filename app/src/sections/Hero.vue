@@ -28,9 +28,12 @@
                 <div ref="captionContainer" class="overflow-hidden">
                     <p ref="caption"
                         class="font-body text-base md:text-lg lg:text-xl text-secondary max-w-xl md:max-w-2xl leading-relaxed translate-y-[100%] opacity-0">
-                        Frontend developer focused on modern web architectures,
-                        fluid motion, and performance-driven user experiences.
+                        Frontend developer focused on modern web architectures, fluid motion, and performance-driven
+                        user experiences.
                     </p>
+                    <div class="mt-4 text-xs font-mono text-gray-500 opacity-0 translate-y-4" ref="locationMeta">
+                        Based in Bali, Indonesia • 3+ Years Exp • 20+ Projects
+                    </div>
                 </div>
 
                 <!-- CTA -->
@@ -188,6 +191,12 @@ onMounted(() => {
             opacity: 1,
             duration: 1
         }, '-=0.5')
+        .to(locationMeta.value, { // Animate locationMeta as well
+            y: 0,
+            opacity: 1,
+            duration: 1
+        }, '-=0.8')
+
 
     // 3. Init Magnetic Buttons
     initMagneticButtons('.magnetic-btn')
@@ -255,9 +264,10 @@ onMounted(() => {
     })
 })
 
+const locationMeta = ref(null)
+
 onUnmounted(() => {
     cancelAnimationFrame(animationFrameId)
-    // Remove resize listener not strictly necessary as component is unmounted, but good practice if extracted
 })
 </script>
 

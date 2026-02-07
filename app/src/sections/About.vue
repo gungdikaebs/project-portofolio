@@ -31,7 +31,10 @@
                     <div ref="floatingBadge"
                         class="absolute -bottom-10 -right-10 bg-surface/80 backdrop-blur-md border border-white/10 p-6 rounded-none shadow-xl z-20 hidden md:block">
                         <p class="font-heading font-bold text-accent text-xl">Based in</p>
-                        <p class="text-white text-lg">Bali, Indonesia 🌴</p>
+                        <p class="text-white text-lg">
+                            <span v-if="profile">{{ profile.location }}</span>
+                            <span v-else>Loading...</span>
+                        </p>
                     </div>
 
                     <!-- Decorative Border Frame -->
@@ -60,40 +63,31 @@
 
                     <!-- Bio Text -->
                     <div class="flex flex-col gap-6 text-secondary text-lg leading-relaxed font-body max-w-xl">
-
                         <p ref="para1" class="opacity-0 translate-y-4">
-                            Hi, I'm <span class="text-accent">Gung Dika</span>, a Full-Stack Web Developer passionate
-                            about building reliable and
-                            user-focused
-                            digital products.
-                        </p>
-                        <p ref="para2" class="opacity-0 translate-y-4">
-                            I specialize in developing modern web applications that combine solid backend architecture
-                            with clean and intuitive user interfaces.
-                            My goal is to turn complex ideas into scalable, maintainable, and meaningful solutions that
-                            deliver real value.
+                            <span v-if="loading">Loading bio...</span>
+                            <span v-else-if="profile" class="whitespace-pre-line">{{ profile.bio }}</span>
                         </p>
                     </div>
 
                     <!-- Interactive Stats -->
-                    <!-- <div class="grid grid-cols-2 gap-12 mt-4 border-t border-white/5 pt-10">
+                    <div v-if="profile" class="grid grid-cols-2 gap-12 mt-4 border-t border-white/5 pt-10">
                         <div class="stat-item opacity-0 translate-y-4">
                             <h3 class="font-heading font-bold text-5xl text-white flex items-baseline">
-                                <span ref="stat1">0</span>+
+                                {{ profile.yearsExperience }}+
                             </h3>
                             <p class="text-sm text-secondary mt-2 tracking-widest uppercase">Years Experience</p>
                         </div>
                         <div class="stat-item opacity-0 translate-y-4">
                             <h3 class="font-heading font-bold text-5xl text-accent flex items-baseline">
-                                <span ref="stat2">0</span>+
+                                {{ profile.projectsDone }}+
                             </h3>
                             <p class="text-sm text-secondary mt-2 tracking-widest uppercase">Projects Done</p>
                         </div>
-                    </div> -->
+                    </div>
 
                     <!-- Download CV Button -->
-                    <div class="mt-8 reveal-btn opacity-0 translate-y-4 border-white/5 border-t pt-10">
-                        <a href="/cv.pdf" download
+                    <div ref="cvBtn" class="mt-8 opacity-0 translate-y-4 border-white/5 border-t pt-10">
+                        <a v-if="profile && profile.cvUrl" :href="profile.cvUrl" target="_blank"
                             class="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-accent transition-all duration-300 group">
                             <span class="group-hover:-translate-y-0.5 transition-transform">Download CV</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -104,6 +98,7 @@
                                 <line x1="12" y1="15" x2="12" y2="3" />
                             </svg>
                         </a>
+                        <span v-else class="text-gray-500 text-sm">CV available upon request</span>
                     </div>
                 </div>
 
@@ -113,11 +108,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
+import { useProfile } from '../composables/useProfile'
 
 gsap.registerPlugin(ScrollTrigger)
+
+const { profile, loading, fetchProfile } = useProfile()
 
 const watermark = ref(null)
 const imageFrame = ref(null)
@@ -125,11 +123,11 @@ const floatingBadge = ref(null)
 const headingLine1 = ref(null)
 const headingLine2 = ref(null)
 const para1 = ref(null)
-const para2 = ref(null)
-const stat1 = ref(null)
-const stat2 = ref(null)
+const cvBtn = ref(null)
 
-onMounted(() => {
+onMounted(async () => {
+    await fetchProfile()
+
     // 1. Parallax Watermark
     gsap.to(watermark.value, {
         xPercent: 20,
@@ -205,10 +203,9 @@ onMounted(() => {
             duration: 1,
             ease: 'power4.out'
         })
-        .to([para1.value, para2.value], {
+        .to([para1.value], {
             y: 0,
             opacity: 1,
-            stagger: 0.1,
             duration: 0.8
         }, '-=0.5')
         .to('.stat-item', {
@@ -217,32 +214,25 @@ onMounted(() => {
             stagger: 0.1,
             duration: 0.5
         }, '-=0.5')
-        .to('.reveal-btn', {
+        .to(cvBtn.value, {
             y: 0,
             opacity: 1,
             duration: 0.5,
             ease: 'back.out(1.7)'
         }, '-=0.3')
 
-    // 4. Number Counter Animation
-    ScrollTrigger.create({
-        trigger: '.stat-item',
-        start: 'top 85%',
-        once: true,
-        onEnter: () => {
-            gsap.to(stat1.value, {
-                innerText: 3,
-                duration: 2,
-                snap: { innerText: 1 },
-                ease: 'power1.inOut'
-            })
-            gsap.to(stat2.value, {
-                innerText: 50,
-                duration: 2.5,
-                snap: { innerText: 1 },
-                ease: 'power1.inOut'
-            })
-        }
-    })
+    // 4. Number Counter Animation (Using real values if available)
+    if (profile.value) {
+        ScrollTrigger.create({
+            trigger: '.stat-item',
+            start: 'top 85%',
+            once: true,
+            onEnter: () => {
+                // You can add counter animation here if you want to animate from 0 to profile.value.yearsExperience
+                // For now static is fine or text reveal
+            }
+        })
+    }
+
 })
 </script>

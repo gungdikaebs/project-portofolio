@@ -31,7 +31,7 @@
             <!-- Education Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-                <div v-for="(edu, index) in educationList" :key="index"
+                <div v-for="(edu, index) in education" :key="edu.id"
                     class="edu-card bg-surface border border-white/5 p-8 rounded-2xl relative overflow-hidden group hover:border-accent/30 transition-colors duration-300">
 
                     <!-- Decorative Background -->
@@ -46,8 +46,8 @@
 
                     <div class="relative z-10">
                         <span
-                            class="font-mono text-accent text-sm border border-accent/20 px-3 py-1  -full bg-accent/5 inline-block mb-4">
-                            {{ edu.year }}
+                            class="font-mono text-accent text-sm border border-accent/20 px-3 py-1 bg-accent/5 inline-block mb-4 rounded-full">
+                            {{ formatYear(edu.startDate) }} - {{ edu.endDate ? formatYear(edu.endDate) : 'Present' }}
                         </span>
 
                         <h3 class="font-heading font-bold text-2xl text-white mb-2">
@@ -64,7 +64,7 @@
                             {{ edu.institution }}
                         </h4>
 
-                        <p class="text-secondary leading-relaxed">
+                        <p class="text-secondary leading-relaxed whitespace-pre-line">
                             {{ edu.description }}
                         </p>
                     </div>
@@ -73,7 +73,7 @@
             </div>
 
             <!-- Certifications Section (Horizontal Scroll) -->
-            <div ref="certContainer"
+            <div v-if="certifications.length > 0" ref="certContainer"
                 class="mt-20 w-full relative h-screen flex flex-col justify-center overflow-hidden">
                 <div class="container mx-auto px-6 mb-10">
                     <div class="flex items-center gap-4">
@@ -87,14 +87,14 @@
                 </div>
 
                 <div ref="certTrack" class="flex gap-8 px-6 w-max items-center h-[400px]">
-                    <div v-for="(cert, index) in certifications" :key="index"
+                    <div v-for="(cert, index) in certifications" :key="cert.id"
                         class="cert-card bg-surface border border-white/5 p-8 rounded-2xl relative overflow-hidden group hover:border-accent/30 transition-colors duration-300 flex flex-col justify-between w-[400px] h-[350px] shrink-0">
 
                         <div>
                             <div class="flex justify-between items-start mb-4">
                                 <span
                                     class="font-mono text-secondary text-sm border border-white/10 px-3 py-1 rounded-full bg-white/5">
-                                    {{ cert.year }}
+                                    {{ formatYear(cert.date) }}
                                 </span>
                                 <!-- Optional Icon -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -117,7 +117,7 @@
 
                         <!-- Optional Credential Attachment -->
                         <div v-if="cert.credentialUrl" class="border-t border-white/5 pt-4">
-                            <a :href="cert.credentialUrl" target="_blank"
+                            <a :href="getCredentialUrl(cert.credentialUrl)" target="_blank"
                                 class="inline-flex items-center gap-2 text-sm text-white hover:text-accent transition-colors group/link">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -145,76 +145,37 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, onUnmounted } from 'vue'
+import { onMounted, ref, onUnmounted, nextTick, watch } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
+import { useEducation } from '../composables/useEducation'
 
 gsap.registerPlugin(ScrollTrigger)
+
+const { education, certifications, loading, fetchData } = useEducation()
 
 const certContainer = ref<HTMLElement | null>(null)
 const certTrack = ref<HTMLElement | null>(null)
 const progressBar = ref<HTMLElement | null>(null)
-let scrollTween: gsap.core.Tween | gsap.core.Timeline | null = null
+let scrollTween: gsap.core.Timeline | null = null
 
-const educationList = [
-    {
-        degree: 'Information Systems',
-        institution: 'ITB STIKOM Bali',
-        year: 'Present',
-        description: 'Currently pursuing a Bachelor\'s degree in Information Systems. Actively exploring modern web technologies and software architecture.'
-    },
-    {
-        degree: 'Software Engineering',
-        institution: 'SMK TI Bali Global Denpasar',
-        year: '2023',
-        description: 'Vocational high school focused on Software Engineering. Gained strong foundational knowledge in programming logic, database management, and web development.'
-    }
-]
+const formatYear = (dateString: string) => {
+    if (!dateString) return 'Present';
+    if (dateString === 'Present') return 'Present';
+    return new Date(dateString).getFullYear();
+}
 
-const certifications = [
-    {
-        name: 'AWS Certified Cloud Practitioner',
-        issuer: 'Amazon Web Services',
-        year: '2024',
-        description: 'Foundational understanding of AWS Cloud concepts, security, and billing. Validates overall understanding of the AWS Cloud platform.',
-        credentialUrl: 'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=1000&auto=format&fit=crop',
-        color: 'border-orange-500/50'
-    },
-    {
-        name: 'Meta Frontend Developer',
-        issuer: 'Meta',
-        year: '2023',
-        description: 'Professional certificate covering advanced React, version control, and UI/UX principles for modern web development.',
-        credentialUrl: '',
-        color: 'border-blue-500/50'
-    },
-    {
-        name: 'Google UX Design Professional',
-        issuer: 'Google',
-        year: '2023',
-        description: 'Mastering the design process from empathy to prototype. Focus on accessibility and user-centered design.',
-        credentialUrl: '',
-        color: 'border-red-500/50'
-    },
-    {
-        name: 'Certified Kubernetes Administrator',
-        issuer: 'CNCF',
-        year: '2024',
-        description: 'Demonstrating competence in hands-on installation, configuration, and management of production-grade Kubernetes clusters.',
-        credentialUrl: '',
-        color: 'border-blue-400/50'
-    },
-    {
-        name: 'Dicoding Belajar Dasar Pemrograman Web',
-        issuer: 'Dicoding Indonesia',
-        year: '2022',
-        description: 'Learned the basics of web programming including HTML, CSS, and basic JavaScript logic.',
-        credentialUrl: '',
-        color: 'border-gray-500/50'
-    }
-]
+const getCredentialUrl = (url: string) => {
+    if (!url) return '';
+    if (url.startsWith('http')) return url;
+    // If it's a file path from backend upload
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    return `${baseUrl}${url}`;
+}
 
-onMounted(() => {
+const refreshAnimations = () => {
+    ScrollTrigger.refresh()
+
     // 1. Vertical Education Animation
     gsap.from('.edu-card', {
         y: 50,
@@ -229,21 +190,24 @@ onMounted(() => {
     })
 
     // 2. Horizontal Scroll for Certifications
-    if (certContainer.value && certTrack.value) {
+    if (certContainer.value && certTrack.value && certifications.value.length > 0) {
+
+        // Kill old scroll trigger if exists to prevent duplication on re-render
+        if (scrollTween) {
+            scrollTween.kill()
+            // access internal scrollTrigger instance if needed to kill it specifically, though killing tween usually enough if it owns the trigger
+        }
 
         const getScrollAmount = () => {
             if (!certTrack.value) return 0
-            // Total width of track - viewport width + LARGE buffer ensure last card is fully visible
-            // Using a large fixed buffer + percentage of viewport to be safe against different screen sizes
             return -(certTrack.value.scrollWidth - window.innerWidth + window.innerWidth * 0.2 + 300)
         }
 
-        // Create timeline to sync track movement and progress bar
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: certContainer.value,
                 start: 'top top',
-                end: () => `+=${Math.abs(getScrollAmount())}`, // Match scroll end to distance
+                end: () => `+=${Math.abs(getScrollAmount())}`,
                 pin: true,
                 scrub: 1,
                 invalidateOnRefresh: true,
@@ -251,13 +215,11 @@ onMounted(() => {
             }
         })
 
-        // Track Movement
         tl.to(certTrack.value, {
             x: () => getScrollAmount(),
             ease: 'none',
         })
 
-        // Progress Bar Animation
         if (progressBar.value) {
             tl.to(progressBar.value, {
                 scaleX: 1,
@@ -267,6 +229,13 @@ onMounted(() => {
 
         scrollTween = tl
     }
+}
+
+onMounted(async () => {
+    await fetchData()
+    nextTick(() => {
+        refreshAnimations()
+    })
 })
 
 onUnmounted(() => {

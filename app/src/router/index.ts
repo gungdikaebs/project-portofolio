@@ -57,6 +57,18 @@ const routes = [
         name: 'AdminProfile',
         component: () => import('../views/admin/Profile.vue'),
         meta: { requiresAuth: true }
+    },
+    {
+        path: '/admin/experience',
+        name: 'AdminExperience',
+        component: () => import('../views/admin/ExperienceIndex.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/admin/education',
+        name: 'AdminEducation',
+        component: () => import('../views/admin/EducationIndex.vue'),
+        meta: { requiresAuth: true }
     }
 ]
 

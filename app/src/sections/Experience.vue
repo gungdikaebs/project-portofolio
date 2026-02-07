@@ -27,7 +27,7 @@
             <!-- Experience Timeline -->
             <div class="relative border-l border-white/10 ml-4 md:ml-10 space-y-16">
 
-                <div v-for="(job, index) in experiences" :key="index" class="experience-item relative pl-8 md:pl-16">
+                <div v-for="(job, index) in experience" :key="job.id" class="experience-item relative pl-8 md:pl-16">
                     <!-- Timeline Dot -->
                     <div
                         class="absolute -left-[5px] top-3 w-2.5 h-2.5 bg-accent rounded-full shadow-[0_0_10px_rgba(106,227,255,0.5)] z-10">
@@ -43,13 +43,13 @@
                             </h3>
                             <h4 class="font-body text-xl text-primary mb-6">{{ job.company }}</h4>
 
-                            <p class="text-secondary text-lg leading-relaxed mb-6">
+                            <p class="text-secondary text-lg leading-relaxed mb-6 whitespace-pre-line">
                                 {{ job.description }}
                             </p>
 
                             <!-- Tech Stack Used -->
                             <div class="flex flex-wrap gap-3">
-                                <span v-for="tech in job.stack" :key="tech"
+                                <span v-for="tech in job.technologies" :key="tech"
                                     class="px-3 py-1 bg-white/5 rounded-full text-xs text-secondary border border-white/5">
                                     {{ tech }}
                                 </span>
@@ -60,7 +60,7 @@
                         <div class="flex-shrink-0">
                             <span
                                 class="font-mono text-accent text-sm md:text-base border border-accent/20 px-4 py-2 rounded-full bg-accent/5">
-                                {{ job.date }}
+                                {{ formatDateRange(job.startDate, job.endDate) }}
                             </span>
                         </div>
 
@@ -74,51 +74,53 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, nextTick, watch } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
+import { useExperience } from '../composables/useExperience'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const experiences = [
-    {
-        role: 'Senior Frontend Engineer',
-        company: 'Tech Solutions Inc.',
-        date: '2023 - Present',
-        description: 'Leading the frontend architecture for high-scale SaaS products. Reduced load times by 40% through code splitting and advanced caching strategies. Mentoring junior developers and implementing E2E testing pipelines.',
-        stack: ['Vue 3', 'TypeScript', 'Vite', 'Cypress']
-    },
-    {
-        role: 'Full Stack Developer',
-        company: 'Creative Studio Bali',
-        date: '2021 - 2023',
-        description: 'Developed custom web applications for international clients. Built CMS-driven marketing sites and robust e-commerce platforms. Collaborated directly with designers to ensure pixel-perfect implementation.',
-        stack: ['Laravel', 'React', 'MySQL', 'Tailwind']
-    },
-    {
-        role: 'Web Developer Intern',
-        company: 'Bali Digital Agency',
-        date: '2020 - 2021',
-        description: 'Assisted in building responsive landing pages and maintaining legacy WordPress sites. Gained hands-on experience with modern CSS frameworks and version control systems.',
-        stack: ['HTML/CSS', 'JavaScript', 'WordPress', 'PHP']
-    }
-]
+const { experience, loading, fetchExperience } = useExperience()
 
-onMounted(() => {
-    // Stagger Reveal
+const formatDateRange = (start: string, end: string | null) => {
+    if (!start) return '';
+    const startDate = new Date(start);
+    const startYear = startDate.getFullYear();
+    // Optional: Add month if needed, but design uses years usually or Month Year.
+    // The design shows "2023 - Present" or "2021 - 2023".
+
+    if (!end || end === 'Present') return `${startYear} - Present`;
+
+    const endDate = new Date(end);
+    const endYear = endDate.getFullYear();
+    return `${startYear} - ${endYear}`;
+}
+
+const refreshAnimations = () => {
+    ScrollTrigger.refresh()
     const items = document.querySelectorAll('.experience-item')
-
     items.forEach(item => {
-        gsap.from(item, {
-            y: 50,
-            opacity: 0,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-                trigger: item,
-                start: 'top 85%'
+        gsap.fromTo(item,
+            { y: 50, opacity: 0 },
+            {
+                y: 0,
+                opacity: 1,
+                duration: 1,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: item,
+                    start: 'top 85%'
+                }
             }
-        })
+        )
+    })
+}
+
+onMounted(async () => {
+    await fetchExperience()
+    nextTick(() => {
+        refreshAnimations()
     })
 })
 </script>

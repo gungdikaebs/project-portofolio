@@ -170,7 +170,9 @@ const handleFileUpload = async (event: Event) => {
 
     const file = target.files[0];
     const formData = new FormData();
-    formData.append('file', file);
+    if (file) {
+        formData.append('file', file);
+    }
 
     try {
         const res = await api.post('/media/upload', formData, {

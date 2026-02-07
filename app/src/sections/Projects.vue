@@ -49,15 +49,15 @@
 
             <!-- Projects Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
-                <article v-for="(project, index) in projects" :key="index"
+                <article v-for="(project, index) in projects" :key="project.id"
                     class="project-card group relative flex flex-col gap-6">
 
                     <!-- Image Container -->
                     <router-link :to="'/project/' + project.id"
-                        class="block w-full aspect-[4/3] rounded-2xl overflow-hidden relative cursor-pointer">
+                        class="block w-full aspect-[4/3] rounded-2xl overflow-hidden relative cursor-pointer bg-surface">
                         <!-- Image -->
                         <div class="w-full h-full relative overflow-hidden">
-                            <img v-if="project.imageUrl" :src="project.imageUrl" :alt="project.title"
+                            <img v-if="project.imageUrl" :src="getImageUrl(project.imageUrl)" :alt="project.title"
                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                             <div v-else class="w-full h-full bg-surface flex items-center justify-center relative">
                                 <div class="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent"></div>
@@ -89,9 +89,9 @@
                                     {{ project.title }}
                                 </h3>
                                 <div class="flex items-center gap-3 mt-2 text-secondary text-sm font-mono">
-                                    <span>{{ project.category }}</span>
-                                    <span class="w-1 h-1 bg-white/20 rounded-full"></span>
-                                    <span>{{ project.year }}</span>
+                                    <!-- Use Project Skills as Category substitute or generic -->
+                                    <span>Web Development</span>
+                                    <!-- Optional Year hardcoded or from logic if needed -->
                                 </div>
                             </div>
                         </div>
@@ -101,12 +101,13 @@
 
                         <!-- Tech Tags -->
                         <div class="flex flex-wrap gap-2 mt-2">
-                            <span v-for="tech in project.techStack.slice(0, 3)" :key="tech"
+                            <span v-for="tech in getTechStack(project).slice(0, 3)" :key="tech"
                                 class="text-xs font-mono text-white/50 border border-white/10 px-2 py-1 rounded hover:text-accent hover:border-accent/30 transition-colors cursor-default">
                                 {{ tech }}
                             </span>
-                            <span v-if="project.techStack.length > 3" class="text-xs font-mono text-white/50 px-2 py-1">
-                                +{{ project.techStack.length - 3 }}
+                            <span v-if="getTechStack(project).length > 3"
+                                class="text-xs font-mono text-white/50 px-2 py-1">
+                                +{{ getTechStack(project).length - 3 }}
                             </span>
                         </div>
                     </div>
@@ -131,51 +132,48 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, watch, nextTick } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
+import { useProjects } from '../composables/useProjects'
 
 gsap.registerPlugin(ScrollTrigger)
 
-import tamansariImg from '@/assets/tamansarikost.png'
+const { projects, loading, fetchProjects } = useProjects()
 
-// Mock Data
-const projects = [
-    {
-        id: 1,
-        title: 'Taman Sari Kost',
-        category: 'Full-Stack Web App',
-        year: '2024',
-        description: 'A comprehensive boarding house management system designed to streamline operations. From tenant onboarding to automated billing, this platform bridges the gap between property owners and residents.',
-        techStack: ['Laravel', 'Vue.js', 'MySQL', 'Docker', 'Tailwind'],
-        imageUrl: tamansariImg
-    },
-    {
-        id: 2,
-        title: 'HR Screening System',
-        category: 'Internal Tool',
-        year: '2023',
-        description: 'An intelligent candidate screening platform that automates the initial recruitment phase. Features include resume parsing, automated scoring, and a centralized dashboard for HR teams.',
-        techStack: ['React', 'Node.js', 'PostgreSQL', 'AWS'],
-        imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1920&auto=format&fit=crop'
-    }
-]
+const getImageUrl = (path: string) => {
+    if (!path) return '';
+    if (path.startsWith('http')) return path;
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    return `${baseUrl}${path}`;
+};
 
-onMounted(() => {
+const getTechStack = (project: any) => {
+    if (!project.skills) return [];
+    return project.skills.map((s: any) => s.skill.name);
+};
+
+// Ref for animation refresh
+const refreshAnimations = () => {
+    ScrollTrigger.refresh()
+
     // 1. Text Reveals
     const texts = document.querySelectorAll('.reveal-text')
     texts.forEach((text, i) => {
-        gsap.from(text, {
-            y: 50,
-            opacity: 0,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-                trigger: text,
-                start: 'top 85%'
-            },
-            delay: i * 0.1
-        })
+        gsap.fromTo(text,
+            { y: 50, opacity: 0 },
+            {
+                y: 0,
+                opacity: 1,
+                duration: 1,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: text,
+                    start: 'top 85%'
+                },
+                delay: i * 0.1
+            }
+        )
     })
 
     // 2. Project Card Animation & Parallax
@@ -194,16 +192,19 @@ onMounted(() => {
                 }
 
                 // Entrance
-                gsap.from(card, {
-                    y: isEven ? 160 : 100, // Add to the offset
-                    opacity: 0,
-                    duration: 1,
-                    ease: 'power3.out',
-                    scrollTrigger: {
-                        trigger: card,
-                        start: 'top 90%'
+                gsap.fromTo(card,
+                    { y: isEven ? 160 : 100, opacity: 0 },
+                    {
+                        y: isEven ? 60 : 0, // Return to offset or 0
+                        opacity: 1,
+                        duration: 1,
+                        ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top 90%'
+                        }
                     }
-                })
+                )
 
                 // Parallax Scroll (Right column moves faster/slower)
                 if (isEven) {
@@ -223,17 +224,27 @@ onMounted(() => {
         "(max-width: 767px)": function () {
             // Simple entrance for mobile
             cards.forEach((card) => {
-                gsap.from(card, {
-                    y: 50,
-                    opacity: 0,
-                    duration: 0.8,
-                    scrollTrigger: {
-                        trigger: card,
-                        start: 'top 90%'
+                gsap.fromTo(card,
+                    { y: 50, opacity: 0 },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.8,
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top 90%'
+                        }
                     }
-                })
+                )
             })
         }
+    })
+}
+
+onMounted(async () => {
+    await fetchProjects()
+    nextTick(() => {
+        refreshAnimations()
     })
 })
 </script>

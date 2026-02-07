@@ -12,7 +12,12 @@
             </div>
         </div>
 
-        <div v-if="project" class="w-full max-w-[1100px] mx-auto px-6 relative z-10">
+        <div v-if="loading" class="min-h-[50vh] flex flex-col items-center justify-center">
+            <div class="w-10 h-10 border-4 border-accent/30 border-t-accent rounded-full animate-spin mb-4"></div>
+            <p class="text-secondary font-mono text-sm">Loading Project...</p>
+        </div>
+
+        <div v-else-if="project" class="w-full max-w-[1100px] mx-auto px-6 relative z-10">
 
             <!-- Breadcrumb / Back -->
             <router-link to="/projects"
@@ -30,10 +35,10 @@
             <div class="mb-16">
                 <!-- Meta -->
                 <div class="flex flex-wrap gap-4 items-center mb-6 text-sm font-mono text-accent">
-                    <span class="px-3 py-1 border border-accent/20 bg-accent/5 rounded-full">{{ project.category
-                        }}</span>
+                    <span class="px-3 py-1 border border-accent/20 bg-accent/5 rounded-full">{{ getCategory(project)
+                    }}</span>
                     <span class="w-1 h-1 bg-white/20 rounded-full"></span>
-                    <span>{{ project.year }}</span>
+                    <span>{{ getYear(project.startDate) }}</span>
                 </div>
 
                 <h1 class="font-heading font-bold text-4xl md:text-6xl text-white mb-8 leading-tight">
@@ -42,7 +47,7 @@
 
                 <!-- Tech Stack -->
                 <div class="flex flex-wrap gap-3">
-                    <span v-for="tech in project.techStack" :key="tech"
+                    <span v-for="tech in getTechStack(project)" :key="tech"
                         class="px-3 py-1.5 bg-surface border border-white/10 rounded-lg text-sm text-secondary hover:text-white hover:border-white/30 transition-colors">
                         {{ tech }}
                     </span>
@@ -51,7 +56,7 @@
 
             <!-- Main Image -->
             <div class="w-full aspect-video rounded-3xl overflow-hidden mb-16 border border-white/10 relative group">
-                <img :src="project.imageUrl" :alt="project.title" class="w-full h-full object-cover" />
+                <img :src="getImageUrl(project.imageUrl)" :alt="project.title" class="w-full h-full object-cover" />
                 <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-60"></div>
             </div>
 
@@ -61,13 +66,8 @@
                 <!-- Description -->
                 <div class="md:col-span-2 space-y-8">
                     <h2 class="font-heading font-bold text-2xl text-white">Overview</h2>
-                    <p class="text-secondary text-lg leading-relaxed">
+                    <p class="text-secondary text-lg leading-relaxed whitespace-pre-line">
                         {{ project.description }}
-                    </p>
-                    <p class="text-secondary text-lg leading-relaxed">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi ut aliquip ex ea commodo consequat.
                     </p>
                 </div>
 
@@ -114,54 +114,49 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useProjects } from '../composables/useProjects'
 
 const route = useRoute()
+const { project, loading, fetchProject } = useProjects()
 
-interface Project {
-    id: number;
-    title: string;
-    category: string;
-    year: string;
-    description: string;
-    techStack: string[];
-    link?: string;
-    liveUrl?: string;
-    imageUrl: string;
+const getImageUrl = (path: string) => {
+    if (!path) return '';
+    if (path.startsWith('http')) return path;
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    return `${baseUrl}${path}`;
 }
 
-const project = ref<Project | null>(null)
+const getYear = (dateString: string) => {
+    if (!dateString) return new Date().getFullYear();
+    return new Date(dateString).getFullYear();
+}
 
-import tamansariImg from '@/assets/tamansarikost.png'
+const getTechStack = (proj: any) => {
+    if (!proj || !proj.skills) return [];
+    return proj.skills.map((s: any) => s.skill.name);
+}
 
-const projects: Project[] = [
-    {
-        id: 1,
-        title: 'Taman Sari Kost',
-        category: 'Full-Stack Web App',
-        year: '2024',
-        description: 'A comprehensive boarding house management system designed to streamline operations. From tenant onboarding to automated billing, this platform bridges the gap between property owners and residents.',
-        techStack: ['Laravel', 'Vue.js', 'MySQL', 'Docker', 'Tailwind'],
-        link: '#',
-        liveUrl: 'https://tamansarikost.com',
-        imageUrl: tamansariImg
-    },
-    {
-        id: 2,
-        title: 'HR Screening System',
-        category: 'Internal Tool',
-        year: '2023',
-        description: 'An intelligent candidate screening platform that automates the initial recruitment phase. Features include resume parsing, automated scoring, and a centralized dashboard for HR teams.',
-        techStack: ['React', 'Node.js', 'PostgreSQL', 'AWS'],
-        link: '#',
-        imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1920&auto=format&fit=crop'
+const getCategory = (proj: any) => {
+    // If backend doesn't return category, use a default or derive from skills
+    // For now, hardcode or use a fallback
+    return 'Web Development';
+}
+
+onMounted(async () => {
+    const id = route.params.id as string
+    if (id) {
+        await fetchProject(id)
     }
-]
-
-onMounted(() => {
-    const id = parseInt(route.params.id as string)
-    project.value = projects.find((p) => p.id === id) || null
     window.scrollTo(0, 0)
+})
+
+// watch route to refetch if params change (e.g. related projects)
+watch(() => route.params.id, async (newId) => {
+    if (newId) {
+        await fetchProject(newId as string)
+        window.scrollTo(0, 0)
+    }
 })
 </script>
