@@ -63,7 +63,7 @@ import { useSkills } from '../composables/useSkills'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const { categories, loading, fetchSkills } = useSkills()
+const { categories, fetchSkills } = useSkills()
 
 const isSvg = (icon: string) => {
     return icon && icon.trim().startsWith('<svg');

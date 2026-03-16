@@ -35,7 +35,7 @@
             <div class="mb-16">
                 <!-- Meta -->
                 <div class="flex flex-wrap gap-4 items-center mb-6 text-sm font-mono text-accent">
-                    <span class="px-3 py-1 border border-accent/20 bg-accent/5 rounded-full">{{ getCategory(project)
+                    <span class="px-3 py-1 border border-accent/20 bg-accent/5 rounded-full">{{ getCategory()
                     }}</span>
                     <span class="w-1 h-1 bg-white/20 rounded-full"></span>
                     <span>{{ getYear(project.startDate) }}</span>
@@ -138,7 +138,7 @@ const getTechStack = (proj: any) => {
     return proj.skills.map((s: any) => s.skill.name);
 }
 
-const getCategory = (proj: any) => {
+const getCategory = () => {
     // If backend doesn't return category, use a default or derive from skills
     // For now, hardcode or use a fallback
     return 'Web Development';

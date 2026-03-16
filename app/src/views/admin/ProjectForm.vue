@@ -86,7 +86,7 @@
                                 <button type="button" v-for="skill in category.skills" :key="skill.id"
                                     @click="toggleSkill(skill.id)"
                                     class="px-3 py-1.5 rounded-lg text-sm border transition-all flex items-center gap-2"
-                                    :class="form.skillIds.includes(skill.id)
+                                    :class="form.skillIds.indexOf(skill.id) !== -1
                                         ? 'bg-blue-600 border-blue-500 text-white'
                                         : 'bg-[#0B0D10] border-white/10 text-gray-400 hover:border-white/30'">
                                     {{ skill.name }}

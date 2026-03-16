@@ -27,7 +27,7 @@
             <!-- Experience Timeline -->
             <div class="relative border-l border-white/10 ml-4 md:ml-10 space-y-16">
 
-                <div v-for="(job, index) in experience" :key="job.id" class="experience-item relative pl-8 md:pl-16">
+                <div v-for="job in experience" :key="job.id" class="experience-item relative pl-8 md:pl-16">
                     <!-- Timeline Dot -->
                     <div
                         class="absolute -left-[5px] top-3 w-2.5 h-2.5 bg-accent rounded-full shadow-[0_0_10px_rgba(106,227,255,0.5)] z-10">
@@ -74,14 +74,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick, watch } from 'vue'
+import { onMounted, nextTick } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useExperience } from '../composables/useExperience'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const { experience, loading, fetchExperience } = useExperience()
+const { experience, fetchExperience } = useExperience()
 
 const formatDateRange = (start: string, end: string | null) => {
     if (!start) return '';

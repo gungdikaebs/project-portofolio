@@ -13,6 +13,8 @@ import { SkillsModule } from './skills/skills.module';
 import { MediaModule } from './media/media.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { BlogModule } from './blog/blog.module';
+import { BlogCategoriesModule } from './blog-categories/blog-categories.module';
 
 @Module({
   imports: [
@@ -30,8 +32,11 @@ import { PrismaModule } from './prisma/prisma.module';
     CertificationsModule,
     SkillsModule,
     MediaModule,
+    BlogModule,
+    BlogCategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule { }
+

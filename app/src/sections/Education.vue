@@ -31,7 +31,7 @@
             <!-- Education Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-                <div v-for="(edu, index) in education" :key="edu.id"
+                <div v-for="edu in education" :key="edu.id"
                     class="edu-card bg-surface border border-white/5 p-8 rounded-2xl relative overflow-hidden group hover:border-accent/30 transition-colors duration-300">
 
                     <!-- Decorative Background -->
@@ -87,7 +87,7 @@
                 </div>
 
                 <div ref="certTrack" class="flex gap-8 px-6 w-max items-center h-[400px]">
-                    <div v-for="(cert, index) in certifications" :key="cert.id"
+                    <div v-for="cert in certifications" :key="cert.id"
                         class="cert-card bg-surface border border-white/5 p-8 rounded-2xl relative overflow-hidden group hover:border-accent/30 transition-colors duration-300 flex flex-col justify-between w-[400px] h-[350px] shrink-0">
 
                         <div>
@@ -145,14 +145,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, onUnmounted, nextTick, watch } from 'vue'
+import { onMounted, ref, onUnmounted, nextTick } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useEducation } from '../composables/useEducation'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const { education, certifications, loading, fetchData } = useEducation()
+const { education, certifications, fetchData } = useEducation()
 
 const certContainer = ref<HTMLElement | null>(null)
 const certTrack = ref<HTMLElement | null>(null)

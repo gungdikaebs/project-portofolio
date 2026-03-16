@@ -255,7 +255,12 @@ const openSkillModal = (preselectCategoryId?: string) => {
 
 const editSkill = (skill: Skill) => {
     isEditing.value = true;
-    skillForm.value = { ...skill };
+    skillForm.value = { 
+        id: skill.id, 
+        name: skill.name, 
+        categoryId: skill.categoryId, 
+        svgContent: skill.svgContent || '' 
+    };
 
     if (!skill.categoryId) {
         const parentCat = categories.value.find(c => c.skills.some(s => s.id === skill.id));

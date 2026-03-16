@@ -49,7 +49,7 @@
 
             <!-- Projects Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
-                <article v-for="(project, index) in projects" :key="project.id"
+                <article v-for="project in projects" :key="project.id"
                     class="project-card group relative flex flex-col gap-6">
 
                     <!-- Image Container -->
@@ -132,14 +132,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch, nextTick } from 'vue'
+import { onMounted, nextTick } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useProjects } from '../composables/useProjects'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const { projects, loading, fetchProjects } = useProjects()
+const { projects, fetchProjects } = useProjects()
 
 const getImageUrl = (path: string) => {
     if (!path) return '';
