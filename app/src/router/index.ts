@@ -79,6 +79,30 @@ const routes = [
         name: 'AdminEducation',
         component: () => import('../views/admin/EducationIndex.vue'),
         meta: { requiresAuth: true }
+    },
+    {
+        path: '/admin/blog-categories',
+        name: 'AdminBlogCategories',
+        component: () => import('../views/admin/BlogCategoriesIndex.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/admin/blog',
+        name: 'AdminBlog',
+        component: () => import('../views/admin/BlogIndex.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/admin/blog/create',
+        name: 'AdminBlogCreate',
+        component: () => import('../views/admin/BlogForm.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/admin/blog/:id/edit',
+        name: 'AdminBlogEdit',
+        component: () => import('../views/admin/BlogForm.vue'),
+        meta: { requiresAuth: true }
     }
 ]
 
