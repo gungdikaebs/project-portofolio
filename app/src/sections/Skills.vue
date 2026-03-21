@@ -41,7 +41,7 @@
                             class="flex items-center gap-3 group/item">
                             <div
                                 class="text-secondary group-hover/item:text-accent transition-colors w-6 h-6 flex items-center justify-center">
-                                <span v-if="isSvg(skill.icon)" v-html="skill.icon"></span>
+                                <div v-if="isSvg(skill.icon)" v-html="skill.icon" class="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full"></div>
                                 <i v-else :class="skill.icon" class="text-xl"></i>
                             </div>
                             <span class="text-secondary font-medium group-hover/item:text-white transition-colors">
@@ -66,7 +66,8 @@ gsap.registerPlugin(ScrollTrigger)
 const { categories, fetchSkills } = useSkills()
 
 const isSvg = (icon: string) => {
-    return icon && icon.trim().startsWith('<svg');
+    if (!icon || typeof icon !== 'string') return false;
+    return icon.toLowerCase().includes('<svg');
 }
 
 onMounted(async () => {
