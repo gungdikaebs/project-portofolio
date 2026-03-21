@@ -41,8 +41,10 @@
                             class="flex items-center gap-3 group/item">
                             <div
                                 class="text-secondary group-hover/item:text-accent transition-colors w-6 h-6 flex items-center justify-center">
-                                <div v-if="isSvg(skill.icon)" v-html="skill.icon" class="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full"></div>
-                                <i v-else :class="skill.icon" class="text-xl"></i>
+                                <div v-if="skill.svgContent || isSvg(skill.icon)" 
+                                    v-html="skill.svgContent || skill.icon" 
+                                    class="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full text-current"></div>
+                                <i v-else :class="skill.icon || 'w-6 h-6 border border-dashed border-white/20 rounded'" class="text-xl flex items-center justify-center"></i>
                             </div>
                             <span class="text-secondary font-medium group-hover/item:text-white transition-colors">
                                 {{ skill.name }}
