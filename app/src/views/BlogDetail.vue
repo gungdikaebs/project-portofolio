@@ -152,4 +152,40 @@ onMounted(async () => {
     color: inherit;
     padding: 0;
 }
+
+/* Lists — Tailwind reset strips default list styles */
+.custom-prose ul {
+    list-style-type: disc;
+    padding-left: 1.75em;
+    margin-top: 0.75em;
+    margin-bottom: 1.25em;
+}
+.custom-prose ol {
+    list-style-type: decimal;
+    padding-left: 1.75em;
+    margin-top: 0.75em;
+    margin-bottom: 1.25em;
+}
+.custom-prose li {
+    color: var(--color-text-secondary);
+    margin-top: 0.35em;
+    margin-bottom: 0.35em;
+    line-height: 1.8;
+}
+.custom-prose li p {
+    margin-bottom: 0;
+}
+/* Nested lists */
+.custom-prose ul ul,
+.custom-prose ol ul {
+    list-style-type: circle;
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+}
+.custom-prose ul ol,
+.custom-prose ol ol {
+    list-style-type: lower-alpha;
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+}
 </style>
