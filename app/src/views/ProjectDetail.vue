@@ -75,7 +75,7 @@
                 <div>
                     <h2 class="font-heading font-bold text-2xl text-white mb-6">Links</h2>
                     <div class="space-y-4">
-                        <a v-if="project.liveUrl" :href="project.liveUrl" target="_blank"
+                        <a v-if="project.projectUrl" :href="project.projectUrl" target="_blank"
                             class="flex items-center justify-between p-4 bg-surface border border-white/10 rounded-xl hover:border-accent/50 hover:bg-white/5 transition-all group">
                             <span class="font-medium text-white">Live Preview</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
@@ -86,18 +86,9 @@
                                 <polyline points="7 7 17 7 17 17"></polyline>
                             </svg>
                         </a>
-                        <a v-if="project.link" :href="project.link" target="_blank"
-                            class="flex items-center justify-between p-4 bg-surface border border-white/10 rounded-xl hover:border-accent/50 hover:bg-white/5 transition-all group">
-                            <span class="font-medium text-white">Source Code</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="text-secondary group-hover:text-accent transition-colors">
-                                <path
-                                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
-                                </path>
-                            </svg>
-                        </a>
+                        <div v-else class="p-4 border border-white/5 rounded-xl bg-white/5">
+                            <p class="text-secondary text-sm">No live URL available.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -124,8 +115,11 @@ const { project, loading, fetchProject } = useProjects()
 const getImageUrl = (path: string) => {
     if (!path) return '';
     if (path.startsWith('http')) return path;
-    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    return `${baseUrl}${path}`;
+    let baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    baseUrl = baseUrl.replace(/^["']|["']$/g, '');
+    baseUrl = baseUrl.replace(/\/+$/, '');
+    const safePath = path.startsWith('/') ? path : `/${path}`;
+    return `${baseUrl}${safePath}`;
 }
 
 const getYear = (dateString: string) => {

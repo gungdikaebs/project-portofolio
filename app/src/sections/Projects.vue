@@ -144,8 +144,11 @@ const { projects, fetchProjects } = useProjects()
 const getImageUrl = (path: string) => {
     if (!path) return '';
     if (path.startsWith('http')) return path;
-    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    return `${baseUrl}${path}`;
+    let baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    baseUrl = baseUrl.replace(/^["']|["']$/g, '');
+    baseUrl = baseUrl.replace(/\/+$/, '');
+    const safePath = path.startsWith('/') ? path : `/${path}`;
+    return `${baseUrl}${safePath}`;
 };
 
 const getTechStack = (project: any) => {
