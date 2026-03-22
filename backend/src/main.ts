@@ -9,7 +9,12 @@ async function bootstrap() {
   // CORS Configuration
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
   app.enableCors({
-    origin: [frontendUrl, 'http://localhost:5174'],
+    origin: [
+      frontendUrl, 
+      'http://localhost:5174',
+      'https://www.gungdikaebs.cloud',
+      'https://portofolio-gungdika.netlify.app'
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
