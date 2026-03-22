@@ -28,11 +28,10 @@
                 <div ref="captionContainer" class="overflow-hidden">
                     <p ref="caption"
                         class="font-body text-base md:text-lg lg:text-xl text-secondary max-w-xl md:max-w-2xl leading-relaxed translate-y-[100%] opacity-0">
-                        Frontend developer focused on modern web architectures, fluid motion, and performance-driven
-                        user experiences.
+                        Fullstack Developer specializing in designing and building scalable web systems that solve real-world problems, with a focus on performance, maintainability, and user experience.
                     </p>
                     <div class="mt-4 text-xs font-mono text-gray-500 opacity-0 translate-y-4" ref="locationMeta">
-                        Based in Bali, Indonesia • 3+ Years Exp • 20+ Projects
+                        Based in Bali, Indonesia • 2+ Years Exp
                     </div>
                 </div>
 
