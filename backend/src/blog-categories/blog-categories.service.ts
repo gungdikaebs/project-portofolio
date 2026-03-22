@@ -8,8 +8,17 @@ export class BlogCategoriesService {
     constructor(private prisma: PrismaService) { }
 
     create(createBlogCategoryDto: CreateBlogCategoryDto) {
+        const slug = createBlogCategoryDto.slug ||
+            createBlogCategoryDto.name
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)+/g, '');
+
         return this.prisma.blogCategory.create({
-            data: createBlogCategoryDto,
+            data: {
+                ...createBlogCategoryDto,
+                slug,
+            },
         });
     }
 

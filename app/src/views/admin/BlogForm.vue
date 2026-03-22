@@ -35,11 +35,19 @@
                         <!-- Category -->
                         <div class="col-span-2">
                             <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Category</label>
-                            <select v-model="form.categoryId"
+                            <select v-model="form.categoryId" required
                                 class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white appearance-none focus:outline-none focus:border-white/30 transition-all">
                                 <option value="" disabled>Select a category</option>
                                 <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
                             </select>
+                        </div>
+
+                        <!-- Excerpt -->
+                        <div class="col-span-2">
+                            <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Excerpt</label>
+                            <textarea v-model="form.excerpt" rows="3" required
+                                class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
+                                placeholder="A brief summary of this blog post..."></textarea>
                         </div>
 
                         <!-- Content -->
@@ -60,11 +68,17 @@
 
                     <div>
                         <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Status</label>
-                        <select v-model="form.isPublished"
+                        <select v-model="form.status"
                             class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white appearance-none focus:outline-none focus:border-white/30 transition-all">
-                            <option :value="false">Draft</option>
-                            <option :value="true">Published</option>
+                            <option value="DRAFT">Draft</option>
+                            <option value="PUBLISHED">Published</option>
                         </select>
+                    </div>
+
+                    <div class="flex items-center gap-3 pt-2">
+                        <input v-model="form.featured" type="checkbox" id="featured"
+                            class="w-5 h-5 rounded border-gray-600 text-blue-600 focus:ring-blue-500 bg-[#0B0D10]">
+                        <label for="featured" class="text-sm text-white select-none cursor-pointer">Mark as Featured</label>
                     </div>
 
                     <!-- Actions -->
@@ -118,17 +132,21 @@ const categories = ref<any[]>([]);
 const form = ref({
     title: '',
     slug: '',
+    excerpt: '',
     content: '',
     categoryId: '',
     coverImage: '',
-    isPublished: false,
+    status: 'DRAFT',
+    featured: false,
 });
 
 const previewImage = computed(() => {
     if (!form.value.coverImage) return null;
     if (form.value.coverImage.startsWith('http')) return form.value.coverImage;
-    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    return `${baseUrl}${form.value.coverImage}`;
+    let baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    baseUrl = baseUrl.replace(/\/+$/, '');
+    const safePath = form.value.coverImage.startsWith('/') ? form.value.coverImage : `/${form.value.coverImage}`;
+    return `${baseUrl}${safePath}`;
 });
 
 const generateSlug = () => {
@@ -174,17 +192,17 @@ const fetchCategories = async () => {
 
 const fetchBlog = async (id: string) => {
     try {
-        // We use api.get because blogService.getBlog uses slug in public, but admin needs by ID.
-        // Actually, blog controller often uses id. Let's use api.get to be safe or check the backend.
-        const res = await api.get(`/blog/${id}`);
+        const res = await api.get(`/blog/by-id/${id}`);
         const data = res.data;
         form.value = {
             title: data.title,
             slug: data.slug,
+            excerpt: data.excerpt || '',
             content: data.content,
             categoryId: data.categoryId || '',
             coverImage: data.coverImage || '',
-            isPublished: data.isPublished,
+            status: data.status || 'DRAFT',
+            featured: data.featured || false,
         };
     } catch (error) {
         console.error('Failed to fetch blog', error);
@@ -196,10 +214,14 @@ const fetchBlog = async (id: string) => {
 const submitForm = async () => {
     saving.value = true;
     try {
-        const payload = { ...form.value };
-        
-        // Remove empty categoryId to let Prisma handle null relations properly if needed
-        if (!payload.categoryId) delete (payload as any).categoryId;
+        const payload: any = { ...form.value };
+
+        // Set publishedAt when first publishing
+        if (payload.status === 'PUBLISHED' && !isEditing.value) {
+            payload.publishedAt = new Date().toISOString();
+        }
+
+        if (!payload.categoryId) delete payload.categoryId;
 
         if (isEditing.value) {
             await blogService.updateBlog(route.params.id as string, payload);

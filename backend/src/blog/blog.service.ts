@@ -33,6 +33,15 @@ export class BlogService {
         });
     }
 
+    findById(id: string) {
+        return this.prisma.blog.findUnique({
+            where: { id },
+            include: {
+                category: true,
+            },
+        });
+    }
+
     findBySlug(slug: string) {
         return this.prisma.blog.findUnique({
             where: { slug },

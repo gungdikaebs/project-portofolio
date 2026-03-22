@@ -5,9 +5,9 @@ export class CreateBlogCategoryDto {
     @IsNotEmpty()
     name: string;
 
+    @IsOptional()
     @IsString()
-    @IsNotEmpty()
-    slug: string;
+    slug?: string;
 
     @IsOptional()
     @IsInt()

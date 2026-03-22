@@ -49,10 +49,10 @@
                                 </td>
                                 <td class="py-4 px-6">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border"
-                                        :class="blog.isPublished
+                                        :class="blog.status === 'PUBLISHED'
                                             ? 'bg-green-500/10 text-green-400 border-green-500/20'
                                             : 'bg-gray-500/10 text-gray-400 border-gray-500/20'">
-                                        {{ blog.isPublished ? 'PUBLISHED' : 'DRAFT' }}
+                                        {{ blog.status }}
                                     </span>
                                 </td>
                                 <td class="py-4 px-6 text-right">
