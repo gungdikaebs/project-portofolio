@@ -47,7 +47,7 @@
                     <div class="relative z-10">
                         <span
                             class="font-mono text-accent text-sm border border-accent/20 px-3 py-1 bg-accent/5 inline-block mb-4 rounded-full">
-                            {{ formatYear(edu.startDate) }} - {{ edu.endDate ? formatYear(edu.endDate) : 'Present' }}
+                            {{ edu.startYear }} - {{ edu.endYear ? edu.endYear : 'Present' }}
                         </span>
 
                         <h3 class="font-heading font-bold text-2xl text-white mb-2">
@@ -94,7 +94,7 @@
                             <div class="flex justify-between items-start mb-4">
                                 <span
                                     class="font-mono text-secondary text-sm border border-white/10 px-3 py-1 rounded-full bg-white/5">
-                                    {{ formatYear(cert.date) }}
+                                    {{ cert.year }}
                                 </span>
                                 <!-- Optional Icon -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -159,11 +159,7 @@ const certTrack = ref<HTMLElement | null>(null)
 const progressBar = ref<HTMLElement | null>(null)
 let scrollTween: gsap.core.Timeline | null = null
 
-const formatYear = (dateString: string) => {
-    if (!dateString) return 'Present';
-    if (dateString === 'Present') return 'Present';
-    return new Date(dateString).getFullYear();
-}
+// Removed unused formatYear
 
 const getCredentialUrl = (url: string) => {
     if (!url) return '';

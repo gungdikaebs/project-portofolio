@@ -209,7 +209,8 @@ const tabs = [
 ];
 
 const activeTabName = computed(() => {
-    return tabs.find(t => t.id === activeTab.value)?.label.slice(0, -1) || 'Item'; // Remove 's' for singular
+    const label = tabs.find(t => t.id === activeTab.value)?.label || 'Item';
+    return activeTab.value === 'certifications' ? 'Certification' : label;
 });
 
 // Data Lists
