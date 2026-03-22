@@ -50,11 +50,10 @@
                                 placeholder="A brief summary of this blog post..."></textarea>
                         </div>
 
-                        <!-- Content -->
+                        <!-- Content (WYSIWYG) -->
                         <div class="col-span-2">
-                            <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Content (HTML)</label>
-                            <textarea v-model="form.content" rows="12" required
-                                class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all font-mono text-sm"></textarea>
+                            <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Content</label>
+                            <WysiwygEditor v-model="form.content" />
                         </div>
                     </div>
                 </div>
@@ -118,6 +117,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AdminLayout from '../../layouts/AdminLayout.vue';
+import WysiwygEditor from '../../components/WysiwygEditor.vue';
 import api from '../../services/api';
 import { blogService, blogCategoriesService } from '../../services/blog.service';
 
