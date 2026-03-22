@@ -27,6 +27,8 @@ services:
       - "3005:3000"
     env_file:
       - .env
+    volumes:
+      - ./uploads:/usr/src/app/uploads
     depends_on:
       - db
 
