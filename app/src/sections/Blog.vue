@@ -1,14 +1,42 @@
 <template>
-    <section id="blog" class="py-32 relative overflow-hidden">
-        <!-- Background Elements -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div class="absolute top-[20%] left-[-10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px]"></div>
-            <div class="absolute bottom-[10%] right-[-5%] w-[300px] h-[300px] bg-primary/5 rounded-full blur-[80px]"></div>
+    <section id="blog" class="py-20 relative overflow-hidden">
+        <!-- Rich Background Elements -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+            <!-- Top-left glow -->
+            <div class="absolute top-[15%] left-[-10%] w-[600px] h-[600px] bg-accent/[0.04] rounded-full blur-[120px]"></div>
+            <!-- Bottom-right glow -->
+            <div class="absolute bottom-[5%] right-[-8%] w-[400px] h-[400px] bg-accent/[0.03] rounded-full blur-[100px]"></div>
+
+            <!-- Grid pattern -->
+            <div class="absolute inset-0 opacity-[0.03]"
+                style="background-image: linear-gradient(to right, rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 70% 50% at 50% 50%, #000 40%, transparent 100%); -webkit-mask-image: radial-gradient(ellipse 70% 50% at 50% 50%, #000 40%, transparent 100%);">
+            </div>
+
+            <!-- Decorative SVG shapes -->
+            <div class="absolute top-[8%] right-[5%] opacity-[0.03] rotate-12">
+                <svg width="200" height="200" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="0.5">
+                    <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" />
+                </svg>
+            </div>
+            <div class="absolute bottom-[15%] left-[3%] opacity-[0.03] -rotate-6">
+                <svg width="150" height="150" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="0.5">
+                    <circle cx="50" cy="50" r="40" />
+                    <circle cx="50" cy="50" r="25" />
+                </svg>
+            </div>
+
+            <!-- Watermark -->
+            <div class="absolute top-[2%] right-[-2%] select-none z-0">
+                <span class="text-[10rem] md:text-[14rem] font-heading font-bold text-white/[0.015] leading-none">BLOG</span>
+            </div>
         </div>
+
+        <!-- Top border line -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
 
         <div class="w-full max-w-[1350px] mx-auto px-6 relative z-10">
             <!-- Section Header -->
-            <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
                 <div>
                     <h2 class="font-heading font-bold text-5xl md:text-7xl text-primary mb-6 reveal-blog-text">
                         Latest <br /> <span class="text-accent">Articles.</span>
@@ -45,36 +73,37 @@
                 </div>
             </div>
 
-            <div v-else-if="featuredBlogs.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+            <div v-else-if="featuredBlogs.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
                 <article v-for="post in featuredBlogs" :key="post.id"
                     class="blog-card group relative flex flex-col gap-6">
 
                     <!-- Image Container -->
                     <router-link :to="'/blog/' + post.slug"
-                        class="block w-full aspect-[16/10] rounded-2xl overflow-hidden relative cursor-pointer bg-surface">
+                        class="block w-full aspect-[16/10] rounded-2xl overflow-hidden relative cursor-pointer bg-surface border border-white/5 hover:border-accent/20 transition-colors duration-500">
                         <!-- Image -->
                         <div class="w-full h-full relative overflow-hidden">
                             <img v-if="post.coverImage" :src="getImageUrl(post.coverImage)" :alt="post.title"
                                 class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-                            <div v-else class="w-full h-full bg-gradient-to-br from-surface to-background flex items-center justify-center border border-white/5">
+                            <div v-else class="w-full h-full bg-gradient-to-br from-surface to-background flex items-center justify-center">
                                 <span class="text-white/10 font-heading text-4xl font-bold opacity-30">BLOG</span>
                             </div>
                         </div>
 
                         <!-- Hover Overlay -->
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
-                            <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 transform scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 delay-100">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-white">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                            <div class="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 transform scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 delay-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="text-white">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
                                 </svg>
                             </div>
                         </div>
                     </router-link>
 
                     <!-- Content -->
-                    <div class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-3">
                         <div class="flex justify-between items-center text-sm font-mono text-secondary">
                             <span class="text-accent/80 border border-accent/20 px-3 py-1 rounded-full bg-accent/5" v-if="post.category">{{ post.category.name }}</span>
                             <span v-else class="text-white/30 truncate">Uncategorized</span>
@@ -85,7 +114,7 @@
                             <router-link :to="'/blog/' + post.slug">{{ post.title }}</router-link>
                         </h3>
                         
-                        <p class="text-secondary leading-relaxed line-clamp-3">
+                        <p class="text-secondary leading-relaxed line-clamp-3 text-sm">
                             {{ post.excerpt }}
                         </p>
                     </div>
@@ -97,7 +126,7 @@
             </div>
 
             <!-- Mobile Only View All Button -->
-            <div class="md:hidden mt-16 flex justify-center">
+            <div class="md:hidden mt-12 flex justify-center">
                 <router-link to="/blog"
                     class="inline-flex items-center gap-2 px-8 py-3 bg-surface border border-white/10 rounded-full text-white font-bold hover:bg-white/5 transition-colors">
                     Read All Articles
@@ -126,8 +155,10 @@ const { featuredBlogs, loading, fetchBlogs } = useBlog()
 const getImageUrl = (path: string) => {
     if (!path) return '';
     if (path.startsWith('http')) return path;
-    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    return `${baseUrl}${path}`;
+    let baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    baseUrl = baseUrl.replace(/\/+$/, '');
+    const safePath = path.startsWith('/') ? path : `/${path}`;
+    return `${baseUrl}${safePath}`;
 };
 
 const formatDate = (dateString: string) => {
@@ -139,34 +170,35 @@ const formatDate = (dateString: string) => {
 const initAnimations = () => {
     ScrollTrigger.refresh()
 
-    // Texts Reveal
+    // Section header text reveal with stagger
     const texts = document.querySelectorAll('.reveal-blog-text')
     texts.forEach((text, i) => {
         gsap.fromTo(text,
-            { y: 50, opacity: 0 },
+            { y: 60, opacity: 0 },
             {
                 y: 0,
                 opacity: 1,
-                duration: 1,
+                duration: 1.2,
                 ease: 'power3.out',
                 scrollTrigger: {
-                    trigger: text,
-                    start: 'top 85%'
+                    trigger: '#blog',
+                    start: 'top 80%'
                 },
-                delay: i * 0.1
+                delay: i * 0.15
             }
         )
     })
 
-    // Cards Reveal Stagger
+    // Blog cards — staggered entrance with scale
     const cards = document.querySelectorAll('.blog-card')
     if (cards.length > 0) {
         gsap.fromTo(cards,
-            { y: 80, opacity: 0 },
+            { y: 80, opacity: 0, scale: 0.95 },
             {
                 y: 0,
                 opacity: 1,
-                duration: 0.8,
+                scale: 1,
+                duration: 0.9,
                 stagger: 0.15,
                 ease: 'power3.out',
                 scrollTrigger: {
@@ -176,6 +208,29 @@ const initAnimations = () => {
             }
         )
     }
+
+    // Parallax floating backgrounds
+    gsap.to('#blog .absolute.top-\\[15\\%\\]', {
+        y: -40,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '#blog',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+        }
+    })
+
+    gsap.to('#blog .absolute.bottom-\\[5\\%\\]', {
+        y: 40,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '#blog',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+        }
+    })
 }
 
 onMounted(async () => {

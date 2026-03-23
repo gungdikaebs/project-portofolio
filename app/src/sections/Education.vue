@@ -74,7 +74,7 @@
 
             <!-- Certifications Section (Horizontal Scroll) -->
             <div v-if="certifications.length > 0" ref="certContainer"
-                class="mt-20 w-full relative h-screen flex flex-col justify-center overflow-hidden">
+                class="mt-14 w-full relative min-h-[70vh] flex flex-col justify-center overflow-hidden">
                 <div class="container mx-auto px-6 mb-10">
                     <div class="flex items-center gap-4">
                         <h3 class="font-heading font-bold text-3xl text-primary">Certifications</h3>
