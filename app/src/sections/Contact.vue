@@ -24,9 +24,9 @@
                     <div class="flex flex-col gap-8 reveal-contact">
                         <div class="flex items-center gap-3 md:gap-6">
                             <!-- Magnetic Email Button -->
-                            <a href="mailto:contact@gungdika.com"
+                            <a href="mailto:gungdika85@gmail.com"
                                 class="group relative inline-flex items-center gap-3 md:gap-4 px-5 py-3 md:px-8 md:py-4 bg-white text-black rounded-full overflow-hidden transition-transform duration-300 hover:scale-105 active:scale-95 shrink-0">
-                                <span class="relative z-10 font-bold text-sm md:text-lg">contact@gungdika.com</span>
+                                <span class="relative z-10 font-bold text-sm md:text-lg">gungdika85@gmail.com</span>
                                 <div
                                     class="relative z-10 w-6 h-6 md:w-8 md:h-8 bg-black text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -58,9 +58,9 @@
 
                         <!-- Phone / WhatsApp Button -->
                         <div class="flex items-center gap-6">
-                            <a href="https://wa.me/6281234567890" target="_blank"
+                            <a href="https://wa.me/6281237397984" target="_blank"
                                 class="group relative inline-flex items-center gap-3 md:gap-4 px-5 py-3 md:px-8 md:py-4 bg-white/5 border border-white/10 text-white rounded-full overflow-hidden transition-all duration-300 hover:bg-white hover:text-black hover:scale-105 active:scale-95">
-                                <span class="relative z-10 font-bold text-sm md:text-lg">+62 812 3456 7890</span>
+                                <span class="relative z-10 font-bold text-sm md:text-lg">+62 812 3739 7984</span>
                                 <div
                                     class="relative z-10 w-6 h-6 md:w-8 md:h-8 bg-white/10 group-hover:bg-black group-hover:text-white text-white rounded-full flex items-center justify-center transition-colors duration-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -129,7 +129,7 @@ const formData = ref({
 })
 
 const copyEmail = () => {
-    navigator.clipboard.writeText('contact@gungdika.com')
+    navigator.clipboard.writeText('gungdika85@gmail.com')
     copied.value = true
     setTimeout(() => {
         copied.value = false
@@ -137,7 +137,7 @@ const copyEmail = () => {
 }
 
 const submitForm = () => {
-    const phoneNumber = '6281234567890' // Replace with actual WhatsApp number
+    const phoneNumber = '6281237397984'
     const text = `Name: ${formData.value.name}%0AMessage: ${formData.value.message}`
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${text}`
     window.open(whatsappUrl, '_blank')

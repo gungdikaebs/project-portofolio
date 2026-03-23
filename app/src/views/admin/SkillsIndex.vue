@@ -7,7 +7,7 @@
             </div>
 
             <div class="flex gap-3">
-                <button @click="openCategoryModal"
+                <button @click="() => openCategoryModal()"
                     class="px-5 py-2.5 bg-[#1A1D24] text-white rounded-xl hover:bg-[#20242D] border border-white/10 transition-all text-sm font-medium flex items-center gap-2">
                     <span>+</span> New Category
                 </button>
@@ -29,10 +29,27 @@
             <div v-for="category in categories" :key="category.id" class="animate-enter">
 
                 <!-- Category Header -->
-                <div class="flex items-end gap-4 mb-6 border-b border-white/5 pb-4">
+                <div class="flex items-center gap-4 mb-6 border-b border-white/5 pb-4">
                     <h3 class="text-2xl font-bold text-white font-display">{{ category.name }}</h3>
                     <span class="px-2 py-0.5 rounded-full bg-white/5 text-xs text-gray-500 border border-white/5">{{
                         category.skills.length }}</span>
+                    <div class="flex items-center gap-1 ml-auto">
+                        <button @click="openCategoryModal(category)"
+                            class="p-2 text-gray-600 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                            title="Edit Category">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                            </svg>
+                        </button>
+                        <button @click="deleteCategory(category.id)"
+                            class="p-2 text-gray-600 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                            title="Delete Category">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 6h18"></path>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Skills Grid -->
@@ -147,13 +164,13 @@
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade">
             <div @click.stop
                 class="bg-[#11141A] w-full max-w-sm rounded-2xl border border-white/10 p-6 shadow-2xl relative">
-                <h3 class="text-xl font-bold text-white mb-6 font-display">New Category</h3>
+                <h3 class="text-xl font-bold text-white mb-6 font-display">{{ isEditingCategory ? 'Edit Category' : 'New Category' }}</h3>
 
-                <form @submit.prevent="createCategory" class="space-y-5">
+                <form @submit.prevent="saveCategory" class="space-y-5">
                     <div>
                         <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Category
                             Name</label>
-                        <input v-model="categoryName" type="text" required placeholder="e.g. Backend & DevOps"
+                        <input v-model="categoryForm.name" type="text" required placeholder="e.g. Backend & DevOps"
                             class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-700 focus:outline-none focus:border-white/30 transition-all">
                     </div>
 
@@ -165,7 +182,7 @@
                         <button type="submit"
                             class="flex-1 bg-white text-black font-bold py-3 rounded-xl hover:bg-gray-200 transition-colors text-sm"
                             :disabled="isSubmitting">
-                            {{ isSubmitting ? 'Creating...' : 'Create' }}
+                            {{ isSubmitting ? 'Saving...' : (isEditingCategory ? 'Update' : 'Create') }}
                         </button>
                     </div>
                 </form>
@@ -209,7 +226,8 @@ const skillForm = ref({
 
 // Category Modal State
 const showCategoryModal = ref(false);
-const categoryName = ref('');
+const isEditingCategory = ref(false);
+const categoryForm = ref({ id: '', name: '' });
 
 const fetchSkills = async () => {
     loading.value = true;
@@ -223,22 +241,42 @@ const fetchSkills = async () => {
     }
 };
 
-const openCategoryModal = () => {
-    categoryName.value = '';
+const openCategoryModal = (category?: Category) => {
+    if (category) {
+        isEditingCategory.value = true;
+        categoryForm.value = { id: category.id, name: category.name };
+    } else {
+        isEditingCategory.value = false;
+        categoryForm.value = { id: '', name: '' };
+    }
     showCategoryModal.value = true;
 };
 
-const createCategory = async () => {
-    if (!categoryName.value) return;
+const saveCategory = async () => {
+    if (!categoryForm.value.name) return;
     isSubmitting.value = true;
     try {
-        await api.post('/skills/categories', { name: categoryName.value });
+        if (isEditingCategory.value) {
+            await api.patch(`/skills/categories/${categoryForm.value.id}`, { name: categoryForm.value.name });
+        } else {
+            await api.post('/skills/categories', { name: categoryForm.value.name });
+        }
         showCategoryModal.value = false;
         fetchSkills();
     } catch (err) {
-        alert("Failed to create category");
+        alert('Failed to save category');
     } finally {
         isSubmitting.value = false;
+    }
+};
+
+const deleteCategory = async (id: string) => {
+    if (!confirm('Are you sure? All skills in this category will also be deleted.')) return;
+    try {
+        await api.delete(`/skills/categories/${id}`);
+        fetchSkills();
+    } catch (err) {
+        alert('Failed to delete category');
     }
 };
 
