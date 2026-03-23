@@ -21,6 +21,7 @@ model Profile {
   projectsDone     Int
   location         String
   cvUrl            String?
+  imageUrl         String?
   availableForHi   Boolean @default(true)
 }
 

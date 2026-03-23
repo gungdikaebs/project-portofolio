@@ -73,6 +73,38 @@
             <!-- Right Column: CV & Actions -->
             <div class="space-y-6">
 
+                <!-- Profile Image Upload -->
+                <div class="bg-[#11141A] p-6 rounded-2xl border border-white/5 space-y-4">
+                    <h3 class="text-xl font-bold text-white mb-2">Profile Image</h3>
+
+                    <div v-if="form.imageUrl"
+                        class="relative group rounded-xl overflow-hidden">
+                        <img :src="getFileUrl(form.imageUrl)" alt="Profile"
+                            class="w-full aspect-[4/5] object-cover rounded-xl" />
+                        <div
+                            class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                            <button type="button" @click="triggerImageInput"
+                                class="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm hover:bg-white/20 transition-colors">
+                                Change
+                            </button>
+                            <button type="button" @click="form.imageUrl = ''"
+                                class="px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm hover:bg-red-500/30 transition-colors">
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+
+                    <div v-else
+                        class="w-full aspect-[4/5] rounded-xl bg-[#0B0D10] border-2 border-dashed border-white/10 flex flex-col items-center justify-center relative overflow-hidden group cursor-pointer hover:border-white/30 hover:bg-white/5 transition-all"
+                        @click="triggerImageInput">
+                        <span class="text-3xl mb-2 group-hover:scale-110 transition-transform">🖼️</span>
+                        <span class="text-xs text-gray-500">Upload Profile Image</span>
+                        <span class="text-[10px] text-gray-600 mt-1">JPG, PNG, WebP</span>
+                    </div>
+                    <input type="file" ref="imageInput" class="hidden" accept="image/*"
+                        @change="handleImageUpload">
+                </div>
+
                 <!-- CV Upload -->
                 <div class="bg-[#11141A] p-6 rounded-2xl border border-white/5 space-y-4">
                     <h3 class="text-xl font-bold text-white mb-2">Curriculum Vitae</h3>
@@ -123,12 +155,15 @@ const loading = ref(true);
 const saving = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
 
+const imageInput = ref<HTMLInputElement | null>(null);
+
 const form = ref({
     bio: '',
     location: '',
     yearsExperience: 0,
     projectsDone: 0,
     cvUrl: '',
+    imageUrl: '',
     availableForHi: true
 });
 
@@ -151,6 +186,7 @@ const fetchProfile = async () => {
             yearsExperience: data.yearsExperience,
             projectsDone: data.projectsDone,
             cvUrl: data.cvUrl || '',
+            imageUrl: data.imageUrl || '',
             availableForHi: data.availableForHi
         };
     } catch (error) {
@@ -162,6 +198,30 @@ const fetchProfile = async () => {
 
 const triggerFileInput = () => {
     fileInput.value?.click();
+};
+
+const triggerImageInput = () => {
+    imageInput.value?.click();
+};
+
+const handleImageUpload = async (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    if (!target.files?.length) return;
+
+    const file = target.files[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+        const res = await api.post('/media/upload', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        form.value.imageUrl = res.data.fileUrl;
+    } catch (error) {
+        console.error('Image upload failed', error);
+        alert('Failed to upload image');
+    }
 };
 
 const handleFileUpload = async (event: Event) => {

@@ -22,6 +22,10 @@ export class CreateProfileDto {
     cvUrl?: string;
 
     @IsOptional()
+    @IsString()
+    imageUrl?: string;
+
+    @IsOptional()
     @IsBoolean()
     availableForHi?: boolean;
 }
