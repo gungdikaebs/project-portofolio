@@ -15,7 +15,7 @@ export class EducationService {
 
     findAll() {
         return this.prisma.education.findMany({
-            orderBy: { sortOrder: 'asc' },
+            orderBy: { startYear: 'desc' },
         });
     }
 

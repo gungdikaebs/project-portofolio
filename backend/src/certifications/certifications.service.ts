@@ -15,7 +15,7 @@ export class CertificationsService {
 
     findAll() {
         return this.prisma.certification.findMany({
-            orderBy: { sortOrder: 'asc' },
+            orderBy: { year: 'desc' },
         });
     }
 
