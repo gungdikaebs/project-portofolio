@@ -15,10 +15,31 @@
                         <h4 class="text-white font-bold text-sm mb-4">Socials</h4>
                         <ul class="space-y-2 text-sm">
                             <li><a href="#" class="text-secondary hover:text-accent transition-colors">LinkedIn</a></li>
-                            <li><a href="#" class="text-secondary hover:text-accent transition-colors">GitHub</a></li>
-                            <li><a href="#" class="text-secondary hover:text-accent transition-colors">Instagram</a>
+                            <li>
+                                <a href="https://github.com/gungdikaebs"
+                                    class="text-secondary hover:text-accent transition-colors">GitHub
+                                </a>
                             </li>
-                            <li><a href="#" class="text-secondary hover:text-accent transition-colors">Twitter (X)</a>
+                            <li>
+                                <a href="https://www.instagram.com/gungdikaebs/"
+                                    class="text-secondary hover:text-accent transition-colors">Instagram
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://x.com/gungdikaebs"
+                                    class="text-secondary hover:text-accent transition-colors">Twitter (X)
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.tiktok.com/@gungdikaebs"
+                                    class="text-secondary hover:text-accent transition-colors">TikTok
+                                </a>
+                            </li>
+                            <li>
+                                //LinkedIn
+                                <a href="https://www.linkedin.com/in/gungdikaebs/"
+                                    class="text-secondary hover:text-accent transition-colors">LinkedIn
+                                </a>
                             </li>
                         </ul>
                     </div>
