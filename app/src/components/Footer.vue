@@ -36,7 +36,6 @@
                                 </a>
                             </li>
                             <li>
-                                //LinkedIn
                                 <a href="https://www.linkedin.com/in/gungdikaebs/"
                                     class="text-secondary hover:text-accent transition-colors">LinkedIn
                                 </a>
