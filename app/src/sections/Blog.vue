@@ -1,5 +1,5 @@
 <template>
-    <section id="blog" class="py-20 relative overflow-hidden">
+    <section v-if="loading || featuredBlogs.length > 0" id="blog" class="py-20 relative overflow-hidden">
         <!-- Rich Background Elements -->
         <div class="absolute inset-0 pointer-events-none overflow-hidden">
             <!-- Top-left glow -->
@@ -121,12 +121,8 @@
                 </article>
             </div>
             
-            <div v-else class="py-20 text-center border border-white/5 bg-surface/30 rounded-3xl">
-                <p class="text-secondary font-mono">No articles published yet.</p>
-            </div>
-
             <!-- Mobile Only View All Button -->
-            <div class="md:hidden mt-12 flex justify-center">
+            <div v-if="featuredBlogs.length > 0" class="md:hidden mt-12 flex justify-center">
                 <router-link to="/blog"
                     class="inline-flex items-center gap-2 px-8 py-3 bg-surface border border-white/10 rounded-full text-white font-bold hover:bg-white/5 transition-colors">
                     Read All Articles

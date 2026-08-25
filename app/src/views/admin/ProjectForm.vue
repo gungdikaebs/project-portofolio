@@ -22,7 +22,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Title -->
-                        <div class="col-span-2">
+                        <div class="md:col-span-2">
                             <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Project
                                 Title</label>
                             <input v-model="form.title" @input="generateSlug" type="text" required
@@ -63,13 +63,55 @@
                                 placeholder="https://...">
                         </div>
 
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Repository URL</label>
+                            <input v-model="form.repositoryUrl" type="url"
+                                class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
+                                placeholder="https://github.com/username/project">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Your Role</label>
+                            <input v-model="form.role" type="text"
+                                class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
+                                placeholder="e.g. Full-Stack Developer — designed the API, database, and frontend">
+                        </div>
+
                         <!-- Description -->
-                        <div class="col-span-2">
+                        <div class="md:col-span-2">
                             <label
                                 class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Description</label>
                             <textarea v-model="form.description" rows="5" required
                                 class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"></textarea>
                         </div>
+                    </div>
+                </div>
+
+                <div class="bg-[#11141A] p-6 rounded-2xl border border-white/5 space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Case Study</h3>
+                        <p class="text-sm text-gray-500 mt-1">Help recruiters understand how you think, not only what you built.</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Challenge</label>
+                        <textarea v-model="form.challenge" rows="4"
+                            class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
+                            placeholder="What problem, constraint, or user need did the project address?"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Solution & Technical Decisions</label>
+                        <textarea v-model="form.solution" rows="5"
+                            class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
+                            placeholder="Explain the architecture, trade-offs, and important implementation choices."></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Outcome / Impact</label>
+                        <textarea v-model="form.impact" rows="4"
+                            class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
+                            placeholder="What improved? Use honest metrics or concrete outcomes when available."></textarea>
                     </div>
                 </div>
 
@@ -182,6 +224,11 @@ const form = ref({
     category: '',
     year: new Date().getFullYear(),
     projectUrl: '',
+    repositoryUrl: '',
+    role: '',
+    challenge: '',
+    solution: '',
+    impact: '',
     imageUrl: '',
     status: 'DRAFT',
     featured: false,
@@ -262,6 +309,11 @@ const fetchProject = async (id: string) => {
             category: data.category,
             year: data.year,
             projectUrl: data.projectUrl,
+            repositoryUrl: data.repositoryUrl || '',
+            role: data.role || '',
+            challenge: data.challenge || '',
+            solution: data.solution || '',
+            impact: data.impact || '',
             imageUrl: data.imageUrl,
             status: data.status,
             featured: data.featured,

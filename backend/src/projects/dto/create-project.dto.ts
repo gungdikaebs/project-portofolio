@@ -35,6 +35,26 @@ export class CreateProjectDto {
     projectUrl?: string;
 
     @IsOptional()
+    @IsString()
+    repositoryUrl?: string;
+
+    @IsOptional()
+    @IsString()
+    role?: string;
+
+    @IsOptional()
+    @IsString()
+    challenge?: string;
+
+    @IsOptional()
+    @IsString()
+    solution?: string;
+
+    @IsOptional()
+    @IsString()
+    impact?: string;
+
+    @IsOptional()
     @IsInt()
     sortOrder?: number;
 

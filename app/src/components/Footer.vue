@@ -12,46 +12,33 @@
                 <!-- Links Grid -->
                 <div class="flex flex-wrap gap-12 sm:gap-20">
                     <div>
-                        <h4 class="text-white font-bold text-sm mb-4">Socials</h4>
+                        <h4 class="text-white font-bold text-sm mb-4">Professional</h4>
                         <ul class="space-y-2 text-sm">
-                            <li><a href="#" class="text-secondary hover:text-accent transition-colors">LinkedIn</a></li>
                             <li>
-                                <a href="https://github.com/gungdikaebs"
+                                <a href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer"
                                     class="text-secondary hover:text-accent transition-colors">GitHub
                                 </a>
                             </li>
                             <li>
-                                <a href="https://www.instagram.com/gungdikaebs/"
-                                    class="text-secondary hover:text-accent transition-colors">Instagram
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://x.com/gungdikaebs"
-                                    class="text-secondary hover:text-accent transition-colors">Twitter (X)
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://www.tiktok.com/@gungdikaebs"
-                                    class="text-secondary hover:text-accent transition-colors">TikTok
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://www.linkedin.com/in/gungdikaebs/"
+                                <a href="https://www.linkedin.com/in/gungdikaebs/" target="_blank" rel="noopener noreferrer"
                                     class="text-secondary hover:text-accent transition-colors">LinkedIn
                                 </a>
                             </li>
+                            <li><a href="mailto:gungdika85@gmail.com"
+                                    class="text-secondary hover:text-accent transition-colors">Email</a></li>
                         </ul>
                     </div>
                     <div>
                         <h4 class="text-white font-bold text-sm mb-4">Navigation</h4>
                         <ul class="space-y-2 text-sm">
-                            <li><a href="#home" class="text-secondary hover:text-white transition-colors">Home</a></li>
-                            <li><a href="#about" class="text-secondary hover:text-white transition-colors">About</a>
+                            <li><a href="/#home" class="text-secondary hover:text-white transition-colors">Home</a></li>
+                            <li><a href="/#about" class="text-secondary hover:text-white transition-colors">About</a>
                             </li>
                             <li><router-link to="/projects"
                                     class="text-secondary hover:text-white transition-colors">Projects</router-link>
                             </li>
-                            <li><a href="#skills" class="text-secondary hover:text-white transition-colors">Skills</a>
+                            <li><a href="/#experience" class="text-secondary hover:text-white transition-colors">Experience</a></li>
+                            <li><a href="/#skills" class="text-secondary hover:text-white transition-colors">Skills</a>
                             </li>
                         </ul>
                     </div>

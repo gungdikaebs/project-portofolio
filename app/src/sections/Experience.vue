@@ -1,5 +1,5 @@
 <template>
-    <section id="experience" class="py-32 relative overflow-hidden">
+    <section v-if="loading || experience.length > 0" id="experience" class="py-32 relative overflow-hidden">
         <!-- Background Blobs -->
         <div
             class="absolute top-[20%] left-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none">
@@ -19,13 +19,24 @@
             <!-- Header -->
             <div class="mb-20">
                 <h2 class="font-heading font-bold text-4xl md:text-5xl text-primary mb-4 reveal-text">
-                    Working <span class="text-accent">History.</span>
+                    Experience & <span class="text-accent">Contributions.</span>
                 </h2>
+                <p class="mt-5 max-w-2xl text-lg leading-relaxed text-secondary">
+                    Roles and collaborations where I translated product needs into maintainable software.
+                </p>
                 <div class="h-1 w-20 bg-accent/50 rounded-full mt-6"></div>
             </div>
 
             <!-- Experience Timeline -->
-            <div class="relative border-l border-white/10 ml-4 md:ml-10 space-y-16">
+            <div v-if="loading" class="space-y-8" aria-label="Loading experience">
+                <div v-for="item in 2" :key="item" class="animate-pulse rounded-2xl border border-white/5 bg-surface/40 p-8">
+                    <div class="mb-4 h-7 w-2/5 rounded bg-white/5"></div>
+                    <div class="mb-6 h-5 w-1/4 rounded bg-white/5"></div>
+                    <div class="h-4 w-full rounded bg-white/5"></div>
+                </div>
+            </div>
+
+            <div v-else class="relative border-l border-white/10 ml-4 md:ml-10 space-y-16">
 
                 <div v-for="job in experience" :key="job.id" class="experience-item relative pl-8 md:pl-16">
                     <!-- Timeline Dot -->
@@ -48,7 +59,7 @@
                             </p>
 
                             <!-- Tech Stack Used -->
-                            <div class="flex flex-wrap gap-3">
+                            <div v-if="job.technologies?.length" class="flex flex-wrap gap-3">
                                 <span v-for="tech in job.technologies" :key="tech"
                                     class="px-3 py-1 bg-white/5 rounded-full text-xs text-secondary border border-white/5">
                                     {{ tech }}
@@ -81,20 +92,20 @@ import { useExperience } from '../composables/useExperience'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const { experience, fetchExperience } = useExperience()
+const { experience, loading, fetchExperience } = useExperience()
 
 const formatDateRange = (start: string, end: string | null) => {
     if (!start) return '';
-    const startDate = new Date(start);
-    const startYear = startDate.getFullYear();
-    // Optional: Add month if needed, but design uses years usually or Month Year.
-    // The design shows "2023 - Present" or "2021 - 2023".
+    const formatMonthYear = (date: string) => new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+        year: 'numeric',
+        timeZone: 'UTC'
+    }).format(new Date(date));
 
-    if (!end || end === 'Present') return `${startYear} - Present`;
+    const startLabel = formatMonthYear(start);
+    const endLabel = !end || end === 'Present' ? 'Present' : formatMonthYear(end);
 
-    const endDate = new Date(end);
-    const endYear = endDate.getFullYear();
-    return `${startYear} - ${endYear}`;
+    return `${startLabel} — ${endLabel}`;
 }
 
 const refreshAnimations = () => {

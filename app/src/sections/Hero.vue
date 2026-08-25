@@ -11,16 +11,23 @@
         <div class="w-full max-w-[1350px] mx-auto px-6 flex items-center min-h-[80vh] relative z-20">
             <div class="flex flex-col gap-8 max-w-5xl">
 
+                <div ref="availability" class="opacity-0 translate-y-4">
+                    <span class="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 py-2 text-xs font-mono uppercase tracking-widest text-accent">
+                        <span class="h-2 w-2 rounded-full bg-accent shadow-[0_0_10px_rgba(106,227,255,0.8)]"></span>
+                        Open to developer opportunities
+                    </span>
+                </div>
+
                 <!-- Heading with Premium Masked Reveal -->
                 <h1
                     class="font-heading font-bold text-5xl md:text-7xl lg:text-8xl leading-[1.1] tracking-tight text-primary">
                     <div class="overflow-hidden">
-                        <span ref="line1" class="block" style="opacity: 0;">Building Digital</span>
+                        <span ref="line1" class="block" style="opacity: 0;">Full-Stack Developer</span>
                     </div>
                     <!-- Combined Line for Better Flow -->
                     <div class="overflow-hidden flex flex-wrap gap-x-4">
-                        <span ref="line2" class="block" style="opacity: 0;">Experiences That</span>
-                        <span ref="line3" class="block text-accent" style="opacity: 0;">Matter.</span>
+                        <span ref="line2" class="block" style="opacity: 0;">Building Reliable</span>
+                        <span ref="line3" class="block text-accent" style="opacity: 0;">Web Applications.</span>
                     </div>
                 </h1>
 
@@ -28,10 +35,10 @@
                 <div ref="captionContainer" class="overflow-hidden">
                     <p ref="caption"
                         class="font-body text-base md:text-lg lg:text-xl text-secondary max-w-xl md:max-w-2xl leading-relaxed translate-y-[100%] opacity-0">
-                        Fullstack Developer specializing in designing and building scalable web systems that solve real-world problems, with a focus on performance, maintainability, and user experience.
+                        I build maintainable, production-ready products with Vue, NestJS, PostgreSQL, and thoughtful user experience—from interface to API and database.
                     </p>
                     <div class="mt-4 text-xs font-mono text-gray-500 opacity-0 translate-y-4" ref="locationMeta">
-                        Based in Bali, Indonesia • 2+ Years Exp
+                        Based in Bali, Indonesia • Available for full-time opportunities
                     </div>
                 </div>
 
@@ -39,12 +46,13 @@
                 <div ref="cta" class="flex flex-wrap items-center gap-4 md:gap-6 mt-4 opacity-0 translate-y-10">
                     <a href="#projects" style="color: black !important;"
                         class="magnetic-btn px-6 py-3 md:px-8 md:py-4 text-sm md:text-base font-bold bg-accent rounded-full hover:bg-primary transition-all duration-300 shadow-[0_0_20px_rgba(106,227,255,0.3)] hover:scale-105 active:scale-95 inline-block">
-                        <span class="btn-content inline-block">View Selected Work</span>
+                        <span class="btn-content inline-block">Explore My Work</span>
                     </a>
-                    <a href="#contact"
+                    <a href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer"
                         class="magnetic-btn px-6 py-3 md:px-8 md:py-4 text-sm md:text-base font-medium text-primary border border-surface rounded-full hover:border-accent hover:text-accent transition-colors active:scale-95 inline-block">
-                        <span class="btn-content inline-block">Contact Me</span>
+                        <span class="btn-content inline-block">View GitHub</span>
                     </a>
+                    <a href="#contact" class="text-sm md:text-base font-medium text-secondary hover:text-accent transition-colors">Contact Me →</a>
                 </div>
             </div>
         </div>
@@ -73,6 +81,7 @@ const caption = ref(null)
 const captionContainer = ref(null)
 const cta = ref(null)
 const scrollIndicator = ref(null)
+const availability = ref(null)
 const canvas = ref<HTMLCanvasElement | null>(null)
 
 // Particle System
@@ -175,7 +184,12 @@ onMounted(() => {
     // Synchronized to start after the text reveal finishes (approx 1s + stagger)
     const tl = gsap.timeline({ defaults: { ease: 'power4.out', duration: 1.5 }, delay: 1.2 })
 
-    tl.to(caption.value, {
+    tl.to(availability.value, {
+        y: 0,
+        opacity: 1,
+        duration: 0.6
+    })
+    .to(caption.value, {
         y: '0%',
         opacity: 1,
         duration: 1

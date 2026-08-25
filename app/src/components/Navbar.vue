@@ -15,6 +15,7 @@ const toggleMenu = async () => {
     if (!isMobileMenuOpen.value) {
         // OPEN ANIMATION
         isMobileMenuOpen.value = true
+        document.body.style.overflow = 'hidden'
         await nextTick() // Wait for DOM to exist
 
         const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
@@ -37,7 +38,10 @@ const toggleMenu = async () => {
         // CLOSE ANIMATION
         const tl = gsap.timeline({
             defaults: { ease: 'power3.in' },
-            onComplete: () => { isMobileMenuOpen.value = false }
+            onComplete: () => {
+                isMobileMenuOpen.value = false
+                document.body.style.overflow = ''
+            }
         })
 
         tl.to('.sidebar-link, .sidebar-footer', { opacity: 0, y: 10, duration: 0.3 })
@@ -46,13 +50,19 @@ const toggleMenu = async () => {
     }
 }
 
+const handleKeydown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape' && isMobileMenuOpen.value) {
+        toggleMenu()
+    }
+}
+
 const navLinks = [
     { href: '#home', label: 'Home' },
-    { href: '#about', label: 'About' },
     { href: '/projects', label: 'Projects' },
-    { href: '/blog', label: 'Blog' },
+    { href: '#experience', label: 'Experience' },
     { href: '#skills', label: 'Skills' },
-    { href: '#education', label: 'Education' },
+    { href: '#about', label: 'About' },
+    { href: '/blog', label: 'Blog' },
 ]
 
 const handleNavClick = async (href: string) => {
@@ -93,10 +103,13 @@ const handleScroll = () => {
 
 onMounted(() => {
     window.addEventListener('scroll', handleScroll)
+    window.addEventListener('keydown', handleKeydown)
 })
 
 onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll)
+    window.removeEventListener('keydown', handleKeydown)
+    document.body.style.overflow = ''
 })
 </script>
 
@@ -113,7 +126,7 @@ onUnmounted(() => {
             </router-link>
 
             <!-- Desktop Navigation -->
-            <nav class="hidden md:flex items-center gap-10">
+            <nav class="hidden lg:flex items-center gap-6 xl:gap-8">
                 <a v-for="link in navLinks" :key="link.href" :href="link.href"
                     @click.prevent="handleNavClick(link.href)"
                     class="group relative text-sm font-medium text-secondary hover:text-primary transition-colors py-2 cursor-pointer">
@@ -125,13 +138,13 @@ onUnmounted(() => {
                 <!-- CTA Button -->
                 <a href="#contact" @click.prevent="handleNavClick('#contact')" style="color: black !important;"
                     class="px-5 py-2.5 text-sm font-bold bg-accent rounded-full hover:bg-primary transition-all duration-300 transform hover:scale-105 shadow-[0_0_15px_rgba(106,227,255,0.3)] cursor-pointer">
-                    Let's Talk
+                    Contact
                 </a>
             </nav>
 
             <!-- Mobile Toggle -->
-            <button @click="toggleMenu" class="md:hidden text-primary p-2 focus:outline-none z-[60] relative"
-                aria-label="Toggle Menu">
+            <button @click="toggleMenu" class="lg:hidden text-primary p-2 focus:outline-none z-[60] relative"
+                aria-label="Toggle Menu" aria-controls="mobile-menu" :aria-expanded="isMobileMenuOpen">
                 <div class="w-8 h-8 flex flex-col justify-center gap-[6px]">
                     <span class="w-full h-[2px] bg-current transition-all duration-300 origin-center"
                         :class="{ 'rotate-45 translate-y-[8px]': isMobileMenuOpen }"></span>
@@ -152,6 +165,7 @@ onUnmounted(() => {
 
                 <!-- Sidebar -->
                 <div ref="sidebar"
+                    id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation menu"
                     class="absolute top-0 right-0 h-full w-full sm:w-[400px] bg-[#0B0D10] border-l border-white/5 shadow-2xl flex flex-col justify-between p-8 translate-x-full">
 
                     <!-- Top Section: Close Button -->
@@ -182,15 +196,16 @@ onUnmounted(() => {
                     <div class="flex flex-col gap-6 sidebar-footer opacity-0 translate-y-4">
                         <a href="#contact" @click.prevent="handleNavClick('#contact')" style="color: black !important;"
                             class="w-full py-4 text-center text-base font-bold bg-accent rounded-full hover:bg-primary transition-colors shadow-lg">
-                            Let's Talk
+                            Contact Me
                         </a>
 
-                        <div
-                            class="flex justify-between items-center text-sm text-secondary border-t border-white/10 pt-6">
+                        <div class="flex justify-between items-center text-sm text-secondary border-t border-white/10 pt-6">
                             <span>© 2026 Gung Dika.</span>
                             <div class="flex gap-4">
-                                <span class="text-primary font-bold cursor-pointer">ID</span>
-                                <span class="hover:text-primary cursor-pointer transition-colors">EN</span>
+                                <a href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer"
+                                    class="hover:text-primary transition-colors">GitHub</a>
+                                <a href="https://www.linkedin.com/in/gungdikaebs/" target="_blank" rel="noopener noreferrer"
+                                    class="hover:text-primary transition-colors">LinkedIn</a>
                             </div>
                         </div>
                     </div>

@@ -38,7 +38,7 @@
                     <span class="px-3 py-1 border border-accent/20 bg-accent/5 rounded-full">{{ getCategory()
                     }}</span>
                     <span class="w-1 h-1 bg-white/20 rounded-full"></span>
-                    <span>{{ getYear(project.startDate) }}</span>
+                    <span>{{ project.year }}</span>
                 </div>
 
                 <h1 class="font-heading font-bold text-4xl md:text-6xl text-white mb-8 leading-tight">
@@ -61,21 +61,48 @@
             </div>
 
             <!-- Content Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-24">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-20">
 
                 <!-- Description -->
-                <div class="md:col-span-2 space-y-8">
-                    <h2 class="font-heading font-bold text-2xl text-white">Overview</h2>
-                    <p class="text-secondary text-lg leading-relaxed whitespace-pre-line">
-                        {{ project.description }}
-                    </p>
+                <div class="md:col-span-2 space-y-12">
+                    <section>
+                        <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">01 — Overview</p>
+                        <h2 class="mb-5 font-heading text-2xl font-bold text-white">What I built</h2>
+                        <p class="text-secondary text-lg leading-relaxed whitespace-pre-line">
+                            {{ project.description }}
+                        </p>
+                    </section>
+
+                    <section v-if="project.challenge">
+                        <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">02 — Challenge</p>
+                        <h2 class="mb-5 font-heading text-2xl font-bold text-white">The problem and constraints</h2>
+                        <p class="text-secondary text-lg leading-relaxed whitespace-pre-line">{{ project.challenge }}</p>
+                    </section>
+
+                    <section v-if="project.solution">
+                        <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">03 — Approach</p>
+                        <h2 class="mb-5 font-heading text-2xl font-bold text-white">Solution and technical decisions</h2>
+                        <p class="text-secondary text-lg leading-relaxed whitespace-pre-line">{{ project.solution }}</p>
+                    </section>
+
+                    <section v-if="project.impact" class="rounded-2xl border border-accent/15 bg-accent/5 p-7 md:p-9">
+                        <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">04 — Outcome</p>
+                        <h2 class="mb-5 font-heading text-2xl font-bold text-white">Impact and learnings</h2>
+                        <p class="text-secondary text-lg leading-relaxed whitespace-pre-line">{{ project.impact }}</p>
+                    </section>
                 </div>
 
                 <!-- Sidebar / Links -->
                 <div>
-                    <h2 class="font-heading font-bold text-2xl text-white mb-6">Links</h2>
+                    <div v-if="project.role" class="mb-10 border-l-2 border-accent pl-5">
+                        <p class="mb-2 font-mono text-xs uppercase tracking-wider text-secondary">My contribution</p>
+                        <p class="font-medium leading-relaxed text-white">{{ project.role }}</p>
+                    </div>
+
+                    <h2 class="font-heading font-bold text-2xl text-white mb-6">Explore</h2>
                     <div class="space-y-4">
                         <a v-if="project.projectUrl" :href="project.projectUrl" target="_blank"
+                            rel="noopener noreferrer"
                             class="flex items-center justify-between p-4 bg-surface border border-white/10 rounded-xl hover:border-accent/50 hover:bg-white/5 transition-all group">
                             <span class="font-medium text-white">Live Preview</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
@@ -86,9 +113,21 @@
                                 <polyline points="7 7 17 7 17 17"></polyline>
                             </svg>
                         </a>
-                        <div v-else class="p-4 border border-white/5 rounded-xl bg-white/5">
-                            <p class="text-secondary text-sm">No live URL available.</p>
-                        </div>
+                        <a v-if="project.repositoryUrl" :href="project.repositoryUrl" target="_blank"
+                            rel="noopener noreferrer"
+                            class="flex items-center justify-between p-4 bg-surface border border-white/10 rounded-xl hover:border-accent/50 hover:bg-white/5 transition-all group">
+                            <span class="font-medium text-white">View Source Code</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="text-secondary group-hover:text-accent transition-colors">
+                                <path d="m16 18 6-6-6-6" />
+                                <path d="m8 6-6 6 6 6" />
+                            </svg>
+                        </a>
+                        <p v-if="!project.projectUrl && !project.repositoryUrl"
+                            class="rounded-xl border border-white/5 bg-white/5 p-4 text-sm text-secondary">
+                            This project is currently documented as a private case study.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -122,20 +161,13 @@ const getImageUrl = (path: string) => {
     return `${baseUrl}${safePath}`;
 }
 
-const getYear = (dateString: string) => {
-    if (!dateString) return new Date().getFullYear();
-    return new Date(dateString).getFullYear();
-}
-
 const getTechStack = (proj: any) => {
     if (!proj || !proj.skills) return [];
     return proj.skills.map((s: any) => s.skill.name);
 }
 
 const getCategory = () => {
-    // If backend doesn't return category, use a default or derive from skills
-    // For now, hardcode or use a fallback
-    return 'Web Development';
+    return project.value?.category || 'Web Development';
 }
 
 onMounted(async () => {

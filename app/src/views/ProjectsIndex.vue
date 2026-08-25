@@ -34,7 +34,7 @@
                                     {{ project.title }}</h2>
                             </div>
                             <span class="text-secondary text-sm font-mono border border-white/10 px-2 py-1 rounded">{{
-                                getYear(project.startDate) }}</span>
+                                project.year }}</span>
                         </div>
                         <p class="text-secondary text-sm mb-6 line-clamp-3 flex-1">{{ project.description }}</p>
                         <router-link :to="'/project/' + project.id"
@@ -70,11 +70,6 @@ const getCategory = (proj: any) => {
     // If backend doesn't return category field yet, return a default or map from skills
     // Assuming backend might have it or we use a fallback
     return proj.category || 'Web Development';
-}
-
-const getYear = (dateString: string) => {
-    if (!dateString) return new Date().getFullYear();
-    return new Date(dateString).getFullYear();
 }
 
 onMounted(() => {

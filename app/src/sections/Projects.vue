@@ -48,8 +48,16 @@
             </div>
 
             <!-- Projects Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
-                <article v-for="project in projects" :key="project.id"
+            <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20" aria-label="Loading projects">
+                <div v-for="item in 4" :key="item" class="animate-pulse space-y-5">
+                    <div class="aspect-[4/3] rounded-2xl bg-white/5"></div>
+                    <div class="h-8 w-2/3 rounded bg-white/5"></div>
+                    <div class="h-4 w-full rounded bg-white/5"></div>
+                </div>
+            </div>
+
+            <div v-else-if="displayedProjects.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
+                <article v-for="project in displayedProjects" :key="project.id"
                     class="project-card group relative flex flex-col gap-6">
 
                     <!-- Image Container -->
@@ -90,7 +98,9 @@
                                 </h3>
                                 <div class="flex items-center gap-3 mt-2 text-secondary text-sm font-mono">
                                     <!-- Use Project Skills as Category substitute or generic -->
-                                    <span>Web Development</span>
+                                    <span>{{ project.category }}</span>
+                                    <span class="h-1 w-1 rounded-full bg-white/20"></span>
+                                    <span>{{ project.year }}</span>
                                     <!-- Optional Year hardcoded or from logic if needed -->
                                 </div>
                             </div>
@@ -114,6 +124,15 @@
                 </article>
             </div>
 
+            <div v-else class="rounded-3xl border border-white/5 bg-surface/40 px-6 py-16 text-center">
+                <h3 class="font-heading text-2xl font-bold text-white">Case studies are being prepared.</h3>
+                <p class="mx-auto mt-3 max-w-xl text-secondary">In the meantime, explore my public code and current experiments on GitHub.</p>
+                <a href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer"
+                    class="mt-7 inline-flex rounded-full border border-accent/30 px-6 py-3 font-medium text-accent hover:bg-accent/10 transition-colors">
+                    Visit GitHub
+                </a>
+            </div>
+
             <!-- Mobile Only View All Button -->
             <div class="md:hidden mt-16 flex justify-center">
                 <router-link to="/projects"
@@ -132,14 +151,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick } from 'vue'
+import { onMounted, nextTick, computed } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useProjects } from '../composables/useProjects'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const { projects, fetchProjects } = useProjects()
+const { projects, loading, fetchProjects } = useProjects()
+const displayedProjects = computed(() => {
+    const featured = projects.value.filter((project: any) => project.featured)
+    return (featured.length > 0 ? featured : projects.value).slice(0, 4)
+})
 
 const getImageUrl = (path: string) => {
     if (!path) return '';

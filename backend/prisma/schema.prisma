@@ -39,6 +39,11 @@ model Project {
   year        Int
   imageUrl    String
   projectUrl  String?
+  repositoryUrl String?
+  role        String?
+  challenge   String?  @db.Text
+  solution    String?  @db.Text
+  impact      String?  @db.Text
   sortOrder   Int      @default(0)
   status      ProjectStatus @default(DRAFT)
   featured    Boolean  @default(false)

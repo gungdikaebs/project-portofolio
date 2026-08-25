@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { educationService } from '../services/education.service';
 
 export function useEducation() {
@@ -24,10 +24,6 @@ export function useEducation() {
             loading.value = false;
         }
     };
-
-    onMounted(() => {
-        fetchData();
-    });
 
     return {
         education,

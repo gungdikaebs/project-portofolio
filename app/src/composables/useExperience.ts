@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { experienceService } from '../services/experience.service';
 
 export function useExperience() {
@@ -23,10 +23,6 @@ export function useExperience() {
             loading.value = false;
         }
     };
-
-    onMounted(() => {
-        fetchExperience();
-    });
 
     return {
         experience,

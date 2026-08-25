@@ -18,7 +18,7 @@
                         <div class="absolute inset-0 bg-gradient-to-tr from-background/80 to-transparent z-10"></div>
                         <!-- Profile Image or Placeholder -->
                         <img v-if="profile && profile.imageUrl"
-                            :src="getFileUrl(profile.imageUrl)" alt="Profile"
+                            :src="getFileUrl(profile.imageUrl)" alt="Gung Dika, Full-Stack Developer"
                             class="w-full h-full object-cover" />
                         <div v-else
                             class="w-full h-full bg-surface border border-white/5 flex items-center justify-center text-secondary relative">
@@ -72,6 +72,12 @@
                         </p>
                     </div>
 
+                    <div v-if="profile?.availableForHi"
+                        class="inline-flex w-fit items-center gap-3 rounded-full border border-accent/20 bg-accent/5 px-4 py-2 text-sm text-accent">
+                        <span class="h-2 w-2 rounded-full bg-accent"></span>
+                        Available for developer opportunities
+                    </div>
+
                     <!-- Interactive Stats -->
                     <div v-if="profile" class="grid grid-cols-2 gap-12 mt-4 border-t border-white/5 pt-10">
                         <div class="stat-item opacity-0 translate-y-4">
@@ -90,7 +96,7 @@
 
                     <!-- Download CV Button -->
                     <div ref="cvBtn" class="mt-8 opacity-0 translate-y-4 border-white/5 border-t pt-10">
-                        <a v-if="profile && profile.cvUrl" :href="profile.cvUrl" target="_blank"
+                        <a v-if="profile && profile.cvUrl" :href="getFileUrl(profile.cvUrl)" target="_blank" rel="noopener noreferrer"
                             class="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-accent transition-all duration-300 group">
                             <span class="group-hover:-translate-y-0.5 transition-transform">Download CV</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"

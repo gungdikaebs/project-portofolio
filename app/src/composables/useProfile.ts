@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { profileService } from '../services/profile.service';
 
 export function useProfile() {
@@ -18,10 +18,6 @@ export function useProfile() {
             loading.value = false;
         }
     };
-
-    onMounted(() => {
-        fetchProfile();
-    });
 
     return {
         profile,

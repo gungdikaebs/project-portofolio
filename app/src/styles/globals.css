@@ -42,3 +42,42 @@ h5,
 h6 {
     font-family: var(--font-heading);
 }
+
+:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .hero-section canvas {
+        display: none;
+    }
+
+    .hero-section .opacity-0,
+    .hero-section [style*="opacity: 0"],
+    .about-image-wrapper [style*="opacity: 0"],
+    .about-content .opacity-0,
+    .reveal-text,
+    .reveal-blog-text,
+    .reveal-contact,
+    .project-card,
+    .skill-card,
+    .experience-item,
+    .stat-item {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}

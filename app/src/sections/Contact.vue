@@ -16,17 +16,20 @@
                         in Touch</span>
                     <h2
                         class="font-heading font-bold text-5xl md:text-7xl lg:text-8xl text-white leading-[1.1] mb-12 reveal-contact">
-                        Let's start a <br />
-                        <span class="text-secondary/50 transition-colors duration-500 hover:text-white">project</span>
-                        together.
+                        Let's discuss your <br />
+                        <span class="text-secondary/50 transition-colors duration-500 hover:text-white">next opportunity.</span>
                     </h2>
 
+                    <p class="-mt-6 mb-10 max-w-xl text-lg leading-relaxed text-secondary reveal-contact">
+                        Open to full-time developer roles and meaningful product collaborations. Email is the best way to reach me.
+                    </p>
+
                     <div class="flex flex-col gap-8 reveal-contact">
-                        <div class="flex items-center gap-3 md:gap-6">
+                        <div class="flex flex-wrap items-center gap-3 md:gap-6">
                             <!-- Magnetic Email Button -->
                             <a href="mailto:gungdika85@gmail.com"
-                                class="group relative inline-flex items-center gap-3 md:gap-4 px-5 py-3 md:px-8 md:py-4 bg-white text-black rounded-full overflow-hidden transition-transform duration-300 hover:scale-105 active:scale-95 shrink-0">
-                                <span class="relative z-10 font-bold text-sm md:text-lg">gungdika85@gmail.com</span>
+                                class="group relative inline-flex max-w-full items-center gap-3 md:gap-4 px-5 py-3 md:px-8 md:py-4 bg-white text-black rounded-full overflow-hidden transition-transform duration-300 hover:scale-[1.02] active:scale-95">
+                                <span class="relative z-10 break-all font-bold text-sm md:text-lg">gungdika85@gmail.com</span>
                                 <div
                                     class="relative z-10 w-6 h-6 md:w-8 md:h-8 bg-black text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -54,11 +57,12 @@
                                     <polyline points="20 6 9 17 4 12"></polyline>
                                 </svg>
                             </button>
+                            <span class="sr-only" aria-live="polite">{{ copied ? 'Email copied to clipboard' : '' }}</span>
                         </div>
 
                         <!-- Phone / WhatsApp Button -->
                         <div class="flex items-center gap-6">
-                            <a href="https://wa.me/6281237397984" target="_blank"
+                            <a href="https://wa.me/6281237397984" target="_blank" rel="noopener noreferrer"
                                 class="group relative inline-flex items-center gap-3 md:gap-4 px-5 py-3 md:px-8 md:py-4 bg-white/5 border border-white/10 text-white rounded-full overflow-hidden transition-all duration-300 hover:bg-white hover:text-black hover:scale-105 active:scale-95">
                                 <span class="relative z-10 font-bold text-sm md:text-lg">+62 812 3739 7984</span>
                                 <div
@@ -79,7 +83,8 @@
                 <!-- Right: Contact Form -->
                 <div
                     class="bg-surface/50 border border-white/5 rounded-3xl p-8 md:p-10 reveal-contact mt-10 lg:mt-0 backdrop-blur-sm">
-                    <h3 class="font-heading font-bold text-2xl text-white mb-8">Send a Message</h3>
+                    <h3 class="font-heading font-bold text-2xl text-white mb-3">Start a Conversation</h3>
+                    <p class="mb-8 text-sm leading-relaxed text-secondary">This form opens WhatsApp with your message ready to send.</p>
                     <form @submit.prevent="submitForm" class="flex flex-col gap-6">
                         <!-- Group: Name -->
                         <div class="flex flex-col gap-2">
@@ -88,6 +93,14 @@
                             <input type="text" id="name" required v-model="formData.name"
                                 class="bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors placeholder:text-white/20"
                                 placeholder="John Doe">
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label for="email"
+                                class="text-sm font-mono text-secondary uppercase tracking-wider">Email</label>
+                            <input type="email" id="email" required v-model="formData.email"
+                                class="bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors placeholder:text-white/20"
+                                placeholder="john@company.com">
                         </div>
 
                         <div class="flex flex-col gap-2">
@@ -100,7 +113,7 @@
 
                         <button type="submit"
                             class="self-start inline-flex items-center justify-center gap-2 bg-accent text-black font-bold px-8 py-4 rounded-full hover:bg-white transition-colors mt-2 group">
-                            Send Message
+                            Continue on WhatsApp
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform">
@@ -125,6 +138,7 @@ gsap.registerPlugin(ScrollTrigger)
 const copied = ref(false)
 const formData = ref({
     name: '',
+    email: '',
     message: ''
 })
 
@@ -138,7 +152,7 @@ const copyEmail = () => {
 
 const submitForm = () => {
     const phoneNumber = '6281237397984'
-    const text = `Name: ${formData.value.name}%0AMessage: ${formData.value.message}`
+    const text = encodeURIComponent(`Name: ${formData.value.name}\nEmail: ${formData.value.email}\nMessage: ${formData.value.message}`)
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${text}`
     window.open(whatsappUrl, '_blank')
 }

@@ -1,5 +1,5 @@
 <template>
-    <section id="education" class="py-20 relative overflow-hidden">
+    <section id="education" ref="sectionEl" class="py-20 relative overflow-hidden">
         <!-- Background Shapes -->
         <div class="absolute top-[10%] left-[-5%] opacity-[0.03] pointer-events-none">
             <svg width="300" height="300" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="0.5">
@@ -72,23 +72,23 @@
 
             </div>
 
-            <!-- Certifications Section (Horizontal Scroll) -->
-            <div v-if="certifications.length > 0" ref="certContainer"
-                class="mt-14 w-full relative min-h-[70vh] flex flex-col justify-center overflow-hidden">
-                <div class="container mx-auto px-6 mb-10">
-                    <div class="flex items-center gap-4">
+            <!-- Certifications Section -->
+            <div v-if="certifications.length > 0" class="mt-20 w-full relative">
+                <div class="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                    <div>
                         <h3 class="font-heading font-bold text-3xl text-primary">Certifications</h3>
-                        <div class="h-[1px] flex-1 bg-white/10"></div>
+                        <p class="mt-3 max-w-2xl text-secondary">
+                            {{ certifications.length }} credentials that support my continuous learning and technical development.
+                        </p>
                     </div>
-                    <!-- Progress Bar -->
-                    <div class="w-full h-1 bg-white/5 mt-4 rounded-full overflow-hidden">
-                        <div ref="progressBar" class="h-full bg-accent origin-left scale-x-0 w-full"></div>
-                    </div>
+                    <span class="w-fit rounded-full border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-secondary">
+                        Newest first
+                    </span>
                 </div>
 
-                <div ref="certTrack" class="flex gap-8 px-6 w-max items-center h-[400px]">
-                    <div v-for="cert in certifications" :key="cert.id"
-                        class="cert-card bg-surface border border-white/5 p-8 rounded-2xl relative overflow-hidden group hover:border-accent/30 transition-colors duration-300 flex flex-col justify-between w-[400px] h-[350px] shrink-0">
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                    <article v-for="cert in visibleCertifications" :key="cert.id"
+                        class="cert-card bg-surface border border-white/5 p-7 rounded-2xl relative overflow-hidden group hover:border-accent/30 transition-colors duration-300 flex min-h-[300px] flex-col justify-between">
 
                         <div>
                             <div class="flex justify-between items-start mb-4">
@@ -117,7 +117,7 @@
 
                         <!-- Optional Credential Attachment -->
                         <div v-if="cert.credentialUrl" class="border-t border-white/5 pt-4">
-                            <a :href="getCredentialUrl(cert.credentialUrl)" target="_blank"
+                            <a :href="getCredentialUrl(cert.credentialUrl)" target="_blank" rel="noopener noreferrer"
                                 class="inline-flex items-center gap-2 text-sm text-white hover:text-accent transition-colors group/link">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -137,7 +137,19 @@
                                 </svg>
                             </a>
                         </div>
-                    </div>
+                    </article>
+                </div>
+
+                <div v-if="certifications.length > initialCertificationLimit" class="mt-10 flex justify-center">
+                    <button type="button" @click="toggleCertifications" :aria-expanded="showAllCertifications"
+                        class="inline-flex items-center gap-3 rounded-full border border-white/10 bg-surface px-7 py-3.5 font-heading font-bold text-white transition-all hover:border-accent/40 hover:text-accent">
+                        {{ showAllCertifications ? 'Show Fewer' : `Show All ${certifications.length} Certificates` }}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="transition-transform" :class="showAllCertifications ? 'rotate-180' : ''">
+                            <path d="m6 9 6 6 6-6" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
@@ -145,7 +157,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, onUnmounted, nextTick } from 'vue'
+import { onMounted, ref, onUnmounted, nextTick, computed } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useEducation } from '../composables/useEducation'
@@ -154,10 +166,14 @@ gsap.registerPlugin(ScrollTrigger)
 
 const { education, certifications, fetchData } = useEducation()
 
-const certContainer = ref<HTMLElement | null>(null)
-const certTrack = ref<HTMLElement | null>(null)
-const progressBar = ref<HTMLElement | null>(null)
-let scrollTween: gsap.core.Timeline | null = null
+const sectionEl = ref<HTMLElement | null>(null)
+const showAllCertifications = ref(false)
+const initialCertificationLimit = 6
+let animationContext: gsap.Context | null = null
+
+const visibleCertifications = computed(() => showAllCertifications.value
+    ? certifications.value
+    : certifications.value.slice(0, initialCertificationLimit))
 
 // Removed unused formatYear
 
@@ -172,59 +188,38 @@ const getCredentialUrl = (url: string) => {
 const refreshAnimations = () => {
     ScrollTrigger.refresh()
 
-    // 1. Vertical Education Animation
-    gsap.from('.edu-card', {
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: 'power3.out',
-        scrollTrigger: {
-            trigger: '#education',
-            start: 'top 80%'
-        }
-    })
-
-    // 2. Horizontal Scroll for Certifications
-    if (certContainer.value && certTrack.value && certifications.value.length > 0) {
-
-        // Kill old scroll trigger if exists to prevent duplication on re-render
-        if (scrollTween) {
-            scrollTween.kill()
-            // access internal scrollTrigger instance if needed to kill it specifically, though killing tween usually enough if it owns the trigger
-        }
-
-        const getScrollAmount = () => {
-            if (!certTrack.value) return 0
-            return -(certTrack.value.scrollWidth - window.innerWidth + window.innerWidth * 0.2 + 300)
-        }
-
-        const tl = gsap.timeline({
+    animationContext?.revert()
+    animationContext = gsap.context(() => {
+        gsap.from('.edu-card', {
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: 'power3.out',
             scrollTrigger: {
-                trigger: certContainer.value,
-                start: 'top top',
-                end: () => `+=${Math.abs(getScrollAmount())}`,
-                pin: true,
-                scrub: 1,
-                invalidateOnRefresh: true,
-                anticipatePin: 1
+                trigger: '.edu-card',
+                start: 'top 85%'
             }
         })
 
-        tl.to(certTrack.value, {
-            x: () => getScrollAmount(),
-            ease: 'none',
+        gsap.from('.cert-card', {
+            y: 40,
+            opacity: 0,
+            duration: 0.7,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: '.cert-card',
+                start: 'top 88%'
+            }
         })
+    }, sectionEl.value || undefined)
+}
 
-        if (progressBar.value) {
-            tl.to(progressBar.value, {
-                scaleX: 1,
-                ease: 'none'
-            }, 0)
-        }
-
-        scrollTween = tl
-    }
+const toggleCertifications = async () => {
+    showAllCertifications.value = !showAllCertifications.value
+    await nextTick()
+    refreshAnimations()
 }
 
 onMounted(async () => {
@@ -235,7 +230,6 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
-    if (scrollTween) scrollTween.kill()
-    ScrollTrigger.getAll().forEach(t => t.kill())
+    animationContext?.revert()
 })
 </script>
