@@ -21,15 +21,13 @@
                 <h2 class="font-heading font-bold text-4xl md:text-5xl text-primary mb-4 reveal-text">
                     Experience & <span class="text-accent">Contributions.</span>
                 </h2>
-                <p class="mt-5 max-w-2xl text-lg leading-relaxed text-secondary">
-                    Roles and collaborations where I translated product needs into maintainable software.
-                </p>
                 <div class="h-1 w-20 bg-accent/50 rounded-full mt-6"></div>
             </div>
 
             <!-- Experience Timeline -->
             <div v-if="loading" class="space-y-8" aria-label="Loading experience">
-                <div v-for="item in 2" :key="item" class="animate-pulse rounded-2xl border border-white/5 bg-surface/40 p-8">
+                <div v-for="item in 2" :key="item"
+                    class="animate-pulse rounded-2xl border border-white/5 bg-surface/40 p-8">
                     <div class="mb-4 h-7 w-2/5 rounded bg-white/5"></div>
                     <div class="mb-6 h-5 w-1/4 rounded bg-white/5"></div>
                     <div class="h-4 w-full rounded bg-white/5"></div>

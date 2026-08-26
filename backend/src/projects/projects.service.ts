@@ -9,7 +9,7 @@ export class ProjectsService {
     constructor(private prisma: PrismaService) { }
 
     async create(createProjectDto: CreateProjectDto) {
-        const { skillIds, status, ...data } = createProjectDto;
+        const { skillIds, galleryImages, status, ...data } = createProjectDto;
 
         // Map status enum manually if needed, or rely on type compatibility
         // Using explicit cast to avoid type mismatches if enum generated differently
@@ -21,6 +21,12 @@ export class ProjectsService {
                 status: projectStatus || 'DRAFT',
                 skills: skillIds ? {
                     create: skillIds.map(skillId => ({ skillId }))
+                } : undefined,
+                galleryImages: galleryImages ? {
+                    create: galleryImages.map((image, index) => ({
+                        ...image,
+                        sortOrder: image.sortOrder ?? index,
+                    }))
                 } : undefined
             },
             include: {
@@ -28,7 +34,8 @@ export class ProjectsService {
                     include: {
                         skill: true
                     }
-                }
+                },
+                galleryImages: { orderBy: { sortOrder: 'asc' } }
             }
         });
     }
@@ -41,7 +48,8 @@ export class ProjectsService {
                     include: {
                         skill: true
                     }
-                }
+                },
+                galleryImages: { orderBy: { sortOrder: 'asc' } }
             }
         });
     }
@@ -54,13 +62,14 @@ export class ProjectsService {
                     include: {
                         skill: true
                     }
-                }
+                },
+                galleryImages: { orderBy: { sortOrder: 'asc' } }
             }
         });
     }
 
     async update(id: string, updateProjectDto: UpdateProjectDto) {
-        const { skillIds, status, ...data } = updateProjectDto;
+        const { skillIds, galleryImages, status, ...data } = updateProjectDto;
         const projectStatus = status as unknown as 'DRAFT' | 'PUBLISHED';
 
         return this.prisma.project.update({
@@ -71,6 +80,13 @@ export class ProjectsService {
                 skills: skillIds ? {
                     deleteMany: {}, // Remove all existing relations
                     create: skillIds.map(skillId => ({ skillId })) // Add new ones
+                } : undefined,
+                galleryImages: galleryImages ? {
+                    deleteMany: {},
+                    create: galleryImages.map((image, index) => ({
+                        ...image,
+                        sortOrder: image.sortOrder ?? index,
+                    }))
                 } : undefined
             },
             include: {
@@ -78,7 +94,8 @@ export class ProjectsService {
                     include: {
                         skill: true
                     }
-                }
+                },
+                galleryImages: { orderBy: { sortOrder: 'asc' } }
             }
         });
     }

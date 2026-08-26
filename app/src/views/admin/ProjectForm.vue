@@ -63,20 +63,6 @@
                                 placeholder="https://...">
                         </div>
 
-                        <div>
-                            <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Repository URL</label>
-                            <input v-model="form.repositoryUrl" type="url"
-                                class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
-                                placeholder="https://github.com/username/project">
-                        </div>
-
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Your Role</label>
-                            <input v-model="form.role" type="text"
-                                class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
-                                placeholder="e.g. Full-Stack Developer — designed the API, database, and frontend">
-                        </div>
-
                         <!-- Description -->
                         <div class="md:col-span-2">
                             <label
@@ -84,34 +70,6 @@
                             <textarea v-model="form.description" rows="5" required
                                 class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"></textarea>
                         </div>
-                    </div>
-                </div>
-
-                <div class="bg-[#11141A] p-6 rounded-2xl border border-white/5 space-y-6">
-                    <div>
-                        <h3 class="text-xl font-bold text-white">Case Study</h3>
-                        <p class="text-sm text-gray-500 mt-1">Help recruiters understand how you think, not only what you built.</p>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Challenge</label>
-                        <textarea v-model="form.challenge" rows="4"
-                            class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
-                            placeholder="What problem, constraint, or user need did the project address?"></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Solution & Technical Decisions</label>
-                        <textarea v-model="form.solution" rows="5"
-                            class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
-                            placeholder="Explain the architecture, trade-offs, and important implementation choices."></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Outcome / Impact</label>
-                        <textarea v-model="form.impact" rows="4"
-                            class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
-                            placeholder="What improved? Use honest metrics or concrete outcomes when available."></textarea>
                     </div>
                 </div>
 
@@ -133,6 +91,74 @@
                                         : 'bg-[#0B0D10] border-white/10 text-gray-400 hover:border-white/30'">
                                     {{ skill.name }}
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Gallery -->
+                <div class="bg-[#11141A] p-6 rounded-2xl border border-white/5 space-y-6">
+                    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Project Gallery</h3>
+                            <p class="mt-2 max-w-xl text-sm leading-relaxed text-gray-500">
+                                Add up to 8 screenshots. Use dummy data and hide personal, client, credential, or internal server information.
+                            </p>
+                        </div>
+                        <button type="button" @click="triggerGalleryFileInput"
+                            :disabled="uploadingGallery || form.galleryImages.length >= maxGalleryImages"
+                            class="shrink-0 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:border-white/30 disabled:cursor-not-allowed disabled:opacity-40">
+                            {{ uploadingGallery ? 'Uploading...' : 'Add Screenshots' }}
+                        </button>
+                        <input ref="galleryFileInput" type="file" multiple accept="image/*" class="hidden"
+                            @change="handleGalleryUpload">
+                    </div>
+
+                    <div v-if="form.galleryImages.length === 0"
+                        class="rounded-xl border border-dashed border-white/10 bg-[#0B0D10] px-6 py-10 text-center text-sm text-gray-500">
+                        No gallery screenshots yet. The project cover will still be displayed.
+                    </div>
+
+                    <div v-else class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                        <div v-for="(image, index) in form.galleryImages" :key="image.imageUrl"
+                            class="overflow-hidden rounded-xl border border-white/10 bg-[#0B0D10]">
+                            <div class="relative aspect-video bg-black/20">
+                                <img :src="getFileUrl(image.imageUrl)" :alt="image.altText || `Gallery image ${index + 1}`"
+                                    class="h-full w-full object-cover">
+                                <span class="absolute left-3 top-3 rounded-full bg-black/70 px-2.5 py-1 font-mono text-xs text-white">
+                                    {{ index + 1 }}
+                                </span>
+                            </div>
+
+                            <div class="space-y-4 p-4">
+                                <div>
+                                    <label class="mb-2 block text-xs font-medium uppercase tracking-wider text-gray-500">Alt text</label>
+                                    <input v-model="image.altText" type="text" maxlength="191"
+                                        class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white focus:border-white/30 focus:outline-none"
+                                        placeholder="e.g. Inventory dashboard overview">
+                                </div>
+                                <div>
+                                    <label class="mb-2 block text-xs font-medium uppercase tracking-wider text-gray-500">Caption</label>
+                                    <input v-model="image.caption" type="text" maxlength="191"
+                                        class="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white focus:border-white/30 focus:outline-none"
+                                        placeholder="Briefly explain what this screen shows">
+                                </div>
+
+                                <div class="flex items-center justify-between border-t border-white/5 pt-3">
+                                    <div class="flex gap-2">
+                                        <button type="button" @click="moveGalleryImage(index, -1)" :disabled="index === 0"
+                                            class="rounded-lg border border-white/10 px-3 py-2 text-xs text-gray-300 hover:text-white disabled:opacity-30"
+                                            aria-label="Move image earlier">←</button>
+                                        <button type="button" @click="moveGalleryImage(index, 1)"
+                                            :disabled="index === form.galleryImages.length - 1"
+                                            class="rounded-lg border border-white/10 px-3 py-2 text-xs text-gray-300 hover:text-white disabled:opacity-30"
+                                            aria-label="Move image later">→</button>
+                                    </div>
+                                    <button type="button" @click="removeGalleryImage(index)"
+                                        class="rounded-lg px-3 py-2 text-xs font-medium text-red-400 transition-colors hover:bg-red-500/10 hover:text-red-300">
+                                        Remove
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -214,6 +240,16 @@ const isEditing = computed(() => route.params.id !== undefined);
 const loadingSkills = ref(true);
 const saving = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
+const galleryFileInput = ref<HTMLInputElement | null>(null);
+const uploadingGallery = ref(false);
+const maxGalleryImages = 8;
+
+type GalleryImageForm = {
+    imageUrl: string;
+    altText: string;
+    caption: string;
+    sortOrder: number;
+};
 
 const skillCategories = ref<any[]>([]);
 
@@ -224,22 +260,23 @@ const form = ref({
     category: '',
     year: new Date().getFullYear(),
     projectUrl: '',
-    repositoryUrl: '',
-    role: '',
-    challenge: '',
-    solution: '',
-    impact: '',
     imageUrl: '',
     status: 'DRAFT',
     featured: false,
-    skillIds: [] as string[]
+    skillIds: [] as string[],
+    galleryImages: [] as GalleryImageForm[]
 });
+
+const getFileUrl = (path: string) => {
+    if (!path) return '';
+    if (path.startsWith('http')) return path;
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    return `${baseUrl.replace(/\/+$/, '')}${path.startsWith('/') ? path : `/${path}`}`;
+};
 
 const previewImage = computed(() => {
     if (!form.value.imageUrl) return null;
-    if (form.value.imageUrl.startsWith('http')) return form.value.imageUrl;
-    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    return `${baseUrl}${form.value.imageUrl}`;
+    return getFileUrl(form.value.imageUrl);
 });
 
 const generateSlug = () => {
@@ -253,6 +290,10 @@ const generateSlug = () => {
 
 const triggerFileInput = () => {
     fileInput.value?.click();
+};
+
+const triggerGalleryFileInput = () => {
+    galleryFileInput.value?.click();
 };
 
 const handleFileUpload = async (event: Event) => {
@@ -275,6 +316,62 @@ const handleFileUpload = async (event: Event) => {
         console.error('Upload failed', error);
         alert('Failed to upload image');
     }
+};
+
+const handleGalleryUpload = async (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    const files = Array.from(target.files || []);
+    const remainingSlots = maxGalleryImages - form.value.galleryImages.length;
+
+    if (files.length === 0 || remainingSlots <= 0) return;
+    if (files.length > remainingSlots) {
+        alert(`Only ${remainingSlots} more screenshot${remainingSlots === 1 ? '' : 's'} can be added.`);
+    }
+
+    uploadingGallery.value = true;
+    try {
+        const uploads = await Promise.all(files.slice(0, remainingSlots).map(async (file) => {
+            const uploadData = new FormData();
+            uploadData.append('file', file);
+            const response = await api.post('/media/upload', uploadData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            return response.data.fileUrl as string;
+        }));
+
+        const startOrder = form.value.galleryImages.length;
+        form.value.galleryImages.push(...uploads.map((imageUrl, index) => ({
+            imageUrl,
+            altText: '',
+            caption: '',
+            sortOrder: startOrder + index,
+        })));
+    } catch (error) {
+        console.error('Gallery upload failed', error);
+        alert('One or more screenshots failed to upload. Please try again.');
+    } finally {
+        uploadingGallery.value = false;
+        target.value = '';
+    }
+};
+
+const removeGalleryImage = (index: number) => {
+    form.value.galleryImages.splice(index, 1);
+    form.value.galleryImages.forEach((image, imageIndex) => {
+        image.sortOrder = imageIndex;
+    });
+};
+
+const moveGalleryImage = (index: number, direction: -1 | 1) => {
+    const nextIndex = index + direction;
+    if (nextIndex < 0 || nextIndex >= form.value.galleryImages.length) return;
+
+    const images = [...form.value.galleryImages];
+    [images[index], images[nextIndex]] = [images[nextIndex]!, images[index]!];
+    form.value.galleryImages = images.map((image, imageIndex) => ({
+        ...image,
+        sortOrder: imageIndex,
+    }));
 };
 
 const fetchSkills = async () => {
@@ -309,15 +406,16 @@ const fetchProject = async (id: string) => {
             category: data.category,
             year: data.year,
             projectUrl: data.projectUrl,
-            repositoryUrl: data.repositoryUrl || '',
-            role: data.role || '',
-            challenge: data.challenge || '',
-            solution: data.solution || '',
-            impact: data.impact || '',
             imageUrl: data.imageUrl,
             status: data.status,
             featured: data.featured,
-            skillIds: data.skills.map((s: any) => s.skillId) // Flatten nested relation
+            skillIds: data.skills.map((s: any) => s.skillId), // Flatten nested relation
+            galleryImages: (data.galleryImages || []).map((image: any, index: number) => ({
+                imageUrl: image.imageUrl,
+                altText: image.altText || '',
+                caption: image.caption || '',
+                sortOrder: image.sortOrder ?? index,
+            }))
         };
     } catch (error) {
         console.error('Failed to fetch project', error);
@@ -332,7 +430,13 @@ const submitForm = async () => {
 
     saving.value = true;
     try {
-        const payload = { ...form.value };
+        const payload = {
+            ...form.value,
+            galleryImages: form.value.galleryImages.map((image, index) => ({
+                ...image,
+                sortOrder: index,
+            }))
+        };
 
         if (isEditing.value) {
             await api.patch(`/projects/${route.params.id}`, payload);

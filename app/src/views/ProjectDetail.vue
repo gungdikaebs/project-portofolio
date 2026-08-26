@@ -61,45 +61,20 @@
             </div>
 
             <!-- Content Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-20">
+            <div class="grid grid-cols-1 gap-12 lg:gap-20" :class="project.projectUrl ? 'md:grid-cols-3' : ''">
 
                 <!-- Description -->
-                <div class="md:col-span-2 space-y-12">
-                    <section>
-                        <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">01 — Overview</p>
-                        <h2 class="mb-5 font-heading text-2xl font-bold text-white">What I built</h2>
-                        <p class="text-secondary text-lg leading-relaxed whitespace-pre-line">
-                            {{ project.description }}
-                        </p>
-                    </section>
-
-                    <section v-if="project.challenge">
-                        <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">02 — Challenge</p>
-                        <h2 class="mb-5 font-heading text-2xl font-bold text-white">The problem and constraints</h2>
-                        <p class="text-secondary text-lg leading-relaxed whitespace-pre-line">{{ project.challenge }}</p>
-                    </section>
-
-                    <section v-if="project.solution">
-                        <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">03 — Approach</p>
-                        <h2 class="mb-5 font-heading text-2xl font-bold text-white">Solution and technical decisions</h2>
-                        <p class="text-secondary text-lg leading-relaxed whitespace-pre-line">{{ project.solution }}</p>
-                    </section>
-
-                    <section v-if="project.impact" class="rounded-2xl border border-accent/15 bg-accent/5 p-7 md:p-9">
-                        <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">04 — Outcome</p>
-                        <h2 class="mb-5 font-heading text-2xl font-bold text-white">Impact and learnings</h2>
-                        <p class="text-secondary text-lg leading-relaxed whitespace-pre-line">{{ project.impact }}</p>
-                    </section>
+                <div class="space-y-8" :class="project.projectUrl ? 'md:col-span-2' : ''">
+                    <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">Project Overview</p>
+                    <h2 class="font-heading text-2xl font-bold text-white">About this project</h2>
+                    <p class="text-secondary text-lg leading-relaxed whitespace-pre-line">
+                        {{ project.description }}
+                    </p>
                 </div>
 
                 <!-- Sidebar / Links -->
-                <div>
-                    <div v-if="project.role" class="mb-10 border-l-2 border-accent pl-5">
-                        <p class="mb-2 font-mono text-xs uppercase tracking-wider text-secondary">My contribution</p>
-                        <p class="font-medium leading-relaxed text-white">{{ project.role }}</p>
-                    </div>
-
-                    <h2 class="font-heading font-bold text-2xl text-white mb-6">Explore</h2>
+                <div v-if="project.projectUrl">
+                    <h2 class="font-heading font-bold text-2xl text-white mb-6">Project Link</h2>
                     <div class="space-y-4">
                         <a v-if="project.projectUrl" :href="project.projectUrl" target="_blank"
                             rel="noopener noreferrer"
@@ -113,24 +88,47 @@
                                 <polyline points="7 7 17 7 17 17"></polyline>
                             </svg>
                         </a>
-                        <a v-if="project.repositoryUrl" :href="project.repositoryUrl" target="_blank"
-                            rel="noopener noreferrer"
-                            class="flex items-center justify-between p-4 bg-surface border border-white/10 rounded-xl hover:border-accent/50 hover:bg-white/5 transition-all group">
-                            <span class="font-medium text-white">View Source Code</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="text-secondary group-hover:text-accent transition-colors">
-                                <path d="m16 18 6-6-6-6" />
-                                <path d="m8 6-6 6 6 6" />
-                            </svg>
-                        </a>
-                        <p v-if="!project.projectUrl && !project.repositoryUrl"
-                            class="rounded-xl border border-white/5 bg-white/5 p-4 text-sm text-secondary">
-                            This project is currently documented as a private case study.
-                        </p>
                     </div>
                 </div>
             </div>
+
+            <!-- Project Gallery -->
+            <section v-if="project.galleryImages?.length" class="mt-24 border-t border-white/10 pt-16">
+                <div class="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                    <div>
+                        <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">Product Preview</p>
+                        <h2 class="font-heading text-3xl font-bold text-white md:text-4xl">Selected Screens</h2>
+                    </div>
+                    <span class="w-fit rounded-full border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-secondary">
+                        {{ project.galleryImages.length }} screenshots
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <button v-for="(image, index) in project.galleryImages" :key="image.id || image.imageUrl"
+                        type="button" @click="openGallery(Number(index))"
+                        class="group relative overflow-hidden rounded-2xl border border-white/10 bg-surface text-left transition-colors hover:border-accent/40"
+                        :class="index === 0 && project.galleryImages.length > 2 ? 'md:col-span-2' : ''"
+                        :aria-label="`Open screenshot ${Number(index) + 1} of ${project.galleryImages.length}`">
+                        <div class="aspect-video overflow-hidden">
+                            <img :src="getImageUrl(image.imageUrl)"
+                                :alt="image.altText || `${project.title} screenshot ${Number(index) + 1}`"
+                                loading="lazy" decoding="async"
+                                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]">
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-transparent"></div>
+                        <div class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 md:p-6">
+                            <div>
+                                <p class="font-mono text-xs text-accent">SCREEN {{ formatScreenNumber(index) }}</p>
+                                <p v-if="image.caption" class="mt-2 font-medium text-white">{{ image.caption }}</p>
+                            </div>
+                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-sm transition-transform group-hover:scale-110">
+                                +
+                            </span>
+                        </div>
+                    </button>
+                </div>
+            </section>
 
         </div>
 
@@ -140,16 +138,52 @@
             <router-link to="/projects" class="text-accent hover:underline">Back to Projects</router-link>
         </div>
 
+        <Teleport to="body">
+            <div v-if="currentGalleryImage" @click.self="closeGallery"
+                class="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-md md:p-8"
+                role="dialog" aria-modal="true" aria-label="Project screenshot viewer">
+                <button type="button" @click="closeGallery"
+                    class="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/50 text-2xl text-white transition-colors hover:border-accent hover:text-accent md:right-8 md:top-8"
+                    aria-label="Close screenshot viewer">×</button>
+
+                <button v-if="project?.galleryImages?.length > 1" type="button" @click="showPreviousImage"
+                    class="absolute left-3 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/60 text-xl text-white transition-colors hover:border-accent hover:text-accent md:left-8"
+                    aria-label="Previous screenshot">←</button>
+
+                <figure class="flex max-h-full w-full max-w-6xl flex-col items-center">
+                    <img :src="getImageUrl(currentGalleryImage.imageUrl)"
+                        :alt="currentGalleryImage.altText || `${project.title} project screenshot`"
+                        class="max-h-[78vh] max-w-full rounded-xl object-contain shadow-2xl">
+                    <figcaption class="mt-4 max-w-3xl text-center">
+                        <p v-if="currentGalleryImage.caption" class="text-sm text-white md:text-base">{{ currentGalleryImage.caption }}</p>
+                        <p class="mt-2 font-mono text-xs text-secondary">
+                            {{ (selectedGalleryIndex ?? 0) + 1 }} / {{ project.galleryImages.length }}
+                        </p>
+                    </figcaption>
+                </figure>
+
+                <button v-if="project?.galleryImages?.length > 1" type="button" @click="showNextImage"
+                    class="absolute right-3 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/60 text-xl text-white transition-colors hover:border-accent hover:text-accent md:right-8"
+                    aria-label="Next screenshot">→</button>
+            </div>
+        </Teleport>
+
     </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProjects } from '../composables/useProjects'
 
 const route = useRoute()
 const { project, loading, fetchProject } = useProjects()
+const selectedGalleryIndex = ref<number | null>(null)
+
+const currentGalleryImage = computed(() => {
+    if (selectedGalleryIndex.value === null) return null
+    return project.value?.galleryImages?.[selectedGalleryIndex.value] || null
+})
 
 const getImageUrl = (path: string) => {
     if (!path) return '';
@@ -170,7 +204,42 @@ const getCategory = () => {
     return project.value?.category || 'Web Development';
 }
 
+const formatScreenNumber = (index: string | number) => {
+    const value = Number(index) + 1
+    return value < 10 ? `0${value}` : `${value}`
+}
+
+const openGallery = (index: number) => {
+    selectedGalleryIndex.value = index
+    document.body.style.overflow = 'hidden'
+}
+
+const closeGallery = () => {
+    selectedGalleryIndex.value = null
+    document.body.style.overflow = ''
+}
+
+const showPreviousImage = () => {
+    const images = project.value?.galleryImages || []
+    if (images.length === 0 || selectedGalleryIndex.value === null) return
+    selectedGalleryIndex.value = (selectedGalleryIndex.value - 1 + images.length) % images.length
+}
+
+const showNextImage = () => {
+    const images = project.value?.galleryImages || []
+    if (images.length === 0 || selectedGalleryIndex.value === null) return
+    selectedGalleryIndex.value = (selectedGalleryIndex.value + 1) % images.length
+}
+
+const handleGalleryKeydown = (event: KeyboardEvent) => {
+    if (selectedGalleryIndex.value === null) return
+    if (event.key === 'Escape') closeGallery()
+    if (event.key === 'ArrowLeft') showPreviousImage()
+    if (event.key === 'ArrowRight') showNextImage()
+}
+
 onMounted(async () => {
+    window.addEventListener('keydown', handleGalleryKeydown)
     const id = route.params.id as string
     if (id) {
         await fetchProject(id)
@@ -180,9 +249,15 @@ onMounted(async () => {
 
 // watch route to refetch if params change (e.g. related projects)
 watch(() => route.params.id, async (newId) => {
+    closeGallery()
     if (newId) {
         await fetchProject(newId as string)
         window.scrollTo(0, 0)
     }
+})
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleGalleryKeydown)
+    document.body.style.overflow = ''
 })
 </script>

@@ -39,7 +39,7 @@
                         <p class="text-secondary text-sm mb-6 line-clamp-3 flex-1">{{ project.description }}</p>
                         <router-link :to="'/project/' + project.id"
                             class="inline-flex items-center gap-2 text-sm text-white font-medium hover:text-accent transition-colors mt-auto">
-                            Read Case Study <span class="transition-transform group-hover:translate-x-1">→</span>
+                            View Project Details <span class="transition-transform group-hover:translate-x-1">→</span>
                         </router-link>
                     </div>
                 </article>

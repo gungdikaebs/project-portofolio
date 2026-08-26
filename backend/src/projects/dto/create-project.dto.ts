@@ -1,8 +1,27 @@
-import { IsString, IsNotEmpty, IsOptional, IsInt, IsBoolean, IsEnum, IsArray, IsUUID } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsString, IsNotEmpty, IsOptional, IsInt, IsBoolean, IsEnum, IsArray, IsUUID, ValidateNested } from 'class-validator';
 
 export enum ProjectStatus {
     DRAFT = 'DRAFT',
     PUBLISHED = 'PUBLISHED',
+}
+
+export class ProjectGalleryImageDto {
+    @IsString()
+    @IsNotEmpty()
+    imageUrl: string;
+
+    @IsOptional()
+    @IsString()
+    altText?: string;
+
+    @IsOptional()
+    @IsString()
+    caption?: string;
+
+    @IsOptional()
+    @IsInt()
+    sortOrder?: number;
 }
 
 export class CreateProjectDto {
@@ -35,26 +54,6 @@ export class CreateProjectDto {
     projectUrl?: string;
 
     @IsOptional()
-    @IsString()
-    repositoryUrl?: string;
-
-    @IsOptional()
-    @IsString()
-    role?: string;
-
-    @IsOptional()
-    @IsString()
-    challenge?: string;
-
-    @IsOptional()
-    @IsString()
-    solution?: string;
-
-    @IsOptional()
-    @IsString()
-    impact?: string;
-
-    @IsOptional()
     @IsInt()
     sortOrder?: number;
 
@@ -70,4 +69,10 @@ export class CreateProjectDto {
     @IsArray()
     @IsUUID('4', { each: true })
     skillIds?: string[];
+
+    @IsOptional()
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => ProjectGalleryImageDto)
+    galleryImages?: ProjectGalleryImageDto[];
 }
