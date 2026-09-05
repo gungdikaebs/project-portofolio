@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { skillsService } from '../services/skills.service';
 
 export function useSkills() {
@@ -25,10 +25,6 @@ export function useSkills() {
             loading.value = false;
         }
     };
-
-    onMounted(() => {
-        fetchSkills();
-    });
 
     return {
         skills,

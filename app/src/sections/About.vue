@@ -52,13 +52,13 @@
                     <div>
                         <div class="overflow-hidden">
                             <h2 ref="headingLine1"
-                                class="font-heading font-bold text-5xl md:text-7xl text-primary translate-y-full opacity-0">
+                                class="font-heading font-bold text-5xl md:text-7xl text-primary">
                                 Full-Stack
                             </h2>
                         </div>
                         <div class="overflow-hidden">
                             <h2 ref="headingLine2"
-                                class="font-heading font-bold text-5xl md:text-7xl text-white translate-y-full opacity-0">
+                                class="font-heading font-bold text-5xl md:text-7xl text-white">
                                 Web Developer<span class="text-accent">.</span>
                             </h2>
                         </div>
@@ -66,7 +66,7 @@
 
                     <!-- Bio Text -->
                     <div class="flex flex-col gap-6 text-secondary text-lg leading-relaxed font-body max-w-xl">
-                        <p ref="para1" class="opacity-0 translate-y-4">
+                        <p ref="para1">
                             <span v-if="loading">Loading bio...</span>
                             <span v-else-if="profile" class="whitespace-pre-line">{{ profile.bio }}</span>
                         </p>
@@ -80,13 +80,13 @@
 
                     <!-- Interactive Stats -->
                     <div v-if="profile" class="grid grid-cols-2 gap-12 mt-4 border-t border-white/5 pt-10">
-                        <div class="stat-item opacity-0 translate-y-4">
+                        <div class="stat-item">
                             <h3 class="font-heading font-bold text-5xl text-white flex items-baseline">
                                 {{ profile.yearsExperience }}+
                             </h3>
                             <p class="text-sm text-secondary mt-2 tracking-widest uppercase">Years Experience</p>
                         </div>
-                        <div class="stat-item opacity-0 translate-y-4">
+                        <div class="stat-item">
                             <h3 class="font-heading font-bold text-5xl text-accent flex items-baseline">
                                 {{ profile.projectsDone }}+
                             </h3>
@@ -95,7 +95,7 @@
                     </div>
 
                     <!-- Download CV Button -->
-                    <div ref="cvBtn" class="mt-8 opacity-0 translate-y-4 border-white/5 border-t pt-10">
+                    <div ref="cvBtn" class="mt-8 border-white/5 border-t pt-10">
                         <a v-if="profile && profile.cvUrl" :href="getFileUrl(profile.cvUrl)" target="_blank" rel="noopener noreferrer"
                             class="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-accent transition-all duration-300 group">
                             <span class="group-hover:-translate-y-0.5 transition-transform">Download CV</span>
@@ -117,10 +117,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useProfile } from '../composables/useProfile'
+import { reduceMotion } from '../animations/motion'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -140,9 +141,13 @@ const headingLine1 = ref(null)
 const headingLine2 = ref(null)
 const para1 = ref(null)
 const cvBtn = ref(null)
+let animationContext: gsap.Context | null = null
 
 onMounted(async () => {
     await fetchProfile()
+    if (reduceMotion()) return
+
+    animationContext = gsap.context(() => {
 
     // 1. Parallax Watermark
     gsap.to(watermark.value, {
@@ -212,27 +217,26 @@ onMounted(async () => {
     })
 
     textTl
-        .to([headingLine1.value, headingLine2.value], {
-            y: 0,
-            opacity: 1,
+        .from([headingLine1.value, headingLine2.value], {
+            yPercent: 100,
             stagger: 0.15,
             duration: 1,
             ease: 'power4.out'
         })
-        .to([para1.value], {
-            y: 0,
-            opacity: 1,
+        .from([para1.value], {
+            y: 16,
+            opacity: 0,
             duration: 0.8
         }, '-=0.5')
-        .to('.stat-item', {
-            y: 0,
-            opacity: 1,
+        .from('.stat-item', {
+            y: 16,
+            opacity: 0,
             stagger: 0.1,
             duration: 0.5
         }, '-=0.5')
-        .to(cvBtn.value, {
-            y: 0,
-            opacity: 1,
+        .from(cvBtn.value, {
+            y: 16,
+            opacity: 0,
             duration: 0.5,
             ease: 'back.out(1.7)'
         }, '-=0.3')
@@ -249,6 +253,8 @@ onMounted(async () => {
             }
         })
     }
-
+    }, '#about')
 })
+
+onUnmounted(() => animationContext?.revert())
 </script>

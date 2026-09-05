@@ -51,7 +51,7 @@
                         </span>
 
                         <h3 class="font-heading font-bold text-2xl text-white mb-2">
-                            {{ edu.degree }}
+                            {{ normalizeDegree(edu.degree) }}
                         </h3>
 
                         <h4 class="text-lg text-primary mb-4 flex items-center gap-2">
@@ -78,7 +78,7 @@
                     <div>
                         <h3 class="font-heading font-bold text-3xl text-primary">Certifications</h3>
                         <p class="mt-3 max-w-2xl text-secondary">
-                            {{ certifications.length }} credentials that support my continuous learning and technical development.
+                            Courses and credentials completed alongside my professional work.
                         </p>
                     </div>
                     <span class="w-fit rounded-full border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-secondary">
@@ -174,6 +174,8 @@ let animationContext: gsap.Context | null = null
 const visibleCertifications = computed(() => showAllCertifications.value
     ? certifications.value
     : certifications.value.slice(0, initialCertificationLimit))
+
+const normalizeDegree = (degree: string) => degree.replace(/System Information/gi, 'Information Systems')
 
 // Removed unused formatYear
 

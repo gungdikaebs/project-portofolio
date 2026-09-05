@@ -1,5 +1,5 @@
 <template>
-    <section id="contact" class="py-32 relative overflow-hidden bg-[#0B0D10]">
+    <section id="contact" ref="sectionEl" class="py-[var(--section-space)] relative overflow-hidden bg-background">
         <!-- Background Elements -->
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
             <div class="absolute top-[10%] left-[20%] w-[400px] h-[400px] bg-accent/5 rounded-full blur-[120px]"></div>
@@ -12,19 +12,19 @@
 
                 <!-- Left: CTA -->
                 <div>
-                    <span class="text-accent font-mono text-sm tracking-widest uppercase mb-6 block reveal-contact">Get
+                    <span class="text-accent font-mono text-sm tracking-widest uppercase mb-6 block contact-kicker">Get
                         in Touch</span>
                     <h2
-                        class="font-heading font-bold text-5xl md:text-7xl lg:text-8xl text-white leading-[1.1] mb-12 reveal-contact">
+                        class="contact-heading font-heading font-bold text-5xl md:text-7xl lg:text-8xl text-white leading-[1.05] mb-12">
                         Let's discuss your <br />
-                        <span class="text-secondary/50 transition-colors duration-500 hover:text-white">next opportunity.</span>
+                        <span class="text-secondary transition-colors duration-500 hover:text-white">next opportunity.</span>
                     </h2>
 
-                    <p class="-mt-6 mb-10 max-w-xl text-lg leading-relaxed text-secondary reveal-contact">
-                        Open to full-time developer roles and meaningful product collaborations. Email is the best way to reach me.
+                    <p class="contact-copy -mt-6 mb-10 max-w-xl text-lg leading-relaxed text-secondary">
+                        Hiring a full-stack developer or need hands-on help with a web product? WhatsApp is fastest; email works too.
                     </p>
 
-                    <div class="flex flex-col gap-8 reveal-contact">
+                    <div class="contact-links flex flex-col gap-8">
                         <div class="flex flex-wrap items-center gap-3 md:gap-6">
                             <!-- Magnetic Email Button -->
                             <a href="mailto:gungdika85@gmail.com"
@@ -82,16 +82,16 @@
 
                 <!-- Right: Contact Form -->
                 <div
-                    class="bg-surface/50 border border-white/5 rounded-3xl p-8 md:p-10 reveal-contact mt-10 lg:mt-0 backdrop-blur-sm">
-                    <h3 class="font-heading font-bold text-2xl text-white mb-3">Start a Conversation</h3>
-                    <p class="mb-8 text-sm leading-relaxed text-secondary">This form opens WhatsApp with your message ready to send.</p>
+                    class="contact-form bg-surface/50 border border-white/10 rounded-3xl p-6 sm:p-8 md:p-10 mt-10 lg:mt-0">
+                    <h3 class="font-heading font-bold text-2xl text-white mb-3">Send the details</h3>
+                    <p class="mb-8 text-sm leading-relaxed text-secondary">Add a short brief. The next step opens your message in WhatsApp.</p>
                     <form @submit.prevent="submitForm" class="flex flex-col gap-6">
                         <!-- Group: Name -->
                         <div class="flex flex-col gap-2">
                             <label for="name"
                                 class="text-sm font-mono text-secondary uppercase tracking-wider">Name</label>
                             <input type="text" id="name" required v-model="formData.name"
-                                class="bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors placeholder:text-white/20"
+                                autocomplete="name" class="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors placeholder:text-white/30 invalid:not-placeholder-shown:border-red-400"
                                 placeholder="John Doe">
                         </div>
 
@@ -99,7 +99,7 @@
                             <label for="email"
                                 class="text-sm font-mono text-secondary uppercase tracking-wider">Email</label>
                             <input type="email" id="email" required v-model="formData.email"
-                                class="bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors placeholder:text-white/20"
+                                autocomplete="email" class="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors placeholder:text-white/30 invalid:not-placeholder-shown:border-red-400"
                                 placeholder="john@company.com">
                         </div>
 
@@ -107,8 +107,8 @@
                             <label for="message"
                                 class="text-sm font-mono text-secondary uppercase tracking-wider">Message</label>
                             <textarea id="message" rows="4" required v-model="formData.message"
-                                class="bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors resize-none placeholder:text-white/20"
-                                placeholder="Tell me about your project..."></textarea>
+                                class="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors resize-none placeholder:text-white/30"
+                                placeholder="What are you building, and where do you need help?"></textarea>
                         </div>
 
                         <button type="submit"
@@ -129,21 +129,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
+import { motion, reduceMotion } from '../animations/motion'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const copied = ref(false)
+const sectionEl = ref<HTMLElement | null>(null)
+let context: gsap.Context | null = null
 const formData = ref({
     name: '',
     email: '',
     message: ''
 })
 
-const copyEmail = () => {
-    navigator.clipboard.writeText('gungdika85@gmail.com')
+const copyEmail = async () => {
+    await navigator.clipboard.writeText('gungdika85@gmail.com')
     copied.value = true
     setTimeout(() => {
         copied.value = false
@@ -158,20 +161,14 @@ const submitForm = () => {
 }
 
 onMounted(() => {
-    // Animations
-    const elements = document.querySelectorAll('.reveal-contact')
-    elements.forEach((el, index) => {
-        gsap.from(el, {
-            y: 50,
-            opacity: 0,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-                trigger: el,
-                start: 'top 90%'
-            },
-            delay: index * 0.1
-        })
-    })
+    if (reduceMotion()) return
+    context = gsap.context(() => {
+        gsap.from('.contact-kicker', { x: -motion.distance.base, opacity: 0, duration: motion.duration.base, ease: motion.ease.enter, scrollTrigger: { trigger: sectionEl.value, start: 'top 75%' } })
+        gsap.from('.contact-heading', { clipPath: 'inset(0 0 100% 0)', y: motion.distance.base, duration: 1.05, ease: motion.ease.emphasis, scrollTrigger: { trigger: sectionEl.value, start: 'top 72%' } })
+        gsap.from('.contact-copy, .contact-links', { opacity: 0, y: motion.distance.small, stagger: motion.stagger.base, duration: motion.duration.base, ease: motion.ease.enter, scrollTrigger: { trigger: '.contact-heading', start: 'top 70%' } })
+        gsap.from('.contact-form', { x: motion.distance.large, opacity: 0, duration: motion.duration.slow, ease: motion.ease.enter, scrollTrigger: { trigger: '.contact-form', start: 'top 82%' } })
+    }, sectionEl.value || undefined)
 })
+
+onUnmounted(() => context?.revert())
 </script>

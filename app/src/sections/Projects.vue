@@ -1,276 +1,84 @@
 <template>
-    <section id="projects" class="py-32 relative overflow-hidden">
-        <!-- Background Elements -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <!-- Dot Grid Texture -->
-            <div
-                class="absolute inset-0 bg-[radial-gradient(#ffffff15_1px,transparent_1px)] [background-size:20px_20px] opacity-20">
-            </div>
-
-            <div class="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px]">
-            </div>
-            <div class="absolute bottom-[10%] left-[-5%] w-[300px] h-[300px] bg-primary/5 rounded-full blur-[80px]">
-            </div>
-        </div>
-
-        <div class="w-full max-w-[1350px] mx-auto px-6 relative z-10">
-
-            <!-- Section Header -->
-            <div class="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
+    <section id="projects" ref="sectionEl" class="relative overflow-hidden py-[var(--section-space)]">
+        <div class="section-shell relative z-10">
+            <header class="projects-heading mb-16 grid gap-7 border-t border-white/10 pt-6 md:mb-24 md:grid-cols-[0.7fr_1.3fr] md:items-end">
+                <div><span class="section-kicker">Selected work / Case studies</span></div>
                 <div>
-                    <h2 class="font-heading font-bold text-5xl md:text-7xl text-primary mb-6 reveal-text">
-                        Selected <br /> <span class="text-accent">Works.</span>
-                    </h2>
-                    <p class="text-secondary text-lg max-w-xl reveal-text leading-relaxed">
-                        A curated selection of projects that demonstrate my passion for
-                        building robust, interactive, and scalable digital products.
-                    </p>
+                    <h2 class="text-balance font-heading text-5xl font-bold leading-[0.98] tracking-tight text-primary md:text-7xl">Selected work,<br>unpacked<span class="text-accent">.</span></h2>
+                    <p class="mt-6 max-w-xl text-base leading-relaxed text-secondary md:text-lg">What I built, the stack behind it, and the decisions that shaped each project.</p>
                 </div>
+            </header>
 
-                <!-- Desktop Only View All Button (Top Right) -->
-                <div class="hidden md:block reveal-text">
-                    <router-link to="/projects"
-                        class="group relative inline-flex items-center gap-3 px-8 py-4 bg-surface border border-white/10 rounded-full overflow-hidden transition-all duration-300 hover:border-accent/50 hover:shadow-[0_0_30px_rgba(106,227,255,0.1)]">
-                        <div
-                            class="absolute inset-0 bg-accent/10 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 ease-in-out">
-                        </div>
-                        <span
-                            class="relative z-10 font-heading font-bold text-white group-hover:text-accent transition-colors">View
-                            All Projects</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="relative z-10 text-white group-hover:text-accent transition-colors group-hover:translate-x-1 duration-300">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </router-link>
-                </div>
+            <div v-if="loading" class="space-y-20" aria-label="Loading projects" aria-live="polite">
+                <div v-for="item in 3" :key="item" class="grid animate-pulse gap-7 md:grid-cols-[1.25fr_0.75fr]"><div class="aspect-[16/10] bg-white/5"></div><div class="space-y-5 py-4"><div class="h-4 w-1/4 bg-white/5"></div><div class="h-10 w-3/4 bg-white/5"></div><div class="h-20 bg-white/5"></div></div></div>
             </div>
 
-            <!-- Projects Grid -->
-            <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20" aria-label="Loading projects">
-                <div v-for="item in 4" :key="item" class="animate-pulse space-y-5">
-                    <div class="aspect-[4/3] rounded-2xl bg-white/5"></div>
-                    <div class="h-8 w-2/3 rounded bg-white/5"></div>
-                    <div class="h-4 w-full rounded bg-white/5"></div>
-                </div>
-            </div>
-
-            <div v-else-if="displayedProjects.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
-                <article v-for="project in displayedProjects" :key="project.id"
-                    class="project-card group relative flex flex-col gap-6">
-
-                    <!-- Image Container -->
-                    <router-link :to="'/project/' + project.id"
-                        class="block w-full aspect-[4/3] rounded-2xl overflow-hidden relative cursor-pointer bg-surface">
-                        <!-- Image -->
-                        <div class="w-full h-full relative overflow-hidden">
-                            <img v-if="project.imageUrl" :src="getImageUrl(project.imageUrl)" :alt="project.title"
-                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                            <div v-else class="w-full h-full bg-surface flex items-center justify-center relative">
-                                <div class="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent"></div>
-                                <span class="text-white/20 font-heading text-2xl">{{ project.title }}</span>
-                            </div>
-                        </div>
-
-                        <!-- Hover Overlay -->
-                        <div
-                            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
-                            <div
-                                class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 transform scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 delay-100">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" class="text-white">
-                                    <line x1="7" y1="17" x2="17" y2="7"></line>
-                                    <polyline points="7 7 17 7 17 17"></polyline>
-                                </svg>
-                            </div>
-                        </div>
+            <div v-else-if="displayedProjects.length" class="projects-list">
+                <article v-for="(project, index) in displayedProjects" :key="project.id" class="project-story group grid gap-7 border-t border-white/10 py-12 md:grid-cols-12 md:gap-10 md:py-20">
+                    <router-link :to="'/project/' + project.id" class="project-media relative block aspect-[16/10] overflow-hidden bg-surface md:col-span-7" :class="index % 2 ? 'md:order-2' : ''">
+                        <img v-if="project.imageUrl" :src="getImageUrl(project.imageUrl)" :alt="project.title" class="project-image h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]" />
+                        <div v-else class="grid h-full place-items-center border border-white/5 text-2xl font-bold text-white/20">{{ project.title }}</div>
+                        <span class="absolute right-4 top-4 grid h-12 w-12 place-items-center rounded-full bg-background/85 text-lg text-primary backdrop-blur transition-colors group-hover:bg-accent group-hover:text-background" aria-hidden="true">↗</span>
                     </router-link>
 
-                    <!-- Content -->
-                    <div class="flex flex-col gap-3">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h3
-                                    class="font-heading font-bold text-3xl text-primary group-hover:text-accent transition-colors duration-300">
-                                    {{ project.title }}
-                                </h3>
-                                <div class="flex items-center gap-3 mt-2 text-secondary text-sm font-mono">
-                                    <!-- Use Project Skills as Category substitute or generic -->
-                                    <span>{{ project.category }}</span>
-                                    <span class="h-1 w-1 rounded-full bg-white/20"></span>
-                                    <span>{{ project.year }}</span>
-                                    <!-- Optional Year hardcoded or from logic if needed -->
-                                </div>
+                    <div class="project-copy flex flex-col justify-between md:col-span-5" :class="index % 2 ? 'md:order-1 md:pr-8' : 'md:pl-8'">
+                        <div>
+                            <div class="mb-7 flex items-center justify-between gap-4 font-mono text-xs uppercase tracking-[0.14em]"><span class="text-accent">{{ projectNumber(index) }}</span><span class="text-secondary">{{ project.category }} · {{ project.year }}</span></div>
+                            <h3 class="text-balance font-heading text-3xl font-bold leading-tight text-primary md:text-5xl"><router-link :to="'/project/' + project.id" class="transition-colors hover:text-accent">{{ project.title }}</router-link></h3>
+                            <div class="mt-7 border-l border-white/15 pl-5">
+                                <span class="mb-2 block text-[0.65rem] font-medium uppercase tracking-[0.16em] text-secondary">Contribution</span>
+                                <p class="line-clamp-3 leading-relaxed text-secondary">{{ project.description }}</p>
                             </div>
                         </div>
-                        <p class="text-secondary leading-relaxed line-clamp-2">
-                            {{ project.description }}
-                        </p>
-
-                        <!-- Tech Tags -->
-                        <div class="flex flex-wrap gap-2 mt-2">
-                            <span v-for="tech in getTechStack(project).slice(0, 3)" :key="tech"
-                                class="text-xs font-mono text-white/50 border border-white/10 px-2 py-1 rounded hover:text-accent hover:border-accent/30 transition-colors cursor-default">
-                                {{ tech }}
-                            </span>
-                            <span v-if="getTechStack(project).length > 3"
-                                class="text-xs font-mono text-white/50 px-2 py-1">
-                                +{{ getTechStack(project).length - 3 }}
-                            </span>
+                        <div class="mt-8">
+                            <ul v-if="getTechStack(project).length" class="mb-7 flex flex-wrap gap-x-4 gap-y-2" aria-label="Technologies"><li v-for="tech in getTechStack(project)" :key="tech" class="text-xs text-secondary">{{ normalizeTechName(tech) }}</li></ul>
+                            <div class="flex flex-wrap gap-5 text-sm font-medium">
+                                <router-link :to="'/project/' + project.id" class="text-primary underline decoration-white/20 underline-offset-8 transition-colors hover:text-accent">View Case Study</router-link>
+                                <a v-if="project.projectUrl" :href="project.projectUrl" target="_blank" rel="noopener noreferrer" class="text-secondary underline decoration-white/20 underline-offset-8 transition-colors hover:text-accent">Live Demo ↗</a>
+                            </div>
                         </div>
                     </div>
                 </article>
             </div>
 
-            <div v-else class="rounded-3xl border border-white/5 bg-surface/40 px-6 py-16 text-center">
-                <h3 class="font-heading text-2xl font-bold text-white">Case studies are being prepared.</h3>
-                <p class="mx-auto mt-3 max-w-xl text-secondary">In the meantime, explore my public code and current experiments on GitHub.</p>
-                <a href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer"
-                    class="mt-7 inline-flex rounded-full border border-accent/30 px-6 py-3 font-medium text-accent hover:bg-accent/10 transition-colors">
-                    Visit GitHub
-                </a>
-            </div>
+            <div v-else class="border-y border-white/10 py-16"><h3 class="font-heading text-2xl font-bold text-primary">No published projects yet.</h3><p class="mt-3 max-w-xl text-secondary">My public repositories are still available on GitHub.</p><a href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer" class="mt-7 inline-flex text-sm font-medium text-accent underline underline-offset-8">Visit GitHub ↗</a></div>
 
-            <!-- Mobile Only View All Button -->
-            <div class="md:hidden mt-16 flex justify-center">
-                <router-link to="/projects"
-                    class="inline-flex items-center gap-2 px-8 py-3 bg-surface border border-white/10 rounded-full text-white font-bold hover:bg-white/5 transition-colors">
-                    View All Projects
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                </router-link>
-            </div>
-
+            <div v-if="displayedProjects.length" class="mt-12 flex justify-end"><router-link to="/projects" class="inline-flex min-h-12 items-center gap-3 rounded-full border border-white/15 px-6 text-sm font-bold text-primary transition-colors hover:border-accent hover:text-accent">View all projects <span aria-hidden="true">→</span></router-link></div>
         </div>
     </section>
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick, computed } from 'vue'
+import { onMounted, onUnmounted, nextTick, computed, ref } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useProjects } from '../composables/useProjects'
+import { motion, reduceMotion } from '../animations/motion'
 
 gsap.registerPlugin(ScrollTrigger)
-
+const sectionEl = ref<HTMLElement | null>(null)
 const { projects, loading, fetchProjects } = useProjects()
-const displayedProjects = computed(() => {
-    const featured = projects.value.filter((project: any) => project.featured)
-    return (featured.length > 0 ? featured : projects.value).slice(0, 4)
-})
+const displayedProjects = computed(() => { const featured = projects.value.filter((project: any) => project.featured); return (featured.length ? featured : projects.value).slice(0, 4) })
+let context: gsap.Context | null = null
 
-const getImageUrl = (path: string) => {
-    if (!path) return '';
-    if (path.startsWith('http')) return path;
-    let baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    baseUrl = baseUrl.replace(/^["']|["']$/g, '');
-    baseUrl = baseUrl.replace(/\/+$/, '');
-    const safePath = path.startsWith('/') ? path : `/${path}`;
-    return `${baseUrl}${safePath}`;
-};
+const getImageUrl = (path: string) => { if (!path || path.startsWith('http')) return path; const base = (import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/^['"]|['"]$/g, '').replace(/\/+$/, ''); return `${base}${path.startsWith('/') ? path : `/${path}`}` }
+const getTechStack = (project: any) => project.skills?.map((item: any) => item.skill.name) || []
+const normalizeTechName = (name: string) => ({ 'Vue JS': 'Vue.js', 'Nest JS': 'NestJS', Github: 'GitHub' } as Record<string, string>)[name] || name
+const projectNumber = (index: number) => index < 9 ? `0${index + 1}` : String(index + 1)
 
-const getTechStack = (project: any) => {
-    if (!project.skills) return [];
-    return project.skills.map((s: any) => s.skill.name);
-};
-
-// Ref for animation refresh
-const refreshAnimations = () => {
-    ScrollTrigger.refresh()
-
-    // 1. Text Reveals
-    const texts = document.querySelectorAll('.reveal-text')
-    texts.forEach((text, i) => {
-        gsap.fromTo(text,
-            { y: 50, opacity: 0 },
-            {
-                y: 0,
-                opacity: 1,
-                duration: 1,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: text,
-                    start: 'top 85%'
-                },
-                delay: i * 0.1
-            }
-        )
-    })
-
-    // 2. Project Card Animation & Parallax
-    const cards = document.querySelectorAll('.project-card')
-
-    // Grid Parallax - Move uneven columns differently
-    ScrollTrigger.matchMedia({
-        "(min-width: 768px)": function () {
-            cards.forEach((card, i) => {
-                // Odd items (Right column in 2-col grid)
-                const isEven = i % 2 !== 0
-
-                // Initial Offset for right column (Masonry feel)
-                if (isEven) {
-                    gsap.set(card, { y: 60 })
-                }
-
-                // Entrance
-                gsap.fromTo(card,
-                    { y: isEven ? 160 : 100, opacity: 0 },
-                    {
-                        y: isEven ? 60 : 0, // Return to offset or 0
-                        opacity: 1,
-                        duration: 1,
-                        ease: 'power3.out',
-                        scrollTrigger: {
-                            trigger: card,
-                            start: 'top 90%'
-                        }
-                    }
-                )
-
-                // Parallax Scroll (Right column moves faster/slower)
-                if (isEven) {
-                    gsap.to(card, {
-                        y: -40, // Moves up relative to its offset
-                        ease: 'none',
-                        scrollTrigger: {
-                            trigger: card,
-                            start: 'top bottom',
-                            end: 'bottom top',
-                            scrub: true
-                        }
-                    })
-                }
-            })
-        },
-        "(max-width: 767px)": function () {
-            // Simple entrance for mobile
-            cards.forEach((card) => {
-                gsap.fromTo(card,
-                    { y: 50, opacity: 0 },
-                    {
-                        y: 0,
-                        opacity: 1,
-                        duration: 0.8,
-                        scrollTrigger: {
-                            trigger: card,
-                            start: 'top 90%'
-                        }
-                    }
-                )
-            })
-        }
-    })
+const initAnimations = () => {
+    if (reduceMotion()) return
+    context = gsap.context(() => {
+        gsap.from('.projects-heading > *', { y: motion.distance.base, opacity: 0, duration: motion.duration.slow, stagger: motion.stagger.base, ease: motion.ease.enter, scrollTrigger: { trigger: '.projects-heading', start: 'top 82%' } })
+        gsap.utils.toArray<HTMLElement>('.project-story').forEach((story, index) => {
+            const media = story.querySelector('.project-media'); const image = story.querySelector('.project-image'); const copy = story.querySelector('.project-copy')
+            gsap.from(media, { clipPath: 'inset(0 0 100% 0)', duration: 1.05, ease: motion.ease.emphasis, scrollTrigger: { trigger: story, start: 'top 82%' } })
+            gsap.from(copy, { x: index % 2 ? -motion.distance.base : motion.distance.base, opacity: 0, duration: motion.duration.slow, ease: motion.ease.enter, scrollTrigger: { trigger: story, start: 'top 78%' } })
+            if (image) gsap.fromTo(image, { yPercent: -4, scale: 1.07 }, { yPercent: 4, scale: 1.07, ease: 'none', scrollTrigger: { trigger: story, start: 'top bottom', end: 'bottom top', scrub: true } })
+        })
+    }, sectionEl.value || undefined)
 }
 
-onMounted(async () => {
-    await fetchProjects()
-    nextTick(() => {
-        refreshAnimations()
-    })
-})
+onMounted(async () => { await fetchProjects(); await nextTick(); initAnimations(); ScrollTrigger.refresh() })
+onUnmounted(() => context?.revert())
 </script>

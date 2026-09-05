@@ -12,7 +12,7 @@
                 <!-- Links Grid -->
                 <div class="flex flex-wrap gap-12 sm:gap-20">
                     <div>
-                        <h4 class="text-white font-bold text-sm mb-4">Professional</h4>
+                        <h4 class="text-white font-bold text-sm mb-4">Elsewhere</h4>
                         <ul class="space-y-2 text-sm">
                             <li>
                                 <a href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer"
@@ -49,7 +49,7 @@
             <div
                 class="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-xs text-white/20 gap-4">
                 <p>&copy; 2026 Gung Dika. All rights reserved.</p>
-                <p>Designed & Built with passion.</p>
+                <p>Built with Vue, GSAP, and NestJS.</p>
             </div>
         </div>
     </footer>

@@ -7,67 +7,72 @@ import { UpdateSkillCategoryDto } from './dto/update-skill-category.dto';
 
 @Injectable()
 export class SkillsService {
-    constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
-    // --- Skills ---
+  // --- Skills ---
 
-    create(createSkillDto: CreateSkillDto) {
-        return this.prisma.skill.create({
-            data: createSkillDto,
-        });
-    }
+  create(createSkillDto: CreateSkillDto) {
+    return this.prisma.skill.create({
+      data: createSkillDto,
+    });
+  }
 
-    findAll() {
-        return this.prisma.skill.findMany({
-            include: { category: true },
-            orderBy: { sortOrder: 'asc' },
-        });
-    }
+  findAll() {
+    return this.prisma.skill.findMany({
+      include: { category: true },
+      orderBy: { sortOrder: 'asc' },
+    });
+  }
 
-    findOne(id: string) {
-        return this.prisma.skill.findUnique({
-            where: { id },
-            include: { category: true },
-        });
-    }
+  findOne(id: string) {
+    return this.prisma.skill.findUnique({
+      where: { id },
+      include: { category: true },
+    });
+  }
 
-    update(id: string, updateSkillDto: UpdateSkillDto) {
-        return this.prisma.skill.update({
-            where: { id },
-            data: updateSkillDto,
-        });
-    }
+  update(id: string, updateSkillDto: UpdateSkillDto) {
+    return this.prisma.skill.update({
+      where: { id },
+      data: updateSkillDto,
+    });
+  }
 
-    remove(id: string) {
-        return this.prisma.skill.delete({
-            where: { id },
-        });
-    }
+  remove(id: string) {
+    return this.prisma.skill.delete({
+      where: { id },
+    });
+  }
 
-    // --- Categories ---
+  // --- Categories ---
 
-    createCategory(createDto: CreateSkillCategoryDto) {
-        return this.prisma.skillCategory.create({
-            data: createDto
-        });
-    }
+  createCategory(createDto: CreateSkillCategoryDto) {
+    return this.prisma.skillCategory.create({
+      data: createDto,
+    });
+  }
 
-    findAllCategories() {
-        return this.prisma.skillCategory.findMany({
-            include: { skills: true }
-        });
-    }
+  findAllCategories() {
+    return this.prisma.skillCategory.findMany({
+      orderBy: { createdAt: 'asc' },
+      include: {
+        skills: {
+          orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+        },
+      },
+    });
+  }
 
-    updateCategory(id: string, updateDto: UpdateSkillCategoryDto) {
-        return this.prisma.skillCategory.update({
-            where: { id },
-            data: updateDto
-        });
-    }
+  updateCategory(id: string, updateDto: UpdateSkillCategoryDto) {
+    return this.prisma.skillCategory.update({
+      where: { id },
+      data: updateDto,
+    });
+  }
 
-    removeCategory(id: string) {
-        return this.prisma.skillCategory.delete({
-            where: { id }
-        });
-    }
+  removeCategory(id: string) {
+    return this.prisma.skillCategory.delete({
+      where: { id },
+    });
+  }
 }

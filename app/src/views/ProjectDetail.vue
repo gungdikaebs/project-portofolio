@@ -65,8 +65,8 @@
 
                 <!-- Description -->
                 <div class="space-y-8" :class="project.projectUrl ? 'md:col-span-2' : ''">
-                    <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">Project Overview</p>
-                    <h2 class="font-heading text-2xl font-bold text-white">About this project</h2>
+                    <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">Overview</p>
+                    <h2 class="font-heading text-2xl font-bold text-white">The project</h2>
                     <p class="text-secondary text-lg leading-relaxed whitespace-pre-line">
                         {{ project.description }}
                     </p>
@@ -74,12 +74,12 @@
 
                 <!-- Sidebar / Links -->
                 <div v-if="project.projectUrl">
-                    <h2 class="font-heading font-bold text-2xl text-white mb-6">Project Link</h2>
+                    <h2 class="font-heading font-bold text-2xl text-white mb-6">Visit</h2>
                     <div class="space-y-4">
                         <a v-if="project.projectUrl" :href="project.projectUrl" target="_blank"
                             rel="noopener noreferrer"
                             class="flex items-center justify-between p-4 bg-surface border border-white/10 rounded-xl hover:border-accent/50 hover:bg-white/5 transition-all group">
-                            <span class="font-medium text-white">Live Preview</span>
+                            <span class="font-medium text-white">Open live project</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round"

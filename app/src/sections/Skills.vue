@@ -1,95 +1,60 @@
 <template>
-    <section id="skills" class="py-32 relative bg-background overflow-hidden">
-        <!-- Background Watermark -->
-        <div class="absolute top-[10%] right-[-10%] select-none pointer-events-none z-0">
-            <span class="text-[15rem] font-heading font-bold text-white/[0.02] leading-none">SKILLS</span>
-        </div>
-
-        <!-- Grid Pattern -->
-        <div
-            class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]">
-        </div>
-
-        <div class="w-full max-w-[1350px] mx-auto px-6 relative z-10">
-
-            <!-- Header -->
-            <div class="mb-20">
-                <h2 class="font-heading font-bold text-4xl md:text-5xl text-primary mb-4 reveal-text">
-                    Technical <span class="text-accent">Skills.</span>
-                </h2>
-                <div class="h-1 w-20 bg-accent/50 rounded-full mt-6"></div>
+    <section id="skills" ref="sectionEl" class="relative overflow-hidden border-y border-white/5 bg-surface/30 py-[var(--section-space)]">
+        <div class="section-shell relative z-10">
+            <div class="mb-14 grid gap-6 md:mb-18 md:grid-cols-2 md:items-end">
+                <div><span class="section-kicker">Capabilities / Toolkit</span><h2 class="mt-4 font-heading text-4xl font-bold text-primary md:text-6xl">Tools I work<br>with<span class="text-accent">.</span></h2></div>
+                <p class="max-w-lg text-base leading-relaxed text-secondary md:justify-self-end">Languages, frameworks, and tools I use to take web products from interface to deployment.</p>
             </div>
 
-            <!-- Skills Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div v-for="category in categories" :key="category.id"
-                    class="skill-card group bg-surface border border-white/5 p-8 rounded-2xl hover:border-accent/30 transition-colors duration-300">
-                    <div class="mb-6 flex items-center gap-4">
-                        <div class="p-3 bg-white/5 rounded-lg text-accent">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-                                <path d="M9 3v18" />
-                                <path d="m14 9 3 3-3 3" />
-                            </svg>
-                        </div>
-                        <h3 class="font-heading font-bold text-xl text-white">{{ category.name }}</h3>
-                    </div>
-                    <ul class="space-y-4">
-                        <li v-for="skill in category.skills" :key="skill.id || skill.name"
-                            class="flex items-center gap-3 group/item">
-                            <div
-                                class="text-secondary group-hover/item:text-accent transition-colors w-6 h-6 flex items-center justify-center">
-                                <div v-if="skill.svgContent || isSvg(skill.icon)" 
-                                    v-html="skill.svgContent || skill.icon" 
-                                    class="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full text-current"></div>
-                                <i v-else :class="skill.icon || 'w-6 h-6 border border-dashed border-white/20 rounded'" class="text-xl flex items-center justify-center"></i>
-                            </div>
-                            <span class="text-secondary font-medium group-hover/item:text-white transition-colors">
-                                {{ skill.name }}
+            <div v-if="loading" class="grid gap-px bg-white/10 sm:grid-cols-2 lg:grid-cols-4" aria-label="Loading skills"><div v-for="item in 4" :key="item" class="h-64 animate-pulse bg-surface"></div></div>
+            <div v-else-if="displayCategories.length" class="skills-grid grid gap-px overflow-hidden border border-white/10 bg-white/10">
+                <article v-for="(category, index) in displayCategories" :key="category.id" class="skill-group min-h-64 bg-background p-6 md:p-7">
+                    <div class="mb-8 flex items-baseline justify-between"><h3 class="font-heading text-lg font-bold text-primary">{{ category.name }}</h3><span class="font-mono text-[0.65rem] text-secondary">{{ categoryNumber(index) }}</span></div>
+                    <ul class="space-y-3.5">
+                        <li v-for="skill in category.skills" :key="skill.id || skill.name" class="group flex min-h-7 items-center gap-3 text-sm text-secondary transition-colors hover:text-primary">
+                            <span class="grid h-5 w-5 shrink-0 place-items-center text-secondary transition-colors group-hover:text-accent">
+                                <span v-if="skill.svgContent || isSvg(skill.icon)" v-html="skill.svgContent || skill.icon" class="flex h-full w-full items-center justify-center [&>svg]:h-full [&>svg]:w-full"></span>
+                                <span v-else class="h-1 w-1 rounded-full bg-current"></span>
                             </span>
+                            {{ normalizeName(skill.name) }}
                         </li>
                     </ul>
-                </div>
+                </article>
             </div>
+            <p v-else class="border-y border-white/10 py-12 text-secondary">Skills will appear here after they are added from the admin.</p>
         </div>
     </section>
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick } from 'vue'
+import { computed, onMounted, onUnmounted, nextTick, ref } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useSkills } from '../composables/useSkills'
+import { motion, reduceMotion } from '../animations/motion'
 
 gsap.registerPlugin(ScrollTrigger)
-
-const { categories, fetchSkills } = useSkills()
-
-const isSvg = (icon: string) => {
-    if (!icon || typeof icon !== 'string') return false;
-    return icon.toLowerCase().includes('<svg');
-}
+const sectionEl = ref<HTMLElement | null>(null)
+const { categories, loading, fetchSkills } = useSkills()
+let context: gsap.Context | null = null
+const normalizeName = (name: string) => ({ 'Vue JS': 'Vue.js', 'Nest JS': 'NestJS', Github: 'GitHub' } as Record<string, string>)[name] || name
+const isSvg = (icon: string) => typeof icon === 'string' && icon.toLowerCase().includes('<svg')
+const displayCategories = computed(() => categories.value.map((category: any) => ({
+    ...category,
+    skills: [...(category.skills || [])].sort((a: any, b: any) => (a.sortOrder || 0) - (b.sortOrder || 0)),
+})))
+const categoryNumber = (index: number) => index < 9 ? `0${index + 1}` : String(index + 1)
 
 onMounted(async () => {
-    await fetchSkills()
-
-    nextTick(() => {
-        ScrollTrigger.refresh()
-
-        // Stagger Reveal for Cards
-        gsap.from('.skill-card', {
-            y: 50,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '#skills',
-                start: 'top 80%'
-            }
-        })
-    })
+    await fetchSkills(); await nextTick()
+    if (!reduceMotion()) context = gsap.context(() => {
+        gsap.from('.skill-group', { clipPath: 'inset(0 100% 0 0)', duration: motion.duration.slow, stagger: motion.stagger.base, ease: motion.ease.emphasis, scrollTrigger: { trigger: '.skills-grid', start: 'top 82%' } })
+    }, sectionEl.value || undefined)
+    ScrollTrigger.refresh()
 })
+onUnmounted(() => context?.revert())
 </script>
+
+<style scoped>
+.skills-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+</style>

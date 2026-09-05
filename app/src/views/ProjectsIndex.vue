@@ -39,7 +39,7 @@
                         <p class="text-secondary text-sm mb-6 line-clamp-3 flex-1">{{ project.description }}</p>
                         <router-link :to="'/project/' + project.id"
                             class="inline-flex items-center gap-2 text-sm text-white font-medium hover:text-accent transition-colors mt-auto">
-                            View Project Details <span class="transition-transform group-hover:translate-x-1">→</span>
+                            View project <span class="transition-transform group-hover:translate-x-1">→</span>
                         </router-link>
                     </div>
                 </article>
@@ -67,9 +67,7 @@ const getImageUrl = (path: string) => {
 }
 
 const getCategory = (proj: any) => {
-    // If backend doesn't return category field yet, return a default or map from skills
-    // Assuming backend might have it or we use a fallback
-    return proj.category || 'Web Development';
+    return proj.category || '';
 }
 
 onMounted(() => {

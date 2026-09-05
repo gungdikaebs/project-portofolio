@@ -21,7 +21,7 @@
                     All <span class="text-accent">Articles.</span>
                 </h1>
                 <p class="text-secondary text-lg max-w-2xl leading-relaxed">
-                    Explore all my thoughts, tutorials, and insights about web development and software engineering.
+                    Notes on web development, lessons from shipped work, and tools I am currently exploring.
                 </p>
             </div>
 

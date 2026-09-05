@@ -1,220 +1,130 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import gsap from 'gsap'
+import { motion, reduceMotion } from '../animations/motion'
 
 const router = useRouter()
 const route = useRoute()
-
 const isMobileMenuOpen = ref(false)
 const isScrolled = ref(false)
-const backdrop = ref(null)
-const sidebar = ref(null)
-
-const toggleMenu = async () => {
-    if (!isMobileMenuOpen.value) {
-        // OPEN ANIMATION
-        isMobileMenuOpen.value = true
-        document.body.style.overflow = 'hidden'
-        await nextTick() // Wait for DOM to exist
-
-        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
-
-        tl.to(backdrop.value, { opacity: 1, duration: 0.5 })
-            .to(sidebar.value, { x: '0%', duration: 0.5, ease: 'power4.out' }, '-=0.5')
-            .to('.sidebar-link', {
-                y: 0,
-                opacity: 1,
-                stagger: 0.1,
-                duration: 0.4
-            }, '-=0.2')
-            .to('.sidebar-footer', {
-                y: 0,
-                opacity: 1,
-                duration: 0.4
-            }, '-=0.2')
-
-    } else {
-        // CLOSE ANIMATION
-        const tl = gsap.timeline({
-            defaults: { ease: 'power3.in' },
-            onComplete: () => {
-                isMobileMenuOpen.value = false
-                document.body.style.overflow = ''
-            }
-        })
-
-        tl.to('.sidebar-link, .sidebar-footer', { opacity: 0, y: 10, duration: 0.3 })
-            .to(sidebar.value, { x: '100%', duration: 0.4 }, '-=0.2')
-            .to(backdrop.value, { opacity: 0, duration: 0.4 }, '-=0.3')
-    }
-}
-
-const handleKeydown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape' && isMobileMenuOpen.value) {
-        toggleMenu()
-    }
-}
+const activeSection = ref('home')
+const backdrop = ref<HTMLElement | null>(null)
+const sidebar = ref<HTMLElement | null>(null)
+const menuButton = ref<HTMLButtonElement | null>(null)
+const closeButton = ref<HTMLButtonElement | null>(null)
+let observer: IntersectionObserver | null = null
+let sectionObserver: MutationObserver | null = null
+const onScroll = () => { isScrolled.value = window.scrollY > 20 }
 
 const navLinks = [
-    { href: '#home', label: 'Home' },
-    { href: '/projects', label: 'Projects' },
-    { href: '#experience', label: 'Experience' },
-    { href: '#skills', label: 'Skills' },
-    { href: '#about', label: 'About' },
+    { href: '#home', label: 'Home' }, { href: '/projects', label: 'Projects' },
+    { href: '#experience', label: 'Experience' }, { href: '#skills', label: 'Skills' },
+    { href: '#about', label: 'About' }, { href: '#education', label: 'Education' },
     { href: '/blog', label: 'Blog' },
 ]
 
-const handleNavClick = async (href: string) => {
-    // If mobile menu is open, close it first
-    if (isMobileMenuOpen.value) {
-        toggleMenu()
+const closeMenu = async (restoreFocus = true) => {
+    if (!isMobileMenuOpen.value) return
+    const finish = () => {
+        isMobileMenuOpen.value = false
+        document.body.style.overflow = ''
+        if (restoreFocus) nextTick(() => menuButton.value?.focus())
     }
-
-    // Handle Route Navigation (e.g. /projects)
-    if (href.charAt(0) !== '#') {
-        router.push(href)
-        return
-    }
-
-    // Handle Hash Navigation (e.g. #home)
-    // Check if we are on the home page
-    if (route.path !== '/') {
-        await router.push('/')
-        // Wait for navigation + slight delay for DOM to render
-        setTimeout(() => {
-            const element = document.querySelector(href)
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' })
-            }
-        }, 300)
-    } else {
-        // We are already on home, just scroll
-        const element = document.querySelector(href)
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' })
-        }
-    }
+    if (reduceMotion()) return finish()
+    gsap.timeline({ onComplete: finish })
+        .to('.sidebar-link, .sidebar-footer', { opacity: 0, y: 10, duration: motion.duration.fast })
+        .to(sidebar.value, { xPercent: 100, duration: motion.duration.base, ease: motion.ease.exit }, '-=0.18')
+        .to(backdrop.value, { opacity: 0, duration: motion.duration.fast }, '-=0.32')
 }
 
-const handleScroll = () => {
-    isScrolled.value = window.scrollY > 20
+const openMenu = async () => {
+    isMobileMenuOpen.value = true
+    document.body.style.overflow = 'hidden'
+    await nextTick()
+    closeButton.value?.focus()
+    if (reduceMotion()) return
+    gsap.timeline({ defaults: { ease: motion.ease.enter } })
+        .fromTo(backdrop.value, { opacity: 0 }, { opacity: 1, duration: motion.duration.fast })
+        .fromTo(sidebar.value, { xPercent: 100 }, { xPercent: 0, duration: motion.duration.base }, 0)
+        .fromTo('.sidebar-link', { y: 24, opacity: 0 }, { y: 0, opacity: 1, stagger: motion.stagger.tight, duration: motion.duration.fast }, 0.14)
+        .fromTo('.sidebar-footer', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: motion.duration.fast }, 0.24)
+}
+
+const toggleMenu = () => isMobileMenuOpen.value ? closeMenu() : openMenu()
+
+const handleKeydown = (event: KeyboardEvent) => {
+    if (!isMobileMenuOpen.value) return
+    if (event.key === 'Escape') { event.preventDefault(); closeMenu(); return }
+    if (event.key !== 'Tab' || !sidebar.value) return
+    const focusable = Array.from(sidebar.value.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'))
+    const first = focusable[0]; const last = focusable[focusable.length - 1]
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
+}
+
+const handleNavClick = async (href: string) => {
+    if (isMobileMenuOpen.value) await closeMenu(false)
+    if (!href.startsWith('#')) { await router.push(href); return }
+    if (route.path !== '/') await router.push('/')
+    await nextTick()
+    requestAnimationFrame(() => document.querySelector(href)?.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth' }))
+}
+
+const isActive = (href: string) => {
+    if (href.startsWith('#')) return route.path === '/' && activeSection.value === href.slice(1)
+    const section = href.slice(1)
+    return route.path.startsWith(href) || (route.path === '/' && activeSection.value === section)
 }
 
 onMounted(() => {
-    window.addEventListener('scroll', handleScroll)
-    window.addEventListener('keydown', handleKeydown)
+    window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('keydown', handleKeydown); onScroll()
+    observer = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) activeSection.value = entry.target.id }), { rootMargin: '-25% 0px -65%', threshold: 0 })
+    const observeSections = () => document.querySelectorAll('main section[id]').forEach((section) => observer?.observe(section))
+    observeSections()
+    sectionObserver = new MutationObserver(observeSections)
+    sectionObserver.observe(document.querySelector('main') || document.body, { childList: true, subtree: true })
 })
 
-onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll)
-    window.removeEventListener('keydown', handleKeydown)
-    document.body.style.overflow = ''
-})
+watch(() => route.fullPath, () => { if (isMobileMenuOpen.value) closeMenu(false) })
+onUnmounted(() => { window.removeEventListener('scroll', onScroll); window.removeEventListener('keydown', handleKeydown); observer?.disconnect(); sectionObserver?.disconnect(); document.body.style.overflow = '' })
 </script>
 
 <template>
-    <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300" :class="[
-        isScrolled ? 'bg-background/70 backdrop-blur-xl border-b border-surface/50 h-20' : 'bg-transparent h-24'
-    ]">
-        <div class="max-w-[1350px] mx-auto px-6 h-full flex items-center justify-between">
-
-            <!-- Logo -->
-            <router-link to="/"
-                class="font-heading font-bold text-2xl tracking-tight text-primary hover:text-accent transition-colors z-[60] relative">
-                Gung Dika<span class="text-accent">.</span>
-            </router-link>
-
-            <!-- Desktop Navigation -->
-            <nav class="hidden lg:flex items-center gap-6 xl:gap-8">
-                <a v-for="link in navLinks" :key="link.href" :href="link.href"
-                    @click.prevent="handleNavClick(link.href)"
-                    class="group relative text-sm font-medium text-secondary hover:text-primary transition-colors py-2 cursor-pointer">
-                    {{ link.label }}
-                    <span
-                        class="absolute bottom-0 left-0 w-0 h-[2px] bg-accent transition-all duration-300 group-hover:w-full"></span>
+    <header class="fixed left-0 top-0 z-50 w-full border-b transition-[height,background-color,border-color] duration-300" :class="isScrolled ? 'h-18 border-white/5 bg-background/90 backdrop-blur-lg' : 'h-22 border-transparent bg-transparent'">
+        <div class="section-shell flex h-full items-center justify-between">
+            <router-link to="/" class="relative z-[60] font-heading text-xl font-bold tracking-tight text-primary transition-colors hover:text-accent">Gung Dika<span class="text-accent">.</span></router-link>
+            <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
+                <a v-for="link in navLinks" :key="link.href" :href="link.href" @click.prevent="handleNavClick(link.href)"
+                    class="relative inline-flex min-h-11 items-center px-3 text-sm font-medium transition-colors" :class="isActive(link.href) ? 'text-primary' : 'text-secondary hover:text-primary'" :aria-current="isActive(link.href) ? 'page' : undefined">
+                    {{ link.label }}<span class="absolute bottom-1.5 left-3 right-3 h-px origin-left bg-accent transition-transform" :class="isActive(link.href) ? 'scale-x-100' : 'scale-x-0'"></span>
                 </a>
-
-                <!-- CTA Button -->
-                <a href="#contact" @click.prevent="handleNavClick('#contact')" style="color: black !important;"
-                    class="px-5 py-2.5 text-sm font-bold bg-accent rounded-full hover:bg-primary transition-all duration-300 transform hover:scale-105 shadow-[0_0_15px_rgba(106,227,255,0.3)] cursor-pointer">
-                    Contact
-                </a>
+                <a href="#contact" @click.prevent="handleNavClick('#contact')" class="ml-3 inline-flex min-h-11 items-center rounded-full bg-accent px-5 text-sm font-bold text-background transition-colors hover:bg-primary">Contact</a>
             </nav>
-
-            <!-- Mobile Toggle -->
-            <button @click="toggleMenu" class="lg:hidden text-primary p-2 focus:outline-none z-[60] relative"
-                aria-label="Toggle Menu" aria-controls="mobile-menu" :aria-expanded="isMobileMenuOpen">
-                <div class="w-8 h-8 flex flex-col justify-center gap-[6px]">
-                    <span class="w-full h-[2px] bg-current transition-all duration-300 origin-center"
-                        :class="{ 'rotate-45 translate-y-[8px]': isMobileMenuOpen }"></span>
-                    <span class="w-full h-[2px] bg-current transition-all duration-300"
-                        :class="{ 'opacity-0': isMobileMenuOpen }"></span>
-                    <span class="w-full h-[2px] bg-current transition-all duration-300 origin-center"
-                        :class="{ '-rotate-45 -translate-y-[8px]': isMobileMenuOpen }"></span>
-                </div>
+            <button ref="menuButton" type="button" @click="toggleMenu" class="relative z-[60] grid min-h-11 min-w-11 place-items-center rounded-full border border-white/10 text-primary lg:hidden" aria-label="Open navigation menu" aria-controls="mobile-menu" :aria-expanded="isMobileMenuOpen">
+                <span class="sr-only">Menu</span><span class="flex w-5 flex-col gap-1.5"><span class="h-px w-full bg-current"></span><span class="h-px w-3 self-end bg-current"></span></span>
             </button>
         </div>
 
-        <!-- Mobile Menu Overlay (Sidebar) -->
         <Teleport to="body">
-            <div v-if="isMobileMenuOpen" class="fixed inset-0 z-[55]">
-                <!-- Backdrop -->
-                <div ref="backdrop" @click="toggleMenu" class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0">
-                </div>
-
-                <!-- Sidebar -->
-                <div ref="sidebar"
-                    id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation menu"
-                    class="absolute top-0 right-0 h-full w-full sm:w-[400px] bg-[#0B0D10] border-l border-white/5 shadow-2xl flex flex-col justify-between p-8 translate-x-full">
-
-                    <!-- Top Section: Close Button -->
-                    <div class="flex justify-end h-20 items-center">
-                        <button @click="toggleMenu"
-                            class="text-primary hover:text-accent transition-colors p-2 focus:outline-none group"
-                            aria-label="Close Menu">
-                            <!-- Animated X Icon -->
-                            <div class="relative w-8 h-8 flex items-center justify-center">
-                                <span
-                                    class="absolute w-full h-[2px] bg-current rotate-45 group-hover:rotate-[135deg] transition-all duration-300"></span>
-                                <span
-                                    class="absolute w-full h-[2px] bg-current -rotate-45 group-hover:rotate-[45deg] transition-all duration-300"></span>
-                            </div>
-                        </button>
+            <div v-if="isMobileMenuOpen" class="fixed inset-0 z-[70]">
+                <div ref="backdrop" @click="closeMenu()" class="absolute inset-0 bg-black/70"></div>
+                <div ref="sidebar" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation menu" class="absolute right-0 top-0 flex h-[100svh] w-full max-w-[28rem] flex-col overflow-y-auto overscroll-contain border-l border-white/10 bg-background px-6 pb-7 pt-5 sm:px-8">
+                    <div class="flex min-h-14 shrink-0 items-center justify-between border-b border-white/10">
+                        <span class="section-kicker">Navigation</span>
+                        <button ref="closeButton" type="button" @click="closeMenu()" class="grid min-h-11 min-w-11 place-items-center rounded-full border border-white/10 text-2xl text-primary hover:text-accent" aria-label="Close navigation menu">×</button>
                     </div>
-
-                    <!-- Navigation Links -->
-                    <nav class="flex flex-col gap-6">
-                        <a v-for="link in navLinks" :key="link.href" :href="link.href"
-                            @click.prevent="handleNavClick(link.href)"
-                            class="sidebar-link text-4xl font-heading font-bold text-secondary hover:text-primary transition-colors opacity-0 translate-y-4">
-                            {{ link.label }}
+                    <nav class="my-auto flex flex-col py-6" aria-label="Mobile navigation">
+                        <a v-for="(link, index) in navLinks" :key="link.href" :href="link.href" @click.prevent="handleNavClick(link.href)" class="sidebar-link group flex min-h-13 items-center justify-between border-b border-white/8 py-2 font-heading text-[clamp(1.45rem,7vw,2.1rem)] font-bold transition-colors" :class="isActive(link.href) ? 'text-primary' : 'text-secondary hover:text-primary'">
+                            <span>{{ link.label }}</span><span class="font-body text-[0.65rem] font-medium text-secondary">0{{ index + 1 }}</span>
                         </a>
                     </nav>
-
-                    <!-- Bottom Section -->
-                    <div class="flex flex-col gap-6 sidebar-footer opacity-0 translate-y-4">
-                        <a href="#contact" @click.prevent="handleNavClick('#contact')" style="color: black !important;"
-                            class="w-full py-4 text-center text-base font-bold bg-accent rounded-full hover:bg-primary transition-colors shadow-lg">
-                            Contact Me
-                        </a>
-
-                        <div class="flex justify-between items-center text-sm text-secondary border-t border-white/10 pt-6">
-                            <span>© 2026 Gung Dika.</span>
-                            <div class="flex gap-4">
-                                <a href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer"
-                                    class="hover:text-primary transition-colors">GitHub</a>
-                                <a href="https://www.linkedin.com/in/gungdikaebs/" target="_blank" rel="noopener noreferrer"
-                                    class="hover:text-primary transition-colors">LinkedIn</a>
-                            </div>
-                        </div>
+                    <div class="sidebar-footer shrink-0 border-t border-white/10 pt-5">
+                        <a href="#contact" @click.prevent="handleNavClick('#contact')" class="flex min-h-12 w-full items-center justify-center rounded-full bg-accent px-6 font-bold text-background">Start a conversation</a>
+                        <div class="mt-5 flex items-center justify-between text-xs text-secondary"><span>© 2026 Gung Dika</span><span class="flex gap-4"><a href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer" class="hover:text-primary">GitHub</a><a href="https://www.linkedin.com/in/gungdikaebs/" target="_blank" rel="noopener noreferrer" class="hover:text-primary">LinkedIn</a></span></div>
                     </div>
                 </div>
             </div>
         </Teleport>
     </header>
 </template>
-
-<style scoped>
-/* No extra CSS needed, everything handled by Tailwind! */
-</style>

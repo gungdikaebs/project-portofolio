@@ -1,27 +1,11 @@
 <template>
-    <section v-if="loading || experience.length > 0" id="experience" class="py-32 relative overflow-hidden">
-        <!-- Background Blobs -->
-        <div
-            class="absolute top-[20%] left-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none">
-        </div>
-        <div
-            class="absolute bottom-[20%] right-[-10%] w-[400px] h-[400px] bg-accent/5 rounded-full blur-[120px] pointer-events-none">
-        </div>
-
-        <!-- Background Watermark -->
-        <div class="absolute bottom-[5%] left-[-5%] select-none pointer-events-none z-0">
-            <span
-                class="text-[12rem] md:text-[15rem] font-heading font-bold text-white/[0.02] leading-none">HISTORY</span>
-        </div>
-
+    <section v-if="loading || experience.length > 0" id="experience" ref="sectionEl" class="py-[var(--section-space)] relative overflow-hidden">
         <div class="w-full max-w-[1350px] mx-auto px-6 relative z-10">
 
             <!-- Header -->
-            <div class="mb-20">
-                <h2 class="font-heading font-bold text-4xl md:text-5xl text-primary mb-4 reveal-text">
-                    Experience & <span class="text-accent">Contributions.</span>
-                </h2>
-                <div class="h-1 w-20 bg-accent/50 rounded-full mt-6"></div>
+            <div class="mb-16 grid gap-5 border-t border-white/10 pt-6 md:grid-cols-[0.7fr_1.3fr] md:items-end md:mb-20">
+                <span class="section-kicker">Experience / Work history</span>
+                <h2 class="font-heading font-bold text-4xl md:text-6xl text-primary leading-tight">Roles and<br>contributions<span class="text-accent">.</span></h2>
             </div>
 
             <!-- Experience Timeline -->
@@ -34,27 +18,30 @@
                 </div>
             </div>
 
-            <div v-else class="relative border-l border-white/10 ml-4 md:ml-10 space-y-16">
+            <div v-else class="timeline relative ml-1 space-y-14 border-l border-white/10 lg:ml-[32%] lg:space-y-20">
 
-                <div v-for="job in experience" :key="job.id" class="experience-item relative pl-8 md:pl-16">
+                <article v-for="job in experience" :key="job.id" class="experience-item relative pl-7 lg:pl-12">
                     <!-- Timeline Dot -->
-                    <div
-                        class="absolute -left-[5px] top-3 w-2.5 h-2.5 bg-accent rounded-full shadow-[0_0_10px_rgba(106,227,255,0.5)] z-10">
+                    <div class="timeline-dot absolute -left-[5px] top-2 z-10 h-2.5 w-2.5 rounded-full border-2 border-background bg-accent">
                     </div>
 
-                    <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 group">
+                    <div class="group relative">
+
+                        <div class="mb-5 lg:absolute lg:right-[calc(100%+5rem)] lg:top-1 lg:mb-0 lg:w-64 lg:text-right">
+                            <span class="inline-block whitespace-nowrap font-mono text-xs leading-relaxed uppercase tracking-[0.12em] text-accent">{{ formatDateRange(job.startDate, job.endDate) }}</span>
+                        </div>
 
                         <!-- Role & Company -->
-                        <div class="max-w-2xl">
+                        <div class="max-w-3xl">
                             <h3
                                 class="font-heading font-bold text-2xl md:text-3xl text-white mb-2 group-hover:text-accent transition-colors">
                                 {{ job.role }}
                             </h3>
-                            <h4 class="font-body text-xl text-primary mb-6">{{ job.company }}</h4>
+                            <h4 class="font-body text-lg text-primary mb-6">{{ job.company }}</h4>
 
-                            <p class="text-secondary text-lg leading-relaxed mb-6 whitespace-pre-line">
-                                {{ job.description }}
-                            </p>
+                            <ul class="mb-7 space-y-3 text-secondary leading-relaxed">
+                                <li v-for="(point, pointIndex) in descriptionPoints(job.description)" :key="pointIndex" class="flex gap-3"><span class="mt-[0.7em] h-px w-3 shrink-0 bg-white/30"></span><span>{{ point }}</span></li>
+                            </ul>
 
                             <!-- Tech Stack Used -->
                             <div v-if="job.technologies?.length" class="flex flex-wrap gap-3">
@@ -65,16 +52,8 @@
                             </div>
                         </div>
 
-                        <!-- Date -->
-                        <div class="flex-shrink-0">
-                            <span
-                                class="font-mono text-accent text-sm md:text-base border border-accent/20 px-4 py-2 rounded-full bg-accent/5">
-                                {{ formatDateRange(job.startDate, job.endDate) }}
-                            </span>
-                        </div>
-
                     </div>
-                </div>
+                </article>
 
             </div>
 
@@ -83,14 +62,25 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick } from 'vue'
+import { onMounted, onUnmounted, nextTick, ref } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useExperience } from '../composables/useExperience'
+import { motion, reduceMotion } from '../animations/motion'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const { experience, loading, fetchExperience } = useExperience()
+const sectionEl = ref<HTMLElement | null>(null)
+let context: gsap.Context | null = null
+
+const descriptionPoints = (description: string) => {
+    const clean = (description || '').trim()
+    if (!clean) return []
+    const parts = clean.split(/\n+|(?<=[.!?])\s+(?=[A-Z0-9])/).map((point) => point.replace(/^[-•]\s*/, '').trim()).filter(Boolean)
+    if (parts.length <= 4) return parts
+    return [...parts.slice(0, 3), parts.slice(3).join(' ')]
+}
 
 const formatDateRange = (start: string, end: string | null) => {
     if (!start) return '';
@@ -108,22 +98,26 @@ const formatDateRange = (start: string, end: string | null) => {
 
 const refreshAnimations = () => {
     ScrollTrigger.refresh()
+    if (reduceMotion()) return
     const items = document.querySelectorAll('.experience-item')
-    items.forEach(item => {
+    context = gsap.context(() => {
+      gsap.fromTo('.timeline', { '--timeline-progress': '0%' }, { '--timeline-progress': '100%', ease: 'none', scrollTrigger: { trigger: '.timeline', start: 'top 75%', end: 'bottom 65%', scrub: true } })
+      items.forEach(item => {
         gsap.fromTo(item,
-            { y: 50, opacity: 0 },
+            { x: motion.distance.base, opacity: 0 },
             {
-                y: 0,
+                x: 0,
                 opacity: 1,
-                duration: 1,
-                ease: 'power3.out',
+                duration: motion.duration.slow,
+                ease: motion.ease.enter,
                 scrollTrigger: {
                     trigger: item,
                     start: 'top 85%'
                 }
             }
         )
-    })
+      })
+    }, sectionEl.value || undefined)
 }
 
 onMounted(async () => {
@@ -132,4 +126,10 @@ onMounted(async () => {
         refreshAnimations()
     })
 })
+
+onUnmounted(() => context?.revert())
 </script>
+
+<style scoped>
+.timeline::after { content: ''; position: absolute; inset: 0 auto auto -1px; width: 1px; height: var(--timeline-progress, 0%); background: var(--color-accent); }
+</style>

@@ -1,69 +1,40 @@
 <template>
-    <section id="home" class="hero-section min-h-screen flex items-center pt-20 relative overflow-hidden">
-        <!-- Modern Grid Background -->
-        <div class="absolute inset-0 -z-10 h-full w-full"
-            style="background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 100%); -webkit-mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 70%, transparent 100%);">
-        </div>
+    <section id="home" ref="sectionEl" class="hero-section relative flex min-h-[92svh] items-center overflow-hidden pt-24 md:min-h-screen">
+        <div class="hero-grid absolute inset-0 -z-10" aria-hidden="true"></div>
+        <canvas ref="canvas" class="absolute inset-0 z-0 pointer-events-none opacity-40" aria-hidden="true"></canvas>
 
-        <!-- Firefly Particles Canvas -->
-        <canvas ref="canvas" class="absolute inset-0 z-0 pointer-events-none opacity-60"></canvas>
-
-        <div class="w-full max-w-[1350px] mx-auto px-6 flex items-center min-h-[80vh] relative z-20">
-            <div class="flex flex-col gap-8 max-w-5xl">
-
-                <div ref="availability" class="opacity-0 translate-y-4">
-                    <span class="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 py-2 text-xs font-mono uppercase tracking-widest text-accent">
-                        <span class="h-2 w-2 rounded-full bg-accent shadow-[0_0_10px_rgba(106,227,255,0.8)]"></span>
+        <div class="section-shell relative z-10 py-12 md:py-20">
+            <div class="max-w-[74rem]">
+                <div ref="availability" class="mb-6 md:mb-8">
+                    <span class="inline-flex items-center gap-2 rounded-full border border-accent/20 px-3.5 py-2 text-[0.68rem] font-medium uppercase tracking-[0.15em] text-accent">
+                        <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
                         Open to developer opportunities
                     </span>
                 </div>
 
-                <!-- Heading with Premium Masked Reveal -->
-                <h1
-                    class="font-heading font-bold text-5xl md:text-7xl lg:text-8xl leading-[1.1] tracking-tight text-primary">
-                    <div class="overflow-hidden">
-                        <span ref="line1" class="block" style="opacity: 0;">Full-Stack Developer</span>
-                    </div>
-                    <!-- Combined Line for Better Flow -->
-                    <div class="overflow-hidden flex flex-wrap gap-x-4">
-                        <span ref="line2" class="block" style="opacity: 0;">Building Reliable</span>
-                        <span ref="line3" class="block text-accent" style="opacity: 0;">Web Applications.</span>
-                    </div>
+                <h1 class="text-balance font-heading text-[clamp(2.75rem,11vw,6.9rem)] font-bold leading-[0.98] tracking-[-0.055em] text-primary">
+                    <span class="block overflow-hidden"><span ref="line1" class="block">Full-Stack Developer</span></span>
+                    <span class="block overflow-hidden"><span ref="line2" class="block text-secondary">from interface to</span></span>
+                    <span class="block overflow-hidden"><span ref="line3" class="block">reliable systems<span class="text-accent">.</span></span></span>
                 </h1>
 
-                <!-- Caption -->
-                <div ref="captionContainer" class="overflow-hidden">
-                    <p ref="caption"
-                        class="font-body text-base md:text-lg lg:text-xl text-secondary max-w-xl md:max-w-2xl leading-relaxed translate-y-[100%] opacity-0">
-                        I build maintainable, production-ready products with Vue, NestJS, PostgreSQL, and thoughtful user experience—from interface to API and database.
+                <div ref="supporting" class="mt-7 grid max-w-4xl gap-5 border-l border-white/15 pl-5 md:mt-9 md:grid-cols-[1fr_auto] md:items-end md:gap-12 md:pl-7">
+                    <p class="max-w-2xl text-base leading-relaxed text-secondary md:text-lg">
+                        I build web products across Vue interfaces, NestJS APIs, and PostgreSQL databases—with a focus on code that stays clear and maintainable.
                     </p>
-                    <div class="mt-4 text-xs font-mono text-gray-500 opacity-0 translate-y-4" ref="locationMeta">
-                        Based in Bali, Indonesia • Available for full-time opportunities
-                    </div>
+                    <p class="text-xs uppercase tracking-[0.14em] text-secondary">Bali, Indonesia<br><span class="text-primary">Available full-time</span></p>
                 </div>
 
-                <!-- CTA -->
-                <div ref="cta" class="flex flex-wrap items-center gap-4 md:gap-6 mt-4 opacity-0 translate-y-10">
-                    <a href="#projects" style="color: black !important;"
-                        class="magnetic-btn px-6 py-3 md:px-8 md:py-4 text-sm md:text-base font-bold bg-accent rounded-full hover:bg-primary transition-all duration-300 shadow-[0_0_20px_rgba(106,227,255,0.3)] hover:scale-105 active:scale-95 inline-block">
-                        <span class="btn-content inline-block">Explore My Work</span>
-                    </a>
-                    <a href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer"
-                        class="magnetic-btn px-6 py-3 md:px-8 md:py-4 text-sm md:text-base font-medium text-primary border border-surface rounded-full hover:border-accent hover:text-accent transition-colors active:scale-95 inline-block">
-                        <span class="btn-content inline-block">View GitHub</span>
-                    </a>
-                    <a href="#contact" class="text-sm md:text-base font-medium text-secondary hover:text-accent transition-colors">Contact Me →</a>
+                <div ref="cta" class="mt-8 flex flex-wrap items-center gap-3 md:mt-10 md:gap-4">
+                    <a href="#projects" class="magnetic-btn inline-flex min-h-12 items-center rounded-full bg-accent px-6 py-3 text-sm font-bold text-background transition-colors hover:bg-primary md:px-7"><span class="btn-content">Explore My Work</span></a>
+                    <a href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer" class="magnetic-btn inline-flex min-h-12 items-center rounded-full border border-white/20 px-6 py-3 text-sm font-medium text-primary transition-colors hover:border-accent hover:text-accent md:px-7"><span class="btn-content">View GitHub</span></a>
+                    <a href="#contact" class="ml-1 inline-flex min-h-11 items-center text-sm font-medium text-secondary underline decoration-white/20 underline-offset-8 transition-colors hover:text-primary">Contact me</a>
                 </div>
             </div>
         </div>
 
-        <!-- Scroll Indicator -->
-        <div ref="scrollIndicator"
-            class="hidden md:flex absolute bottom-10 left-1/2 -translate-x-1/2 flex-col items-center gap-2 opacity-0">
-            <span class="text-xs font-medium text-secondary tracking-widest uppercase">Scroll</span>
-            <div class="w-[30px] h-[50px] border-2 border-secondary/50 rounded-full flex justify-center p-2">
-                <div class="w-1.5 h-1.5 bg-accent rounded-full animate-bounce"></div>
-            </div>
+        <div ref="scrollIndicator" class="absolute bottom-7 right-[var(--page-gutter)] hidden items-center gap-3 text-[0.65rem] uppercase tracking-[0.18em] text-secondary md:flex" aria-hidden="true">
+            <span>Scroll to explore</span><span class="block h-px w-12 bg-white/20"><span class="scroll-pulse block h-px w-1/2 bg-accent"></span></span>
         </div>
     </section>
 </template>
@@ -71,219 +42,83 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import gsap from 'gsap'
-import { animateTextReveal } from '../animations/textReveal'
 import { initMagneticButtons } from '../animations/magnetic'
+import { motion, reduceMotion } from '../animations/motion'
 
-const line1 = ref(null)
-const line2 = ref(null)
-const line3 = ref(null)
-const caption = ref(null)
-const captionContainer = ref(null)
-const cta = ref(null)
-const scrollIndicator = ref(null)
-const availability = ref(null)
+const sectionEl = ref<HTMLElement | null>(null)
+const line1 = ref<HTMLElement | null>(null)
+const line2 = ref<HTMLElement | null>(null)
+const line3 = ref<HTMLElement | null>(null)
+const availability = ref<HTMLElement | null>(null)
+const supporting = ref<HTMLElement | null>(null)
+const cta = ref<HTMLElement | null>(null)
+const scrollIndicator = ref<HTMLElement | null>(null)
 const canvas = ref<HTMLCanvasElement | null>(null)
+let context: gsap.Context | null = null
+let animationFrameId = 0
+let removeResize: (() => void) | null = null
 
-// Particle System
-let ctx: CanvasRenderingContext2D | null = null
-let animationFrameId: number
-let particles: Particle[] = []
-
-class Particle {
-    x: number
-    y: number
-    size: number
-    speedX: number
-    speedY: number
-    opacity: number
-    fadeSpeed: number
-
-    constructor(canvasWidth: number, canvasHeight: number) {
-        this.x = Math.random() * canvasWidth
-        this.y = Math.random() * canvasHeight
-        this.size = Math.random() * 2 + 0.5 // Small glowing dots
-        this.speedX = Math.random() * 0.5 - 0.25 // Slow drift X
-        this.speedY = Math.random() * 0.5 - 0.25 // Slow drift Y
-        this.opacity = Math.random() * 0.5 + 0.2
-        this.fadeSpeed = Math.random() * 0.005 + 0.002
-    }
-
-    update(canvasWidth: number, canvasHeight: number) {
-        this.x += this.speedX
-        this.y += this.speedY
-        this.opacity += this.fadeSpeed
-
-        // Pulse effect
-        if (this.opacity > 0.8 || this.opacity < 0.2) {
-            this.fadeSpeed = -this.fadeSpeed
-        }
-
-        // Wrap around screen
-        if (this.x > canvasWidth) this.x = 0
-        if (this.x < 0) this.x = canvasWidth
-        if (this.y > canvasHeight) this.y = 0
-        if (this.y < 0) this.y = canvasHeight
-    }
-
-    draw(ctx: CanvasRenderingContext2D) {
-        ctx.beginPath()
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(106, 227, 255, ${this.opacity})` // Accent cyan color
-        ctx.shadowBlur = 10
-        ctx.shadowColor = `rgba(106, 227, 255, 0.8)`
-        ctx.fill()
-    }
-}
+type Particle = { x: number; y: number; radius: number; speed: number; alpha: number }
 
 const initParticles = () => {
-    if (!canvas.value) return
-    ctx = canvas.value.getContext('2d')
-    if (!ctx) return
-
+    const element = canvas.value
+    const ctx = element?.getContext('2d')
+    if (!element || !ctx || reduceMotion()) return
+    let particles: Particle[] = []
     const resize = () => {
-        if (canvas.value) {
-            canvas.value.width = window.innerWidth
-            canvas.value.height = window.innerHeight
-        }
+        const ratio = Math.min(window.devicePixelRatio || 1, 2)
+        element.width = window.innerWidth * ratio
+        element.height = window.innerHeight * ratio
+        element.style.width = `${window.innerWidth}px`
+        element.style.height = `${window.innerHeight}px`
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0)
+        particles = Array.from({ length: window.innerWidth < 768 ? 12 : 24 }, () => ({
+            x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight,
+            radius: Math.random() * 1.1 + 0.35, speed: Math.random() * 0.12 + 0.04,
+            alpha: Math.random() * 0.35 + 0.1,
+        }))
     }
-
-    window.addEventListener('resize', resize)
-    resize()
-
-    // Create particles
-    const particleCount = 40 // Not too crowded
-    for (let i = 0; i < particleCount; i++) {
-        if (canvas.value) {
-            particles.push(new Particle(canvas.value.width, canvas.value.height))
-        }
-    }
-
-    const animate = () => {
-        if (!ctx || !canvas.value) return
-        ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
-
-        particles.forEach(p => {
-            p.update(canvas.value!.width, canvas.value!.height)
-            p.draw(ctx!)
+    const render = () => {
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+        particles.forEach((particle) => {
+            particle.y -= particle.speed
+            if (particle.y < -4) particle.y = window.innerHeight + 4
+            ctx.beginPath(); ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2)
+            ctx.fillStyle = `rgba(106, 227, 255, ${particle.alpha})`; ctx.fill()
         })
-
-        animationFrameId = requestAnimationFrame(animate)
+        animationFrameId = requestAnimationFrame(render)
     }
-
-    animate()
+    resize(); window.addEventListener('resize', resize, { passive: true })
+    removeResize = () => window.removeEventListener('resize', resize)
+    render()
 }
 
 onMounted(() => {
-    // 1. Complex Text Reveal (New Implementation)
-    // We delay the second line slightly to create a sequence
-    if (line1.value) animateTextReveal(line1.value, 0)
-    if (line2.value) animateTextReveal(line2.value, 0.2)
-    if (line3.value) animateTextReveal(line3.value, 0.4)
-
-    // 2. Rest of the Entrance (Caption, CTA, Scroll)
-    // Synchronized to start after the text reveal finishes (approx 1s + stagger)
-    const tl = gsap.timeline({ defaults: { ease: 'power4.out', duration: 1.5 }, delay: 1.2 })
-
-    tl.to(availability.value, {
-        y: 0,
-        opacity: 1,
-        duration: 0.6
-    })
-    .to(caption.value, {
-        y: '0%',
-        opacity: 1,
-        duration: 1
-    })
-        .to(cta.value, {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: 'back.out(1.7)'
-        }, '-=0.6')
-        .to(scrollIndicator.value, {
-            opacity: 1,
-            duration: 1
-        }, '-=0.5')
-        .to(locationMeta.value, { // Animate locationMeta as well
-            y: 0,
-            opacity: 1,
-            duration: 1
-        }, '-=0.8')
-
-
-    // 3. Init Magnetic Buttons
-    initMagneticButtons('.magnetic-btn')
-
-    // 4. Init Particles
+    const lines = [line1.value, line2.value, line3.value]
+    if (!reduceMotion()) {
+        context = gsap.context(() => {
+            const timeline = gsap.timeline({ defaults: { ease: motion.ease.emphasis } })
+            timeline.from(lines, { yPercent: 115, duration: motion.duration.slow, stagger: motion.stagger.base })
+                .from(availability.value, { y: -motion.distance.small, opacity: 0, duration: motion.duration.base }, 0.12)
+                .from(supporting.value, { y: motion.distance.base, opacity: 0, duration: motion.duration.slow }, 0.38)
+                .from(cta.value, { y: motion.distance.small, opacity: 0, duration: motion.duration.base }, 0.58)
+                .from(scrollIndicator.value, { opacity: 0, duration: motion.duration.base }, 0.72)
+        }, sectionEl.value || undefined)
+        initMagneticButtons('.magnetic-btn')
+    }
     initParticles()
-
-    // 5. Parallax Scroll Effects
-    // Text Parallax (Lines move at different speeds)
-    gsap.to(line1.value, {
-        yPercent: -50,
-        ease: 'none',
-        scrollTrigger: {
-            trigger: '#home',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true
-        }
-    })
-
-    gsap.to(line2.value, {
-        yPercent: -30,
-        ease: 'none',
-        scrollTrigger: {
-            trigger: '#home',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true
-        }
-    })
-
-    gsap.to(line3.value, {
-        yPercent: -10,
-        ease: 'none',
-        scrollTrigger: {
-            trigger: '#home',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true
-        }
-    })
-
-    gsap.to(captionContainer.value, {
-        yPercent: 50, // Moves down slightly
-        opacity: 0,
-        ease: 'none',
-        scrollTrigger: {
-            trigger: '#home',
-            start: 'top top',
-            end: '40% top', // Fades out quicker
-            scrub: true
-        }
-    })
-
-    // Particle Background Parallax
-    gsap.to(canvas.value, {
-        yPercent: 50,
-        ease: 'none',
-        scrollTrigger: {
-            trigger: '#home',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true
-        }
-    })
 })
 
-const locationMeta = ref(null)
-
-onUnmounted(() => {
-    cancelAnimationFrame(animationFrameId)
-})
+onUnmounted(() => { context?.revert(); cancelAnimationFrame(animationFrameId); removeResize?.() })
 </script>
 
 <style scoped>
-/* Scoped styles removed in favor of utility classes */
+.hero-grid {
+    background-image: linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px), linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: linear-gradient(to bottom, black 0%, rgb(0 0 0 / 0.85) 55%, transparent 100%);
+}
+.scroll-pulse { animation: scan 1.8s ease-in-out infinite alternate; }
+@keyframes scan { to { transform: translateX(100%); } }
+@media (max-width: 390px) { h1 { font-size: clamp(2.55rem, 12vw, 3.05rem); } }
 </style>

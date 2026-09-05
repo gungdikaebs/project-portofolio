@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
+import { onMounted, onUnmounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import Lenis from 'lenis'
 import Navbar from './components/Navbar.vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
+import { reduceMotion } from './animations/motion'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -16,8 +17,11 @@ const showNavbar = computed(() => {
 
 // Lenis Setup
 let lenis: Lenis | null = null
+const updateLenis = (time: number) => lenis?.raf(time * 1000)
 
 onMounted(() => {
+  if (reduceMotion()) return
+
   lenis = new Lenis({
     duration: 1.2,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -28,12 +32,18 @@ onMounted(() => {
   lenis.on('scroll', ScrollTrigger.update)
 
   // Use GSAP's ticker to drive Lenis updates
-  gsap.ticker.add((time) => {
-    lenis?.raf(time * 1000)
-  })
+  gsap.ticker.add(updateLenis)
 
   // Disable GSAP lag smoothing to ensure smooth scrolling
   gsap.ticker.lagSmoothing(0)
+})
+
+onUnmounted(() => {
+  gsap.ticker.remove(updateLenis)
+  if (lenis) {
+    lenis.destroy()
+    lenis = null
+  }
 })
 </script>
 

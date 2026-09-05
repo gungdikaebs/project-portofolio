@@ -42,7 +42,7 @@
                         Latest <br /> <span class="text-accent">Articles.</span>
                     </h2>
                     <p class="text-secondary text-lg max-w-xl reveal-blog-text leading-relaxed">
-                        Thoughts, learnings, and insights about web development, design, and technology.
+                        Notes on problems I have worked through, tools I am learning, and decisions worth documenting.
                     </p>
                 </div>
 
