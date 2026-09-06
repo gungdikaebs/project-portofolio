@@ -69,26 +69,6 @@ Catatan:
 - Nama kategori harus tetap mengikuti admin.
 - Frontend tidak boleh mengelompokkan ulang skill menggunakan keyword atau heuristic.
 
-## Prioritas 3 — Experience yang Lebih Terstruktur
-
-Saat ini pencapaian masih berasal dari satu field `description` dan dipecah menjadi bullet di frontend.
-
-- [ ] Tambahkan daftar `achievements` yang dapat diedit per item di admin.
-- [ ] Pertimbangkan model `ExperienceAchievement` dengan:
-  - `id`
-  - `experienceId`
-  - `content`
-  - `sortOrder`
-- [ ] Pertahankan `description` sebagai ringkasan opsional atau fallback untuk data lama.
-- [ ] Hubungkan teknologi Experience ke data Skill jika teknologi memang ingin ditampilkan.
-- [ ] Hindari field metrik khusus; angka dapat ditulis di achievement hanya jika benar dan dapat diverifikasi.
-
-Kriteria selesai:
-
-- Setiap pekerjaan menampilkan 3–4 poin yang mudah dipindai.
-- Admin dapat mengatur urutan pencapaian.
-- Frontend tidak perlu memotong paragraf berdasarkan tanda titik.
-
 ## Prioritas 4 — Profile dan Contact dari CMS
 
 Beberapa informasi masih hardcoded di frontend.

@@ -10,12 +10,12 @@
             </header>
 
             <div v-if="loading" class="space-y-20" aria-label="Loading projects" aria-live="polite">
-                <div v-for="item in 3" :key="item" class="grid animate-pulse gap-7 md:grid-cols-[1.25fr_0.75fr]"><div class="aspect-[16/10] bg-white/5"></div><div class="space-y-5 py-4"><div class="h-4 w-1/4 bg-white/5"></div><div class="h-10 w-3/4 bg-white/5"></div><div class="h-20 bg-white/5"></div></div></div>
+                <div v-for="item in 3" :key="item" class="grid animate-pulse gap-7 md:grid-cols-[1.25fr_0.75fr]"><div class="aspect-[4/3] bg-white/5"></div><div class="space-y-5 py-4"><div class="h-4 w-1/4 bg-white/5"></div><div class="h-10 w-3/4 bg-white/5"></div><div class="h-20 bg-white/5"></div></div></div>
             </div>
 
             <div v-else-if="displayedProjects.length" class="projects-list">
                 <article v-for="(project, index) in displayedProjects" :key="project.id" class="project-story group grid gap-7 border-t border-white/10 py-12 md:grid-cols-12 md:gap-10 md:py-20">
-                    <router-link :to="'/project/' + project.id" class="project-media relative block aspect-[16/10] overflow-hidden bg-surface md:col-span-7" :class="index % 2 ? 'md:order-2' : ''">
+                    <router-link :to="'/project/' + project.id" class="project-media relative block aspect-[4/3] overflow-hidden bg-surface md:col-span-7" :class="index % 2 ? 'md:order-2' : ''">
                         <img v-if="project.imageUrl" :src="getImageUrl(project.imageUrl)" :alt="project.title" class="project-image h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]" />
                         <div v-else class="grid h-full place-items-center border border-white/5 text-2xl font-bold text-white/20">{{ project.title }}</div>
                         <span class="absolute right-4 top-4 grid h-12 w-12 place-items-center rounded-full bg-background/85 text-lg text-primary backdrop-blur transition-colors group-hover:bg-accent group-hover:text-background" aria-hidden="true">↗</span>

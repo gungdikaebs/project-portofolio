@@ -59,7 +59,7 @@
             </div>
 
             <!-- Main Image -->
-            <div class="w-full aspect-video rounded-3xl overflow-hidden mb-16 border border-white/10 relative group">
+            <div class="w-full aspect-[4/3] rounded-3xl overflow-hidden mb-16 border border-white/10 relative group">
                 <img :src="getImageUrl(project.imageUrl)" :alt="project.title" class="w-full h-full object-cover" />
                 <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-60"></div>
             </div>

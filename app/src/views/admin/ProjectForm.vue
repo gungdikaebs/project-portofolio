@@ -240,7 +240,7 @@
                 <div class="bg-[#11141A] p-6 rounded-2xl border border-white/5 space-y-4">
                     <h3 class="text-xl font-bold text-white mb-2">Thumbnail</h3>
 
-                    <div class="aspect-video rounded-xl bg-[#0B0D10] border-2 border-dashed border-white/10 flex flex-col items-center justify-center relative overflow-hidden group cursor-pointer"
+                    <div class="aspect-[4/3] rounded-xl bg-[#0B0D10] border-2 border-dashed border-white/10 flex flex-col items-center justify-center relative overflow-hidden group cursor-pointer"
                         @click="triggerFileInput">
                         <img v-if="previewImage" :src="previewImage"
                             class="w-full h-full object-cover absolute inset-0 z-0">
@@ -271,7 +271,7 @@
                         <span class="font-mono text-xs uppercase tracking-[0.2em] text-blue-400">Draft Preview</span>
                         <button type="button" @click="showPreview = false" class="text-2xl text-gray-400 hover:text-white" aria-label="Close preview">×</button>
                     </div>
-                    <img v-if="previewImage" :src="previewImage" :alt="form.title || 'Project cover'" class="mb-8 aspect-video w-full rounded-2xl object-cover">
+                    <img v-if="previewImage" :src="previewImage" :alt="form.title || 'Project cover'" class="mb-8 aspect-[4/3] w-full rounded-2xl object-cover">
                     <p class="font-mono text-xs uppercase tracking-wider text-blue-400">{{ form.category || 'Category' }} · {{ form.year }}</p>
                     <h2 class="mt-4 text-4xl font-bold text-white">{{ form.title || 'Untitled project' }}</h2>
                     <p v-if="form.role" class="mt-3 text-sm text-gray-400">Role · {{ form.role }}</p>
