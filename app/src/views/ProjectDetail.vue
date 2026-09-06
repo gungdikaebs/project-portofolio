@@ -50,10 +50,11 @@
                 </h1>
 
                 <!-- Tech Stack -->
-                <div class="flex flex-wrap gap-3">
-                    <span v-for="tech in getTechStack(project)" :key="tech"
-                        class="px-3 py-1.5 bg-surface border border-white/10 rounded-lg text-sm text-secondary hover:text-white hover:border-white/30 transition-colors">
-                        {{ tech }}
+                <div class="flex flex-wrap gap-2.5">
+                    <span v-for="tech in getTechStack(project)" :key="tech.id"
+                        class="inline-flex items-center gap-2 px-3 py-1.5 bg-surface border border-white/10 rounded-lg text-sm text-secondary hover:text-white hover:border-accent/40 transition-colors">
+                        <TechIcon v-if="tech.svgContent" :svg-content="tech.svgContent" class="h-4 w-4" />
+                        <span>{{ tech.name }}</span>
                     </span>
                 </div>
             </div>
@@ -185,10 +186,19 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProjects } from '../composables/useProjects'
+import TechIcon from '../components/TechIcon.vue'
 
 const route = useRoute()
 const { project, loading, fetchProject } = useProjects()
 const selectedGalleryIndex = ref<number | null>(null)
+
+interface TechItem {
+    id: string
+    name: string
+    svgContent: string | null
+}
+
+const normalizeTechName = (name: string) => ({ 'Vue JS': 'Vue.js', 'Nest JS': 'NestJS', Github: 'GitHub' } as Record<string, string>)[name.trim()] || name.trim()
 
 const currentGalleryImage = computed(() => {
     if (selectedGalleryIndex.value === null) return null
@@ -217,9 +227,21 @@ const getImageUrl = (path: string) => {
     return `${baseUrl}${safePath}`;
 }
 
-const getTechStack = (proj: any) => {
-    if (!proj || !proj.skills) return [];
-    return proj.skills.map((s: any) => s.skill.name);
+const getTechStack = (proj: any): TechItem[] => {
+    if (!proj || !proj.skills) return []
+    return proj.skills.map((s: any) => {
+        if (typeof s === 'string') {
+            const trimmed = s.trim()
+            return { id: trimmed, name: normalizeTechName(trimmed), svgContent: null }
+        }
+        const skill = s.skill || s
+        const rawName = (skill?.name || '').trim()
+        return {
+            id: skill?.id || rawName,
+            name: normalizeTechName(rawName),
+            svgContent: skill?.svgContent || null
+        }
+    }).filter((t: TechItem) => t.name)
 }
 
 const getCategory = () => {

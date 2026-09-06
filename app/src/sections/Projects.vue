@@ -31,7 +31,33 @@
                             </div>
                         </div>
                         <div class="mt-8">
-                            <ul v-if="getTechStack(project).length" class="mb-7 flex flex-wrap gap-x-4 gap-y-2" aria-label="Technologies"><li v-for="tech in getTechStack(project)" :key="tech" class="text-xs text-secondary">{{ normalizeTechName(tech) }}</li></ul>
+                            <div v-if="getTechStack(project).length" class="mb-7">
+                                <span class="mb-3 block text-[0.65rem] font-medium uppercase tracking-[0.16em] text-secondary">Technologies</span>
+                                <ul class="flex flex-wrap items-center gap-2.5" aria-label="Technologies used">
+                                    <li v-for="tech in getTechStack(project)" :key="tech.id" class="group/tech relative">
+                                        <div
+                                            v-if="tech.svgContent"
+                                            class="grid h-9 w-9 place-items-center rounded-lg border border-white/10 bg-surface text-secondary transition-all duration-200 hover:scale-105 hover:border-accent/40 hover:text-accent"
+                                            :title="tech.name"
+                                            :aria-label="tech.name"
+                                        >
+                                            <TechIcon :svg-content="tech.svgContent" class="h-4 w-4" />
+                                        </div>
+                                        <span
+                                            v-else
+                                            class="inline-block rounded-md border border-white/10 bg-surface px-2.5 py-1 text-xs text-secondary"
+                                        >
+                                            {{ tech.name }}
+                                        </span>
+                                        <span
+                                            v-if="tech.svgContent"
+                                            class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-[#11141A] border border-white/15 px-2 py-0.5 font-mono text-[10px] text-primary opacity-0 shadow-lg transition-opacity duration-150 group-hover/tech:opacity-100 z-20"
+                                        >
+                                            {{ tech.name }}
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
                             <div class="flex flex-wrap gap-5 text-sm font-medium">
                                 <router-link :to="'/project/' + project.id" class="text-primary underline decoration-white/20 underline-offset-8 transition-colors hover:text-accent">View Case Study</router-link>
                                 <a v-if="project.projectUrl" :href="project.projectUrl" target="_blank" rel="noopener noreferrer" class="text-secondary underline decoration-white/20 underline-offset-8 transition-colors hover:text-accent">Live Demo ↗</a>
@@ -54,6 +80,7 @@ import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useProjects } from '../composables/useProjects'
 import { motion, reduceMotion } from '../animations/motion'
+import TechIcon from '../components/TechIcon.vue'
 
 gsap.registerPlugin(ScrollTrigger)
 const sectionEl = ref<HTMLElement | null>(null)
@@ -61,9 +88,31 @@ const { projects, loading, fetchProjects } = useProjects()
 const displayedProjects = computed(() => { const featured = projects.value.filter((project: any) => project.featured); return (featured.length ? featured : projects.value).slice(0, 4) })
 let context: gsap.Context | null = null
 
+interface TechItem {
+    id: string
+    name: string
+    svgContent: string | null
+}
+
+const normalizeTechName = (name: string) => ({ 'Vue JS': 'Vue.js', 'Nest JS': 'NestJS', Github: 'GitHub' } as Record<string, string>)[name.trim()] || name.trim()
+
 const getImageUrl = (path: string) => { if (!path || path.startsWith('http')) return path; const base = (import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/^['"]|['"]$/g, '').replace(/\/+$/, ''); return `${base}${path.startsWith('/') ? path : `/${path}`}` }
-const getTechStack = (project: any) => project.skills?.map((item: any) => item.skill.name) || []
-const normalizeTechName = (name: string) => ({ 'Vue JS': 'Vue.js', 'Nest JS': 'NestJS', Github: 'GitHub' } as Record<string, string>)[name] || name
+const getTechStack = (project: any): TechItem[] => {
+    if (!project?.skills) return []
+    return project.skills.map((item: any) => {
+        if (typeof item === 'string') {
+            const trimmed = item.trim()
+            return { id: trimmed, name: normalizeTechName(trimmed), svgContent: null }
+        }
+        const skill = item.skill || item
+        const rawName = (skill?.name || '').trim()
+        return {
+            id: skill?.id || rawName,
+            name: normalizeTechName(rawName),
+            svgContent: skill?.svgContent || null
+        }
+    }).filter((t: TechItem) => t.name)
+}
 const projectNumber = (index: number) => index < 9 ? `0${index + 1}` : String(index + 1)
 
 const initAnimations = () => {
