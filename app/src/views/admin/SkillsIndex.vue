@@ -26,7 +26,7 @@
         <!-- Content -->
         <div v-else class="space-y-12">
 
-            <div v-for="category in categories" :key="category.id" class="animate-enter">
+            <div v-for="(category, categoryIndex) in categories" :key="category.id" class="animate-enter">
 
                 <!-- Category Header -->
                 <div class="flex items-center gap-4 mb-6 border-b border-white/5 pb-4">
@@ -34,6 +34,14 @@
                     <span class="px-2 py-0.5 rounded-full bg-white/5 text-xs text-gray-500 border border-white/5">{{
                         category.skills.length }}</span>
                     <div class="flex items-center gap-1 ml-auto">
+                        <button type="button" @click="moveCategory(categoryIndex, -1)"
+                            :disabled="categoryIndex === 0 || reorderingCategories"
+                            class="p-2 text-gray-600 hover:text-white hover:bg-white/5 rounded-lg transition-all disabled:cursor-not-allowed disabled:opacity-25"
+                            title="Move Category Up" :aria-label="`Move ${category.name} up`">↑</button>
+                        <button type="button" @click="moveCategory(categoryIndex, 1)"
+                            :disabled="categoryIndex === categories.length - 1 || reorderingCategories"
+                            class="p-2 text-gray-600 hover:text-white hover:bg-white/5 rounded-lg transition-all disabled:cursor-not-allowed disabled:opacity-25"
+                            title="Move Category Down" :aria-label="`Move ${category.name} down`">↓</button>
                         <button @click="openCategoryModal(category)"
                             class="p-2 text-gray-600 hover:text-white hover:bg-white/5 rounded-lg transition-all"
                             title="Edit Category">
@@ -207,12 +215,14 @@ interface Skill {
 interface Category {
     id: string;
     name: string;
+    sortOrder: number;
     skills: Skill[];
 }
 
 const loading = ref(true);
 const categories = ref<Category[]>([]);
 const isSubmitting = ref(false);
+const reorderingCategories = ref(false);
 
 // Skill Modal State
 const showSkillModal = ref(false);
@@ -277,6 +287,28 @@ const deleteCategory = async (id: string) => {
         fetchSkills();
     } catch (err) {
         alert('Failed to delete category');
+    }
+};
+
+const moveCategory = async (index: number, direction: -1 | 1) => {
+    const targetIndex = index + direction;
+    const current = categories.value[index];
+    const target = categories.value[targetIndex];
+    if (!current || !target || reorderingCategories.value) return;
+
+    reorderingCategories.value = true;
+    try {
+        const reordered = [...categories.value];
+        [reordered[index], reordered[targetIndex]] = [target, current];
+        const response = await api.patch('/skills/categories/reorder', {
+            categories: reordered.map((category, sortOrder) => ({ id: category.id, sortOrder })),
+        });
+        categories.value = response.data;
+    } catch (error) {
+        console.error('Failed to reorder categories', error);
+        alert('Failed to update category order');
+    } finally {
+        reorderingCategories.value = false;
     }
 };
 

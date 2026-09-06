@@ -27,7 +27,7 @@
                             <h3 class="text-balance font-heading text-3xl font-bold leading-tight text-primary md:text-5xl"><router-link :to="'/project/' + project.id" class="transition-colors hover:text-accent">{{ project.title }}</router-link></h3>
                             <div class="mt-7 border-l border-white/15 pl-5">
                                 <span class="mb-2 block text-[0.65rem] font-medium uppercase tracking-[0.16em] text-secondary">Contribution</span>
-                                <p class="line-clamp-3 leading-relaxed text-secondary">{{ project.description }}</p>
+                                <p class="line-clamp-3 leading-relaxed text-secondary">{{ project.contribution || project.description }}</p>
                             </div>
                         </div>
                         <div class="mt-8">

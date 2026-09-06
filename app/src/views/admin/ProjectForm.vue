@@ -61,6 +61,17 @@
                             <input v-model="form.projectUrl" type="url"
                                 class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
                                 placeholder="https://...">
+                            <p class="mt-2 text-xs text-gray-600">Optional. Must start with http:// or https://.</p>
+                        </div>
+
+                        <!-- Source Code URL -->
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Source
+                                Code URL</label>
+                            <input v-model="form.sourceCodeUrl" type="url"
+                                class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
+                                placeholder="https://github.com/...">
+                            <p class="mt-2 text-xs text-gray-600">Optional. Repository link is kept separate from the live demo.</p>
                         </div>
 
                         <!-- Description -->
@@ -70,6 +81,28 @@
                             <textarea v-model="form.description" rows="5" required
                                 class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"></textarea>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Optional Case Study -->
+                <div class="bg-[#11141A] p-6 rounded-2xl border border-white/5 space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Case Study</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-gray-500">All fields in this section are optional. Empty sections will not appear on the public project page.</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Role</label>
+                        <input v-model="form.role" type="text" maxlength="191"
+                            class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
+                            placeholder="e.g. Full-Stack Developer">
+                    </div>
+
+                    <div v-for="field in caseStudyFields" :key="field.key">
+                        <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">{{ field.label }}</label>
+                        <textarea v-model="form[field.key]" rows="5"
+                            class="w-full bg-[#0B0D10] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-all"
+                            :placeholder="field.placeholder"></textarea>
                     </div>
                 </div>
 
@@ -196,6 +229,10 @@
                             class="w-full py-3 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition-colors disabled:opacity-50">
                             {{ saving ? 'Saving...' : 'Save Project' }}
                         </button>
+                        <button type="button" @click="showPreview = true"
+                            class="w-full py-3 border border-white/15 text-white font-bold rounded-xl hover:border-white/30 hover:bg-white/5 transition-colors">
+                            Preview Draft
+                        </button>
                     </div>
                 </div>
 
@@ -224,6 +261,29 @@
             </div>
 
         </form>
+
+        <Teleport to="body">
+            <div v-if="showPreview" @click.self="showPreview = false"
+                class="fixed inset-0 z-[100] overflow-y-auto bg-black/90 p-4 backdrop-blur-md md:p-10"
+                role="dialog" aria-modal="true" aria-label="Project draft preview">
+                <div class="mx-auto max-w-4xl rounded-3xl border border-white/10 bg-[#0B0D10] p-6 shadow-2xl md:p-10">
+                    <div class="mb-8 flex items-center justify-between gap-4">
+                        <span class="font-mono text-xs uppercase tracking-[0.2em] text-blue-400">Draft Preview</span>
+                        <button type="button" @click="showPreview = false" class="text-2xl text-gray-400 hover:text-white" aria-label="Close preview">×</button>
+                    </div>
+                    <img v-if="previewImage" :src="previewImage" :alt="form.title || 'Project cover'" class="mb-8 aspect-video w-full rounded-2xl object-cover">
+                    <p class="font-mono text-xs uppercase tracking-wider text-blue-400">{{ form.category || 'Category' }} · {{ form.year }}</p>
+                    <h2 class="mt-4 text-4xl font-bold text-white">{{ form.title || 'Untitled project' }}</h2>
+                    <p v-if="form.role" class="mt-3 text-sm text-gray-400">Role · {{ form.role }}</p>
+                    <div class="mt-10 space-y-9">
+                        <section v-for="section in previewSections" :key="section.label">
+                            <h3 class="text-xl font-bold text-white">{{ section.label }}</h3>
+                            <p class="mt-3 whitespace-pre-line leading-relaxed text-gray-400">{{ section.content }}</p>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </Teleport>
     </AdminLayout>
 </template>
 
@@ -239,6 +299,7 @@ const router = useRouter();
 const isEditing = computed(() => route.params.id !== undefined);
 const loadingSkills = ref(true);
 const saving = ref(false);
+const showPreview = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
 const galleryFileInput = ref<HTMLInputElement | null>(null);
 const uploadingGallery = ref(false);
@@ -257,15 +318,35 @@ const form = ref({
     title: '',
     slug: '',
     description: '',
+    role: '',
+    challenge: '',
+    contribution: '',
+    result: '',
     category: '',
     year: new Date().getFullYear(),
     projectUrl: '',
+    sourceCodeUrl: '',
     imageUrl: '',
     status: 'DRAFT',
     featured: false,
     skillIds: [] as string[],
     galleryImages: [] as GalleryImageForm[]
 });
+
+type CaseStudyField = 'challenge' | 'contribution' | 'result';
+
+const caseStudyFields: { key: CaseStudyField; label: string; placeholder: string }[] = [
+    { key: 'challenge', label: 'Challenge', placeholder: 'What problem or constraint needed to be solved?' },
+    { key: 'contribution', label: 'Contribution', placeholder: 'What did you directly build or decide?' },
+    { key: 'result', label: 'Result', placeholder: 'What verifiable outcome did the project produce?' },
+];
+
+const previewSections = computed(() => [
+    { label: 'Overview', content: form.value.description.trim() },
+    { label: 'Challenge', content: form.value.challenge.trim() },
+    { label: 'Contribution', content: form.value.contribution.trim() },
+    { label: 'Result', content: form.value.result.trim() },
+].filter(section => section.content));
 
 const getFileUrl = (path: string) => {
     if (!path) return '';
@@ -403,9 +484,14 @@ const fetchProject = async (id: string) => {
             title: data.title,
             slug: data.slug,
             description: data.description,
+            role: data.role || '',
+            challenge: data.challenge || '',
+            contribution: data.contribution || '',
+            result: data.result || '',
             category: data.category,
             year: data.year,
-            projectUrl: data.projectUrl,
+            projectUrl: data.projectUrl || '',
+            sourceCodeUrl: data.sourceCodeUrl || '',
             imageUrl: data.imageUrl,
             status: data.status,
             featured: data.featured,
@@ -430,8 +516,15 @@ const submitForm = async () => {
 
     saving.value = true;
     try {
+        const optionalText = (value: string) => value.trim() || null;
         const payload = {
             ...form.value,
+            role: optionalText(form.value.role),
+            challenge: optionalText(form.value.challenge),
+            contribution: optionalText(form.value.contribution),
+            result: optionalText(form.value.result),
+            projectUrl: optionalText(form.value.projectUrl),
+            sourceCodeUrl: optionalText(form.value.sourceCodeUrl),
             galleryImages: form.value.galleryImages.map((image, index) => ({
                 ...image,
                 sortOrder: index,

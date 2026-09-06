@@ -4,6 +4,7 @@ import { CreateSkillDto } from './dto/create-skill.dto';
 import { UpdateSkillDto } from './dto/update-skill.dto';
 import { CreateSkillCategoryDto } from './dto/create-skill-category.dto';
 import { UpdateSkillCategoryDto } from './dto/update-skill-category.dto';
+import { ReorderSkillCategoriesDto } from './dto/reorder-skill-categories.dto';
 
 @Injectable()
 export class SkillsService {
@@ -46,15 +47,26 @@ export class SkillsService {
 
   // --- Categories ---
 
-  createCategory(createDto: CreateSkillCategoryDto) {
+  async createCategory(createDto: CreateSkillCategoryDto) {
+    const lastCategory =
+      createDto.sortOrder === undefined
+        ? await this.prisma.skillCategory.findFirst({
+            orderBy: [{ sortOrder: 'desc' }, { createdAt: 'desc' }],
+            select: { sortOrder: true },
+          })
+        : null;
+
     return this.prisma.skillCategory.create({
-      data: createDto,
+      data: {
+        ...createDto,
+        sortOrder: createDto.sortOrder ?? (lastCategory?.sortOrder ?? -1) + 1,
+      },
     });
   }
 
   findAllCategories() {
     return this.prisma.skillCategory.findMany({
-      orderBy: { createdAt: 'asc' },
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
       include: {
         skills: {
           orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
@@ -68,6 +80,19 @@ export class SkillsService {
       where: { id },
       data: updateDto,
     });
+  }
+
+  async reorderCategories(reorderDto: ReorderSkillCategoriesDto) {
+    await this.prisma.$transaction(
+      reorderDto.categories.map((category) =>
+        this.prisma.skillCategory.update({
+          where: { id: category.id },
+          data: { sortOrder: category.sortOrder },
+        }),
+      ),
+    );
+
+    return this.findAllCategories();
   }
 
   removeCategory(id: string) {

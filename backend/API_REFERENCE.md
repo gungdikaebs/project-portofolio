@@ -70,10 +70,15 @@ Base URL: `http://localhost:3000`
   "title": "Portfolio V2",
   "slug": "portfolio-v2",
   "description": "My personal portfolio website built with NestJS and Vue.",
+  "role": "Full-Stack Developer",
+  "challenge": "Optional project constraint or problem.",
+  "contribution": "Optional description of the work completed directly.",
+  "result": "Optional, verifiable project outcome.",
   "category": "Web Development",
   "year": 2024,
   "imageUrl": "/uploads/portfolio.jpg",
   "projectUrl": "https://gungdika.com",
+  "sourceCodeUrl": "https://github.com/example/portfolio",
   "status": "DRAFT", 
   "featured": true,
   "sortOrder": 1,
@@ -208,7 +213,21 @@ Base URL: `http://localhost:3000`
 - **Body**:
 ```json
 {
-  "name": "Frontend"
+  "name": "Frontend",
+  "sortOrder": 0
+}
+```
+
+### Reorder Categories (Protected)
+- **URL**: `/skills/categories/reorder`
+- **Method**: `PATCH`
+- **Body**:
+```json
+{
+  "categories": [
+    { "id": "<uuid-of-category-1>", "sortOrder": 0 },
+    { "id": "<uuid-of-category-2>", "sortOrder": 1 }
+  ]
 }
 ```
 

@@ -39,6 +39,10 @@
                     }}</span>
                     <span class="w-1 h-1 bg-white/20 rounded-full"></span>
                     <span>{{ project.year }}</span>
+                    <template v-if="project.role">
+                        <span class="w-1 h-1 bg-white/20 rounded-full"></span>
+                        <span>{{ project.role }}</span>
+                    </template>
                 </div>
 
                 <h1 class="font-heading font-bold text-4xl md:text-6xl text-white mb-8 leading-tight">
@@ -61,25 +65,25 @@
             </div>
 
             <!-- Content Grid -->
-            <div class="grid grid-cols-1 gap-12 lg:gap-20" :class="project.projectUrl ? 'md:grid-cols-3' : ''">
+            <div class="grid grid-cols-1 gap-12 lg:gap-20" :class="hasProjectLinks ? 'md:grid-cols-3' : ''">
 
                 <!-- Description -->
-                <div class="space-y-8" :class="project.projectUrl ? 'md:col-span-2' : ''">
-                    <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">Overview</p>
-                    <h2 class="font-heading text-2xl font-bold text-white">The project</h2>
-                    <p class="text-secondary text-lg leading-relaxed whitespace-pre-line">
-                        {{ project.description }}
-                    </p>
+                <div class="space-y-12" :class="hasProjectLinks ? 'md:col-span-2' : ''">
+                    <section v-for="section in caseStudySections" :key="section.label">
+                        <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">{{ section.label }}</p>
+                        <h2 class="mt-4 font-heading text-2xl font-bold text-white">{{ section.title }}</h2>
+                        <p class="mt-4 text-secondary text-lg leading-relaxed whitespace-pre-line">{{ section.content }}</p>
+                    </section>
                 </div>
 
                 <!-- Sidebar / Links -->
-                <div v-if="project.projectUrl">
+                <div v-if="hasProjectLinks">
                     <h2 class="font-heading font-bold text-2xl text-white mb-6">Visit</h2>
                     <div class="space-y-4">
                         <a v-if="project.projectUrl" :href="project.projectUrl" target="_blank"
                             rel="noopener noreferrer"
                             class="flex items-center justify-between p-4 bg-surface border border-white/10 rounded-xl hover:border-accent/50 hover:bg-white/5 transition-all group">
-                            <span class="font-medium text-white">Open live project</span>
+                            <span class="font-medium text-white">Live Demo</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round"
@@ -87,6 +91,12 @@
                                 <line x1="7" y1="17" x2="17" y2="7"></line>
                                 <polyline points="7 7 17 7 17 17"></polyline>
                             </svg>
+                        </a>
+                        <a v-if="project.sourceCodeUrl" :href="project.sourceCodeUrl" target="_blank"
+                            rel="noopener noreferrer"
+                            class="flex items-center justify-between p-4 bg-surface border border-white/10 rounded-xl hover:border-accent/50 hover:bg-white/5 transition-all group">
+                            <span class="font-medium text-white">Source Code</span>
+                            <span class="text-secondary transition-colors group-hover:text-accent" aria-hidden="true">↗</span>
                         </a>
                     </div>
                 </div>
@@ -185,6 +195,18 @@ const currentGalleryImage = computed(() => {
     return project.value?.galleryImages?.[selectedGalleryIndex.value] || null
 })
 
+const hasProjectLinks = computed(() => Boolean(project.value?.projectUrl || project.value?.sourceCodeUrl))
+
+const caseStudySections = computed(() => {
+    if (!project.value) return []
+    return [
+        { label: 'Overview', title: 'The project', content: project.value.description },
+        { label: 'Challenge', title: 'The problem to solve', content: project.value.challenge },
+        { label: 'Contribution', title: 'What I worked on', content: project.value.contribution },
+        { label: 'Result', title: 'The outcome', content: project.value.result },
+    ].filter(section => typeof section.content === 'string' && section.content.trim())
+})
+
 const getImageUrl = (path: string) => {
     if (!path) return '';
     if (path.startsWith('http')) return path;
@@ -201,7 +223,7 @@ const getTechStack = (proj: any) => {
 }
 
 const getCategory = () => {
-    return project.value?.category || 'Web Development';
+    return project.value?.category || '';
 }
 
 const formatScreenNumber = (index: string | number) => {
