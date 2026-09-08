@@ -27,8 +27,9 @@
                 <div ref="supporting"
                     class="mt-7 grid max-w-4xl gap-5 border-l border-white/15 pl-5 md:mt-9 md:grid-cols-[1fr_auto] md:items-end md:gap-12 md:pl-7">
                     <p class="max-w-2xl text-base leading-relaxed text-secondary md:text-lg">
-                        I build web products across Vue interfaces, NestJS APIs, and PostgreSQL databases—with a focus
-                        on code that stays clear and maintainable.
+                        I primarily build web products with Vue, Laravel, and MySQL, using Docker for consistent
+                        development and deployment. I also work with Next.js, NestJS, and PostgreSQL when a project
+                        calls for them—with a focus on clean, reliable, and maintainable code.
                     </p>
                     <p class="text-xs uppercase tracking-[0.14em] text-secondary">Bali, Indonesia<br><span
                             class="text-primary">Available full-time</span></p>
