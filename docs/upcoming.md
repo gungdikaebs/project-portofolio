@@ -69,25 +69,6 @@ Catatan:
 - Nama kategori harus tetap mengikuti admin.
 - Frontend tidak boleh mengelompokkan ulang skill menggunakan keyword atau heuristic.
 
-## Prioritas 4 — Profile dan Contact dari CMS
-
-Beberapa informasi masih hardcoded di frontend.
-
-- [ ] `email: String?`
-- [ ] `whatsappNumber: String?`
-- [ ] `githubUrl: String?`
-- [ ] `linkedinUrl: String?`
-- [ ] `availabilityText: String?`
-- [ ] `headline: String?`
-- [ ] `shortIntroduction: Text?`
-
-Aturan:
-
-- `whatsappNumber` disimpan dalam format internasional tanpa spasi untuk pembuatan URL.
-- Label tampilan nomor dapat diformat terpisah oleh frontend.
-- Link yang kosong tidak dirender.
-- Availability tidak boleh ditampilkan jika `availableForHi` bernilai false.
-
 ## Prioritas 5 — Content Quality
 
 - [ ] Audit bio agar lebih personal dan tidak berisi jargon generik.

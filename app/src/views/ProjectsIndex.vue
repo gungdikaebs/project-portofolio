@@ -37,10 +37,20 @@
                                 project.year }}</span>
                         </div>
                         <p class="text-secondary text-sm mb-6 line-clamp-3 flex-1">{{ project.description }}</p>
-                        <router-link :to="'/project/' + project.id"
-                            class="inline-flex items-center gap-2 text-sm text-white font-medium hover:text-accent transition-colors mt-auto">
-                            View project <span class="transition-transform group-hover:translate-x-1">→</span>
-                        </router-link>
+                        <div class="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3">
+                            <router-link :to="'/project/' + project.id"
+                                class="inline-flex items-center gap-2 text-sm text-white font-medium hover:text-accent transition-colors">
+                                View project <span class="transition-transform group-hover:translate-x-1">→</span>
+                            </router-link>
+                            <a v-if="project.sourceCodeUrl" :href="project.sourceCodeUrl" target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center gap-2 text-sm font-medium text-secondary transition-colors hover:text-accent"
+                                :aria-label="`View ${project.title} source code on GitHub (opens in a new tab)`">
+                                <GitHubIcon class="h-4 w-4 shrink-0" />
+                                <span>View Code</span>
+                                <span aria-hidden="true">↗</span>
+                            </a>
+                        </div>
                     </div>
                 </article>
             </div>
@@ -53,6 +63,7 @@
 import { onMounted } from 'vue'
 import Footer from '../components/Footer.vue'
 import { useProjects } from '../composables/useProjects'
+import GitHubIcon from '../components/GitHubIcon.vue'
 
 const { projects, loading, fetchProjects } = useProjects()
 

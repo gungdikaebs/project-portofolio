@@ -88,6 +88,14 @@
                                     rel="noopener noreferrer"
                                     class="text-secondary underline decoration-white/20 underline-offset-8 transition-colors hover:text-accent">Live
                                     Demo ↗</a>
+                                <a v-if="project.sourceCodeUrl" :href="project.sourceCodeUrl" target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="inline-flex items-center gap-2 text-secondary underline decoration-white/20 underline-offset-8 transition-colors hover:text-accent"
+                                    :aria-label="`View ${project.title} source code on GitHub (opens in a new tab)`">
+                                    <GitHubIcon class="h-4 w-4 shrink-0" />
+                                    <span>View Code</span>
+                                    <span aria-hidden="true">↗</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -116,6 +124,7 @@ import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useProjects } from '../composables/useProjects'
 import { motion, reduceMotion } from '../animations/motion'
 import TechIcon from '../components/TechIcon.vue'
+import GitHubIcon from '../components/GitHubIcon.vue'
 
 gsap.registerPlugin(ScrollTrigger)
 const sectionEl = ref<HTMLElement | null>(null)

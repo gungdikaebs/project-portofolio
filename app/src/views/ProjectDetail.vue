@@ -96,7 +96,10 @@
                         <a v-if="project.sourceCodeUrl" :href="project.sourceCodeUrl" target="_blank"
                             rel="noopener noreferrer"
                             class="flex items-center justify-between p-4 bg-surface border border-white/10 rounded-xl hover:border-accent/50 hover:bg-white/5 transition-all group">
-                            <span class="font-medium text-white">Source Code</span>
+                            <span class="inline-flex items-center gap-3 font-medium text-white">
+                                <GitHubIcon class="h-5 w-5 text-secondary transition-colors group-hover:text-accent" />
+                                View Code on GitHub
+                            </span>
                             <span class="text-secondary transition-colors group-hover:text-accent" aria-hidden="true">↗</span>
                         </a>
                     </div>
@@ -187,6 +190,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProjects } from '../composables/useProjects'
 import TechIcon from '../components/TechIcon.vue'
+import GitHubIcon from '../components/GitHubIcon.vue'
 
 const route = useRoute()
 const { project, loading, fetchProject } = useProjects()
