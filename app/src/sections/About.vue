@@ -1,25 +1,23 @@
 <template>
-    <section id="about" class="min-h-screen flex items-center py-20 relative overflow-hidden">
+    <section id="about" class="relative flex items-center overflow-hidden py-[var(--section-space)]">
 
-        <!-- Background Parallax Text (Watermark) -->
-        <div ref="watermark"
-            class="absolute top-20 left-0 w-full text-[20vw] font-bold font-heading text-white/[0.02] leading-none select-none pointer-events-none z-0 whitespace-nowrap">
-            ABOUT ME
-        </div>
+        <div class="section-shell relative z-10">
+            <!-- Scroll Line Divider -->
+            <div class="scroll-divider-wrapper mb-12 h-px w-full overflow-hidden bg-white/5 md:mb-16">
+                <div class="about-scroll-line h-full w-full bg-gradient-to-r from-accent/60 via-white/20 to-white/5 origin-left"></div>
+            </div>
 
-        <div class="w-full max-w-[1350px] mx-auto px-6 relative z-10">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+            <div class="grid grid-cols-1 items-center gap-12 md:grid-cols-2 lg:gap-20">
 
                 <!-- Left Column: Creative Visual -->
-                <div class="about-image-wrapper relative group perspective-1000">
+                <div class="about-image-wrapper relative order-2 md:order-1">
                     <!-- Main Image Frame with Parallax -->
                     <div ref="imageFrame"
-                        class="w-full aspect-[4/5] bg-surface rounded-none overflow-hidden relative shadow-2xl transform transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-tr from-background/80 to-transparent z-10"></div>
+                        class="relative aspect-[4/5] max-h-[42rem] w-full overflow-hidden border border-white/10 bg-surface">
                         <!-- Profile Image or Placeholder -->
                         <img v-if="profile && profile.imageUrl"
                             :src="getFileUrl(profile.imageUrl)" alt="Gung Dika, Full-Stack Developer"
-                            class="w-full h-full object-cover" />
+                            class="w-full h-full object-cover grayscale" />
                         <div v-else
                             class="w-full h-full bg-surface border border-white/5 flex items-center justify-center text-secondary relative">
                             <span class="z-20">[Profile Image Placeholder]</span>
@@ -30,38 +28,18 @@
                         </div>
                     </div>
 
-                    <!-- Floating Badge -->
-                    <div ref="floatingBadge"
-                        class="absolute -bottom-10 -right-10 bg-surface/80 backdrop-blur-md border border-white/10 p-6 rounded-none shadow-xl z-20 hidden md:block">
-                        <p class="font-heading font-bold text-accent text-xl">Based in</p>
-                        <p class="text-white text-lg">
-                            <span v-if="profile">{{ profile.location }}</span>
-                            <span v-else>Loading...</span>
-                        </p>
-                    </div>
-
-                    <!-- Decorative Border Frame -->
-                    <div
-                        class="absolute -top-4 -left-4 w-full h-full border border-accent/30 -z-10 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-500">
-                    </div>
+                    <p v-if="profile?.location" class="mt-4 font-mono text-xs uppercase tracking-[0.14em] text-secondary">Based in {{ profile.location }}</p>
                 </div>
 
                 <!-- Right Column: Content -->
-                <div class="about-content flex flex-col gap-10">
+                <div class="about-content order-1 flex flex-col gap-8 md:order-2 md:gap-10">
                     <!-- Section Header with Masked Reveal -->
                     <div>
-                        <div class="overflow-hidden">
-                            <h2 ref="headingLine1"
-                                class="font-heading font-bold text-5xl md:text-7xl text-primary">
-                                Full-Stack
-                            </h2>
-                        </div>
-                        <div class="overflow-hidden">
-                            <h2 ref="headingLine2"
-                                class="font-heading font-bold text-5xl md:text-7xl text-white">
-                                Web Developer<span class="text-accent">.</span>
-                            </h2>
-                        </div>
+                        <span class="section-kicker mb-5 block">01 / About</span>
+                        <h2 class="font-heading text-5xl font-bold leading-[1.05] tracking-[-0.055em] md:text-7xl">
+                            <span class="block overflow-hidden"><span ref="headingLine1" class="block text-secondary">Hello, I'm</span></span>
+                            <span class="block overflow-hidden"><span ref="headingLine2" class="block text-primary">Gung Dika<span class="text-accent">.</span></span></span>
+                        </h2>
                     </div>
 
                     <!-- Bio Text -->
@@ -78,26 +56,26 @@
                         Available for developer opportunities
                     </div>
 
-                    <!-- Interactive Stats -->
-                    <div v-if="profile" class="grid grid-cols-2 gap-12 mt-4 border-t border-white/5 pt-10">
-                        <div class="stat-item">
+                    <!-- Interactive Stats with animated counter -->
+                    <div v-if="profile && (profile.yearsExperience > 0 || profile.projectsDone > 0)" class="mt-4 grid grid-cols-2 gap-8 border-t border-white/10 pt-8">
+                        <div v-if="profile.yearsExperience > 0" class="stat-item">
                             <h3 class="font-heading font-bold text-5xl text-white flex items-baseline">
                                 {{ profile.yearsExperience }}+
                             </h3>
-                            <p class="text-sm text-secondary mt-2 tracking-widest uppercase">Years Experience</p>
+                            <p class="text-xs text-secondary mt-2 tracking-widest uppercase font-mono">Years Experience</p>
                         </div>
-                        <div class="stat-item">
+                        <div v-if="profile.projectsDone > 0" class="stat-item">
                             <h3 class="font-heading font-bold text-5xl text-accent flex items-baseline">
                                 {{ profile.projectsDone }}+
                             </h3>
-                            <p class="text-sm text-secondary mt-2 tracking-widest uppercase">Projects Done</p>
+                            <p class="text-xs text-secondary mt-2 tracking-widest uppercase font-mono">Projects Done</p>
                         </div>
                     </div>
 
                     <!-- Download CV Button -->
                     <div ref="cvBtn" class="mt-8 border-white/5 border-t pt-10">
                         <a v-if="profile && profile.cvUrl" :href="getFileUrl(profile.cvUrl)" target="_blank" rel="noopener noreferrer"
-                            class="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-accent transition-all duration-300 group">
+                            class="magnetic-btn inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-accent transition-all duration-300 group">
                             <span class="group-hover:-translate-y-0.5 transition-transform">Download CV</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -121,7 +99,8 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useProfile } from '../composables/useProfile'
-import { reduceMotion } from '../animations/motion'
+import { motion, reduceMotion } from '../animations/motion'
+import { initMagneticButtons } from '../animations/magnetic'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -134,9 +113,7 @@ const getFileUrl = (path: string) => {
     return `${baseUrl}${path}`
 }
 
-const watermark = ref(null)
 const imageFrame = ref(null)
-const floatingBadge = ref(null)
 const headingLine1 = ref(null)
 const headingLine2 = ref(null)
 const para1 = ref(null)
@@ -148,112 +125,71 @@ onMounted(async () => {
     if (reduceMotion()) return
 
     animationContext = gsap.context(() => {
-
-    // 1. Parallax Watermark
-    gsap.to(watermark.value, {
-        xPercent: 20,
-        scrollTrigger: {
-            trigger: '#about',
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1
+        // Top divider line animation
+        const line = document.querySelector('.about-scroll-line')
+        if (line) {
+            gsap.fromTo(line,
+                { scaleX: 0 },
+                {
+                    scaleX: 1,
+                    duration: 1.1,
+                    ease: motion.ease.emphasis,
+                    scrollTrigger: { trigger: '#about', start: 'top 85%' }
+                }
+            )
         }
-    })
 
-    // 2. Image Reveal & Parallax
-    // Combine Entrance with Scroll Parallax
-    const imageTl = gsap.timeline({
-        scrollTrigger: {
-            trigger: '.about-image-wrapper',
-            start: 'top 80%',
-            end: 'bottom top',
-            scrub: 1
-        }
-    })
-
-    // Entrance
-    gsap.fromTo(imageFrame.value,
-        { scale: 0.9, opacity: 0 },
-        {
-            scale: 1,
-            opacity: 1,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '.about-image-wrapper',
-                start: 'top 70%'
+        // Image entrance
+        gsap.fromTo(imageFrame.value,
+            { scale: 0.9, opacity: 0 },
+            {
+                scale: 1,
+                opacity: 1,
+                duration: 1,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '.about-image-wrapper',
+                    start: 'top 70%'
+                }
             }
-        }
-    )
+        )
 
-    // Parallax Movement (Image moves slower than scroll)
-    imageTl.to(imageFrame.value, {
-        y: 50,
-        ease: 'none'
-    })
-
-    // Floating Badge Parallax (Moves faster/independently)
-    gsap.fromTo(floatingBadge.value,
-        { y: 50, opacity: 0 },
-        {
-            y: -30, // Moves up as we scroll down
-            opacity: 1,
-            ease: 'none',
+        // Text Staggered Reveal
+        const textTl = gsap.timeline({
             scrollTrigger: {
-                trigger: '.about-image-wrapper',
-                start: 'top 70%',
-                end: 'bottom top',
-                scrub: 1.5
-            }
-        }
-    )
-
-    // 3. Text Staggered Reveal
-    const textTl = gsap.timeline({
-        scrollTrigger: {
-            trigger: '.about-content',
-            start: 'top 75%'
-        }
-    })
-
-    textTl
-        .from([headingLine1.value, headingLine2.value], {
-            yPercent: 100,
-            stagger: 0.15,
-            duration: 1,
-            ease: 'power4.out'
-        })
-        .from([para1.value], {
-            y: 16,
-            opacity: 0,
-            duration: 0.8
-        }, '-=0.5')
-        .from('.stat-item', {
-            y: 16,
-            opacity: 0,
-            stagger: 0.1,
-            duration: 0.5
-        }, '-=0.5')
-        .from(cvBtn.value, {
-            y: 16,
-            opacity: 0,
-            duration: 0.5,
-            ease: 'back.out(1.7)'
-        }, '-=0.3')
-
-    // 4. Number Counter Animation (Using real values if available)
-    if (profile.value) {
-        ScrollTrigger.create({
-            trigger: '.stat-item',
-            start: 'top 85%',
-            once: true,
-            onEnter: () => {
-                // You can add counter animation here if you want to animate from 0 to profile.value.yearsExperience
-                // For now static is fine or text reveal
+                trigger: '.about-content',
+                start: 'top 75%'
             }
         })
-    }
+
+        textTl
+            .from([headingLine1.value, headingLine2.value], {
+                yPercent: 100,
+                stagger: 0.15,
+                duration: 1,
+                ease: 'power4.out'
+            })
+            .from([para1.value], {
+                y: 16,
+                opacity: 0,
+                duration: 0.8
+            }, '-=0.5')
+            .from('.stat-item', {
+                y: 16,
+                opacity: 0,
+                stagger: 0.1,
+                duration: 0.5
+            }, '-=0.5')
+            .from(cvBtn.value, {
+                y: 16,
+                opacity: 0,
+                duration: 0.5,
+                ease: 'back.out(1.7)'
+            }, '-=0.3')
+
     }, '#about')
+
+    initMagneticButtons('.magnetic-btn')
 })
 
 onUnmounted(() => animationContext?.revert())

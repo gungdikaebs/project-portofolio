@@ -1,52 +1,31 @@
 <template>
-    <section id="education" ref="sectionEl" class="py-20 relative overflow-hidden">
-        <!-- Background Shapes -->
-        <div class="absolute top-[10%] left-[-5%] opacity-[0.03] pointer-events-none">
-            <svg width="300" height="300" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="0.5">
-                <circle cx="50" cy="50" r="40" />
-            </svg>
-        </div>
-        <div class="absolute bottom-[20%] right-[-5%] opacity-5 pointer-events-none rotate-45">
-            <svg width="400" height="400" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="0.5">
-                <rect x="20" y="20" width="60" height="60" />
-            </svg>
-        </div>
+    <section id="education" ref="sectionEl" class="py-[var(--section-space)] relative overflow-hidden">
+        <div class="section-shell relative z-10">
 
-        <!-- Background Watermark -->
-        <div class="absolute top-[5%] right-[0] select-none pointer-events-none z-0">
-            <span
-                class="text-[10rem] md:text-[12rem] font-heading font-bold text-white/[0.02] leading-none">LEARNING</span>
-        </div>
-
-        <div class="w-full max-w-[1350px] mx-auto px-6 relative z-10">
+            <!-- Scroll Line Divider -->
+            <div class="scroll-divider-wrapper mb-16 h-px w-full overflow-hidden bg-white/5 md:mb-20">
+                <div class="education-scroll-line h-full w-full bg-gradient-to-r from-accent/60 via-white/20 to-white/5 origin-left"></div>
+            </div>
 
             <!-- Header -->
             <div class="mb-16">
-                <h2 class="font-heading font-bold text-4xl md:text-5xl text-primary mb-4 reveal-text">
-                    Education & <span class="text-accent">Certifications.</span>
+                <span class="section-kicker mb-5 block">06 / Education</span>
+                <h2 class="font-heading font-bold text-4xl md:text-6xl text-primary mb-4 reveal-text">
+                    Learning, in practice<span class="text-accent">.</span>
                 </h2>
-                <div class="h-1 w-20 bg-accent/50 rounded-full mt-6"></div>
+                <p class="max-w-2xl text-base leading-relaxed text-secondary">Formal learning and credentials that support the work I do.</p>
             </div>
 
             <!-- Education Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
                 <div v-for="edu in education" :key="edu.id"
-                    class="edu-card bg-surface border border-white/5 p-8 rounded-2xl relative overflow-hidden group hover:border-accent/30 transition-colors duration-300">
-
-                    <!-- Decorative Background -->
-                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                            class="text-accent">
-                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                            <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                        </svg>
-                    </div>
+                    class="edu-card spotlight-card bg-surface border border-white/10 p-8 relative overflow-hidden group hover:border-accent/30 transition-colors duration-300"
+                    @mousemove="handleCardMouseMove">
 
                     <div class="relative z-10">
                         <span
-                            class="font-mono text-accent text-sm border border-accent/20 px-3 py-1 bg-accent/5 inline-block mb-4 rounded-full">
+                            class="mb-5 inline-block font-mono text-xs uppercase tracking-[0.12em] text-secondary">
                             {{ edu.startYear }} - {{ edu.endYear ? edu.endYear : 'Present' }}
                         </span>
 
@@ -54,17 +33,12 @@
                             {{ normalizeDegree(edu.degree) }}
                         </h3>
 
-                        <h4 class="text-lg text-primary mb-4 flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                                <circle cx="12" cy="10" r="3" />
-                            </svg>
+                        <h4 class="text-sm font-mono text-secondary mb-4 flex items-center gap-2">
+                            <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
                             {{ edu.institution }}
                         </h4>
 
-                        <p class="text-secondary leading-relaxed whitespace-pre-line">
+                        <p class="text-secondary text-sm leading-relaxed whitespace-pre-line">
                             {{ edu.description }}
                         </p>
                     </div>
@@ -78,22 +52,20 @@
                     <div>
                         <h3 class="font-heading font-bold text-3xl text-primary">Certifications</h3>
                         <p class="mt-3 max-w-2xl text-secondary">
-                            Courses and credentials completed alongside my professional work.
+                            Certificates and courses recorded in this portfolio.
                         </p>
                     </div>
-                    <span class="w-fit rounded-full border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-secondary">
-                        Newest first
-                    </span>
+                    <span class="font-mono text-xs uppercase tracking-[0.14em] text-secondary">Newest first</span>
                 </div>
 
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                     <article v-for="cert in visibleCertifications" :key="cert.id"
-                        class="cert-card bg-surface border border-white/5 p-7 rounded-2xl relative overflow-hidden group hover:border-accent/30 transition-colors duration-300 flex min-h-[300px] flex-col justify-between">
+                        class="cert-card bg-surface border border-white/10 p-7 relative overflow-hidden group hover:border-white/35 transition-colors duration-300 flex min-h-[300px] flex-col justify-between">
 
                         <div>
                             <div class="flex justify-between items-start mb-4">
                                 <span
-                                    class="font-mono text-secondary text-sm border border-white/10 px-3 py-1 rounded-full bg-white/5">
+                                    class="font-mono text-secondary text-sm">
                                     {{ cert.year }}
                                 </span>
                                 <!-- Optional Icon -->
@@ -187,16 +159,38 @@ const getCredentialUrl = (url: string) => {
     return `${baseUrl}${url}`;
 }
 
+const handleCardMouseMove = (e: MouseEvent) => {
+    const card = e.currentTarget as HTMLElement
+    if (!card) return
+    const rect = card.getBoundingClientRect()
+    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`)
+    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`)
+}
+
 const refreshAnimations = () => {
     ScrollTrigger.refresh()
 
     animationContext?.revert()
     animationContext = gsap.context(() => {
+        // Line divider animation
+        const line = sectionEl.value?.querySelector('.education-scroll-line')
+        if (line) {
+            gsap.fromTo(line,
+                { scaleX: 0 },
+                {
+                    scaleX: 1,
+                    duration: 1.1,
+                    ease: 'power3.out',
+                    scrollTrigger: { trigger: sectionEl.value, start: 'top 85%' }
+                }
+            )
+        }
+
         gsap.from('.edu-card', {
-            y: 50,
+            y: 40,
             opacity: 0,
             duration: 0.8,
-            stagger: 0.15,
+            stagger: 0.12,
             ease: 'power3.out',
             scrollTrigger: {
                 trigger: '.edu-card',
@@ -205,10 +199,10 @@ const refreshAnimations = () => {
         })
 
         gsap.from('.cert-card', {
-            y: 40,
+            y: 35,
             opacity: 0,
             duration: 0.7,
-            stagger: 0.1,
+            stagger: 0.08,
             ease: 'power3.out',
             scrollTrigger: {
                 trigger: '.cert-card',

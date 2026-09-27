@@ -1,133 +1,58 @@
 <template>
-    <main class="pt-32 pb-24 min-h-screen">
-        <!-- Background Elements -->
-        <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-            <div class="absolute top-[10%] right-[10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px]"></div>
-            <div class="absolute bottom-[20%] left-[5%] w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px]"></div>
-        </div>
+    <div>
+    <main class="min-h-screen pt-32 pb-28">
+        <div class="section-shell">
+            <header class="border-t border-white/25 pt-5 pb-16 md:pb-24">
+                <div class="flex items-center justify-between gap-4 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-secondary"><span>Index / 02</span><router-link to="/" class="hover:text-primary">← Back to portfolio</router-link></div>
+                <h1 class="mt-12 max-w-4xl font-heading text-[clamp(3.7rem,9vw,8rem)] font-bold leading-[0.94] tracking-[-0.07em] text-primary">All <span class="font-normal italic">articles.</span></h1>
+                <p class="mt-8 max-w-2xl text-base leading-relaxed text-secondary md:text-lg">Notes on web development, lessons from shipped work, and tools I am currently exploring.</p>
+            </header>
 
-        <div class="w-full max-w-[1350px] mx-auto px-6 relative z-10">
-            <!-- Header -->
-            <div class="mb-16">
-                <router-link to="/" class="inline-flex items-center gap-2 text-secondary hover:text-white transition-colors mb-8 group font-mono text-sm uppercase tracking-wider">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-1 transition-transform">
-                        <line x1="19" y1="12" x2="5" y2="12"></line>
-                        <polyline points="12 19 5 12 12 5"></polyline>
-                    </svg>
-                    Back to Portfolio
-                </router-link>
-                
-                <h1 class="font-heading font-bold text-5xl md:text-7xl text-white mb-6">
-                    All <span class="text-accent">Articles.</span>
-                </h1>
-                <p class="text-secondary text-lg max-w-2xl leading-relaxed">
-                    Notes on web development, lessons from shipped work, and tools I am currently exploring.
-                </p>
-            </div>
-
-            <!-- Blog Grid -->
-            <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div v-for="i in 6" :key="i" class="animate-pulse flex flex-col gap-6">
-                    <div class="w-full aspect-[16/10] bg-white/5 rounded-2xl"></div>
-                    <div class="w-1/3 h-4 bg-white/5 rounded"></div>
-                    <div class="w-full h-8 bg-white/5 rounded"></div>
-                    <div class="w-3/4 h-8 bg-white/5 rounded"></div>
-                </div>
-            </div>
-
-            <div v-else-if="blogs.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-                <article v-for="post in blogs" :key="post.id"
-                    class="blog-card group relative flex flex-col gap-6">
-
-                    <!-- Image Container -->
-                    <router-link :to="'/blog/' + post.slug"
-                        class="block w-full aspect-[16/10] rounded-2xl overflow-hidden relative cursor-pointer bg-surface">
-                        <!-- Image -->
-                        <div class="w-full h-full relative overflow-hidden">
-                            <img v-if="post.coverImage" :src="getImageUrl(post.coverImage)" :alt="post.title"
-                                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-                            <div v-else class="w-full h-full bg-gradient-to-br from-surface to-background flex items-center justify-center border border-white/5">
-                                <span class="text-white/10 font-heading text-4xl font-bold opacity-30">BLOG</span>
-                            </div>
-                        </div>
-
-                        <!-- Hover Overlay -->
-                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
-                            <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 transform scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 delay-100">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-white">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                            </div>
-                        </div>
+            <div v-if="loading" class="border-t border-white/25 py-16 font-mono text-xs uppercase tracking-widest text-secondary" role="status">Loading articles...</div>
+            <div v-else-if="blogs.length" class="border-t border-white/25">
+                <article v-for="(post, index) in blogs" :key="post.id" class="group grid gap-6 border-b border-white/25 py-10 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1fr)] md:gap-12 md:py-12">
+                    <router-link :to="'/blog/' + post.slug" class="relative block aspect-[16/10] overflow-hidden border border-white/10 bg-surface" :aria-label="`Read ${post.title}`">
+                        <img v-if="post.coverImage && !failedImages.has(post.id)" :src="getImageUrl(post.coverImage)" :alt="post.title" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]" @error="markImageFailed(post.id)" />
+                        <div v-else class="flex h-full flex-col justify-between p-6 md:p-8" aria-hidden="true"><span class="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-secondary">Journal / {{ formatIndex(index) }}</span><span class="max-w-[15ch] font-heading text-2xl font-semibold leading-tight text-primary md:text-3xl">{{ post.title }}</span></div>
                     </router-link>
-
-                    <!-- Content -->
-                    <div class="flex flex-col gap-4">
-                        <div class="flex justify-between items-center text-sm font-mono text-secondary">
-                            <span class="text-accent/80 border border-accent/20 px-3 py-1 rounded-full bg-accent/5" v-if="post.category">{{ post.category.name }}</span>
-                            <span v-else class="text-white/30 truncate">Uncategorized</span>
-                            <span>{{ formatDate(post.publishedAt || post.createdAt) }}</span>
+                    <div class="flex min-w-0 flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-4 font-mono text-[0.68rem] uppercase tracking-[0.13em] text-secondary"><span>{{ formatIndex(index) }} / {{ post.category?.name || 'Journal' }}</span><time>{{ formatDate(post.publishedAt || post.createdAt) }}</time></div>
+                            <h2 class="mt-7 max-w-[16ch] font-heading text-[clamp(2rem,4vw,4rem)] font-bold leading-[1.06] tracking-[-0.055em] text-primary"><router-link :to="'/blog/' + post.slug" class="hover:underline hover:decoration-white/40 hover:underline-offset-8">{{ post.title }}</router-link></h2>
+                            <p v-if="post.excerpt" class="mt-6 max-w-xl text-base leading-relaxed text-secondary">{{ post.excerpt }}</p>
                         </div>
-                        
-                        <h3 class="font-heading font-bold text-2xl text-primary group-hover:text-accent transition-colors duration-300 line-clamp-2">
-                            <router-link :to="'/blog/' + post.slug">{{ post.title }}</router-link>
-                        </h3>
-                        
-                        <p class="text-secondary leading-relaxed line-clamp-3">
-                            {{ post.excerpt }}
-                        </p>
+                        <router-link :to="'/blog/' + post.slug" class="mt-9 inline-flex min-h-11 w-fit items-center gap-3 border-b border-white/50 text-sm text-primary transition-colors hover:border-white">Read article <span aria-hidden="true">↗</span></router-link>
                     </div>
                 </article>
             </div>
-            
-            <div v-else class="py-32 text-center border border-white/5 bg-surface/30 rounded-3xl">
-                <p class="text-secondary font-mono text-lg">No articles published yet.</p>
-                <router-link to="/" class="inline-block mt-6 text-accent hover:text-white transition-colors">Go back home</router-link>
-            </div>
+            <div v-else class="border-t border-white/25 py-20 text-secondary">No articles published yet.</div>
         </div>
     </main>
+    <Footer />
+    </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick } from 'vue'
-import gsap from 'gsap'
+import { onMounted, ref } from 'vue'
 import { useBlog } from '../composables/useBlog'
+import Footer from '../components/Footer.vue'
 
 const { blogs, loading, fetchBlogs } = useBlog()
+const failedImages = ref(new Set<string>())
+const markImageFailed = (id: string) => { failedImages.value = new Set([...failedImages.value, id]) }
 
 const getImageUrl = (path: string) => {
-    if (!path) return '';
-    if (path.startsWith('http')) return path;
-    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    return `${baseUrl}${path}`;
-};
+    if (path.startsWith('http')) return path
+    const baseUrl = (import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/\/+$/, '')
+    return `${baseUrl}${path.startsWith('/') ? path : `/${path}`}`
+}
 
-const formatDate = (dateString: string) => {
-    if (!dateString) return '';
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
-};
+const formatDate = (dateString?: string) => {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    return Number.isNaN(date.getTime()) ? '' : new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' }).format(date)
+}
+const formatIndex = (index: number) => index < 9 ? `0${index + 1}` : String(index + 1)
 
-onMounted(async () => {
-    window.scrollTo(0, 0); // Reset scroll position
-    await fetchBlogs()
-    nextTick(() => {
-        // Entrance animation
-        const cards = document.querySelectorAll('.blog-card')
-        if (cards.length > 0) {
-            gsap.fromTo(cards,
-                { y: 50, opacity: 0 },
-                {
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.8,
-                    stagger: 0.1,
-                    ease: 'power3.out'
-                }
-            )
-        }
-    })
-})
+onMounted(fetchBlogs)
 </script>

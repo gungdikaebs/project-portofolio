@@ -1,10 +1,11 @@
 <template>
-    <main>
+    <main class="relative">
         <Hero />
+        <About />
         <Projects />
+        <HowIWork />
         <Experience />
         <Skills />
-        <About />
         <Education />
 
         <!-- Blog Section -->
@@ -21,6 +22,7 @@
 <script setup lang="ts">
 import Hero from '../sections/Hero.vue'
 import Projects from '../sections/Projects.vue'
+import HowIWork from '../sections/HowIWork.vue'
 import Experience from '../sections/Experience.vue'
 import Skills from '../sections/Skills.vue'
 import About from '../sections/About.vue'

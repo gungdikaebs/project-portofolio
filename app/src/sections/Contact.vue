@@ -1,34 +1,31 @@
 <template>
     <section id="contact" ref="sectionEl" class="py-[var(--section-space)] relative overflow-hidden bg-background">
-        <!-- Background Elements -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div class="absolute top-[10%] left-[20%] w-[400px] h-[400px] bg-accent/5 rounded-full blur-[120px]"></div>
-            <div class="absolute bottom-[20%] right-[10%] w-[300px] h-[300px] bg-primary/5 rounded-full blur-[100px]">
-            </div>
-        </div>
+        <div class="section-shell relative z-10">
 
-        <div class="w-full max-w-[1350px] mx-auto px-6 relative z-10">
+            <!-- Scroll Line Divider -->
+            <div class="scroll-divider-wrapper mb-16 h-px w-full overflow-hidden bg-white/5 md:mb-20">
+                <div class="contact-scroll-line h-full w-full bg-gradient-to-r from-accent/60 via-white/20 to-white/5 origin-left"></div>
+            </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-start">
 
                 <!-- Left: CTA -->
                 <div>
-                    <span class="text-accent font-mono text-sm tracking-widest uppercase mb-6 block contact-kicker">Get
-                        in Touch</span>
+                    <span class="section-kicker mb-6 block contact-kicker">08 / Contact</span>
                     <h2
-                        class="contact-heading font-heading font-bold text-5xl md:text-7xl lg:text-8xl text-white leading-[1.05] mb-12">
-                        Let's discuss your <br />
-                        <span class="text-secondary transition-colors duration-500 hover:text-white">next opportunity.</span>
+                        class="contact-heading mb-10 max-w-[12ch] font-heading text-5xl font-bold leading-[1.02] tracking-tight text-primary md:text-7xl">
+                        Let's build something useful<span class="text-accent">.</span>
                     </h2>
 
-                    <p class="contact-copy -mt-6 mb-10 max-w-xl text-lg leading-relaxed text-secondary">
-                        Hiring a full-stack developer or need hands-on help with a web product? WhatsApp is fastest; email works too.
+                    <p class="contact-copy mb-10 max-w-xl text-lg leading-relaxed text-secondary">
+                        Hiring a developer or planning a web product? Tell me what you need. Reach me by email or WhatsApp.
                     </p>
 
                     <div class="contact-links flex flex-col gap-8">
                         <div class="flex flex-wrap items-center gap-3 md:gap-6">
                             <!-- Magnetic Email Button -->
                             <a href="mailto:gungdika85@gmail.com"
-                                class="group relative inline-flex max-w-full items-center gap-3 md:gap-4 px-5 py-3 md:px-8 md:py-4 bg-white text-black rounded-full overflow-hidden transition-transform duration-300 hover:scale-[1.02] active:scale-95">
+                                class="magnetic-btn group relative inline-flex max-w-full items-center gap-3 md:gap-4 px-5 py-3 md:px-8 md:py-4 bg-white text-black rounded-full overflow-hidden transition-transform duration-300 hover:scale-[1.02] active:scale-95">
                                 <span class="relative z-10 break-all font-bold text-sm md:text-lg">gungdika85@gmail.com</span>
                                 <div
                                     class="relative z-10 w-6 h-6 md:w-8 md:h-8 bg-black text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-300">
@@ -43,7 +40,7 @@
 
                             <!-- Copy Email Button -->
                             <button @click="copyEmail"
-                                class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/10 flex items-center justify-center text-secondary hover:text-white hover:border-white hover:bg-white/5 transition-all active:scale-90 shrink-0"
+                                class="magnetic-btn w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/10 flex items-center justify-center text-secondary hover:text-white hover:border-white hover:bg-white/5 transition-all active:scale-90 shrink-0"
                                 aria-label="Copy Email">
                                 <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -53,7 +50,7 @@
                                 </svg>
                                 <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="text-green-400 md:w-5 md:h-5">
+                                    stroke-linecap="round" stroke-linejoin="round" class="text-accent md:w-5 md:h-5">
                                     <polyline points="20 6 9 17 4 12"></polyline>
                                 </svg>
                             </button>
@@ -63,7 +60,7 @@
                         <!-- Phone / WhatsApp Button -->
                         <div class="flex items-center gap-6">
                             <a href="https://wa.me/6281237397984" target="_blank" rel="noopener noreferrer"
-                                class="group relative inline-flex items-center gap-3 md:gap-4 px-5 py-3 md:px-8 md:py-4 bg-white/5 border border-white/10 text-white rounded-full overflow-hidden transition-all duration-300 hover:bg-white hover:text-black hover:scale-105 active:scale-95">
+                                class="magnetic-btn group relative inline-flex items-center gap-3 md:gap-4 px-5 py-3 md:px-8 md:py-4 bg-white/5 border border-white/10 text-white rounded-full overflow-hidden transition-all duration-300 hover:bg-white hover:text-black hover:scale-105 active:scale-95">
                                 <span class="relative z-10 font-bold text-sm md:text-lg">+62 812 3739 7984</span>
                                 <div
                                     class="relative z-10 w-6 h-6 md:w-8 md:h-8 bg-white/10 group-hover:bg-black group-hover:text-white text-white rounded-full flex items-center justify-center transition-colors duration-300">
@@ -71,7 +68,7 @@
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="w-3 h-3 md:w-4 md:h-4">
                                         <path
-                                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                                             d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
                                         </path>
                                     </svg>
                                 </div>
@@ -82,9 +79,10 @@
 
                 <!-- Right: Contact Form -->
                 <div
-                    class="contact-form bg-surface/50 border border-white/10 rounded-3xl p-6 sm:p-8 md:p-10 mt-10 lg:mt-0">
-                    <h3 class="font-heading font-bold text-2xl text-white mb-3">Send the details</h3>
-                    <p class="mb-8 text-sm leading-relaxed text-secondary">Add a short brief. The next step opens your message in WhatsApp.</p>
+                    class="contact-form bg-surface/50 border border-white/15 p-6 sm:p-8 md:p-10 mt-10 lg:mt-0"
+                    @mousemove="handleFormMouseMove">
+                    <h3 class="font-heading font-bold text-2xl text-white mb-3">Start with a short brief</h3>
+                    <p class="mb-8 text-sm leading-relaxed text-secondary">This form prepares your message and opens WhatsApp; it does not submit data to this site.</p>
                     <form @submit.prevent="submitForm" class="flex flex-col gap-6">
                         <!-- Group: Name -->
                         <div class="flex flex-col gap-2">
@@ -133,6 +131,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { motion, reduceMotion } from '../animations/motion'
+import { initMagneticButtons } from '../animations/magnetic'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -144,6 +143,14 @@ const formData = ref({
     email: '',
     message: ''
 })
+
+const handleFormMouseMove = (e: MouseEvent) => {
+    const card = e.currentTarget as HTMLElement
+    if (!card) return
+    const rect = card.getBoundingClientRect()
+    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`)
+    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`)
+}
 
 const copyEmail = async () => {
     await navigator.clipboard.writeText('gungdika85@gmail.com')
@@ -163,11 +170,27 @@ const submitForm = () => {
 onMounted(() => {
     if (reduceMotion()) return
     context = gsap.context(() => {
+        // Line divider animation
+        const line = sectionEl.value?.querySelector('.contact-scroll-line')
+        if (line) {
+            gsap.fromTo(line,
+                { scaleX: 0 },
+                {
+                    scaleX: 1,
+                    duration: 1.1,
+                    ease: motion.ease.emphasis,
+                    scrollTrigger: { trigger: sectionEl.value, start: 'top 85%' }
+                }
+            )
+        }
+
         gsap.from('.contact-kicker', { x: -motion.distance.base, opacity: 0, duration: motion.duration.base, ease: motion.ease.enter, scrollTrigger: { trigger: sectionEl.value, start: 'top 75%' } })
         gsap.from('.contact-heading', { clipPath: 'inset(0 0 100% 0)', y: motion.distance.base, duration: 1.05, ease: motion.ease.emphasis, scrollTrigger: { trigger: sectionEl.value, start: 'top 72%' } })
         gsap.from('.contact-copy, .contact-links', { opacity: 0, y: motion.distance.small, stagger: motion.stagger.base, duration: motion.duration.base, ease: motion.ease.enter, scrollTrigger: { trigger: '.contact-heading', start: 'top 70%' } })
         gsap.from('.contact-form', { x: motion.distance.large, opacity: 0, duration: motion.duration.slow, ease: motion.ease.enter, scrollTrigger: { trigger: '.contact-form', start: 'top 82%' } })
     }, sectionEl.value || undefined)
+
+    initMagneticButtons('.magnetic-btn')
 })
 
 onUnmounted(() => context?.revert())

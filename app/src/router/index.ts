@@ -109,9 +109,12 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes,
-    scrollBehavior(_to, _from, savedPosition) {
+    scrollBehavior(to, _from, savedPosition) {
         if (savedPosition) {
             return savedPosition
+        } else if (to.hash) {
+            // Wait for the page transition to mount Home before resolving the anchor.
+            return new Promise((resolve) => setTimeout(() => resolve({ el: to.hash, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }), 400))
         } else {
             return { top: 0 }
         }

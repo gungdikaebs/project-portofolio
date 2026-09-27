@@ -4,32 +4,35 @@
         <div class="hero-grid absolute inset-0 -z-10" aria-hidden="true"></div>
         <canvas ref="canvas" class="absolute inset-0 z-0 pointer-events-none opacity-40" aria-hidden="true"></canvas>
 
-        <div class="section-shell relative z-10 py-12 md:py-20">
+        <div ref="heroContentWrapper" class="hero-content-wrapper section-shell relative z-10 py-12 md:py-20 will-change-transform">
             <div class="max-w-[74rem]">
-                <div ref="availability" class="mb-6 md:mb-8">
+                <div ref="availability" class="mb-6 md:mb-8 flex flex-wrap items-center gap-3">
                     <span
-                        class="inline-flex items-center gap-2 rounded-full border border-accent/20 px-3.5 py-2 text-[0.68rem] font-medium uppercase tracking-[0.15em] text-accent">
-                        <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
+                        class="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/[0.04] px-3.5 py-1.5 text-[0.68rem] font-medium uppercase tracking-[0.15em] text-accent">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+                        </span>
                         Open to developer opportunities
+                    </span>
+                    <span v-if="currentTime" class="hidden sm:inline-flex items-center font-mono text-[0.68rem] tracking-[0.14em] text-secondary">
+                        BALI, ID (WITA) · <span class="ml-1 text-primary">{{ currentTime }}</span>
                     </span>
                 </div>
 
                 <h1
                     class="text-balance font-heading text-[clamp(2.75rem,11vw,6.9rem)] font-bold leading-[0.98] tracking-[-0.055em] text-primary">
-                    <span class="block overflow-hidden"><span ref="line1" class="block">Full-Stack
-                            Developer</span></span>
-                    <span class="block overflow-hidden"><span ref="line2" class="block text-secondary">from interface
-                            to</span></span>
-                    <span class="block overflow-hidden"><span ref="line3" class="block">reliable systems<span
+                    <span class="block overflow-hidden"><span ref="line1" class="block">Web products,</span></span>
+                    <span class="block overflow-hidden"><span ref="line2" class="block text-secondary">from interface</span></span>
+                    <span class="block overflow-hidden"><span ref="line3" class="block">to deployment<span
                                 class="text-accent">.</span></span></span>
                 </h1>
 
                 <div ref="supporting"
                     class="mt-7 grid max-w-4xl gap-5 border-l border-white/15 pl-5 md:mt-9 md:grid-cols-[1fr_auto] md:items-end md:gap-12 md:pl-7">
                     <p class="max-w-2xl text-base leading-relaxed text-secondary md:text-lg">
-                        I primarily build web products with Vue, Laravel, and MySQL, using Docker for consistent
-                        development and deployment. I also work with Next.js, NestJS, and PostgreSQL when a project
-                        calls for them—with a focus on clean, reliable, and maintainable code.
+                        I build web products primarily with Vue, Laravel, and MySQL. Docker keeps my development
+                        workflow consistent; I also use Next.js, NestJS, and PostgreSQL when they fit the project.
                     </p>
                     <p class="text-xs uppercase tracking-[0.14em] text-secondary">Bali, Indonesia<br><span
                             class="text-primary">Available full-time</span></p>
@@ -37,10 +40,10 @@
 
                 <div class="mt-8 flex flex-col gap-5 md:mt-10">
                     <div ref="ctaRow" class="flex flex-wrap items-center gap-3 md:gap-4">
-                        <a href="#projects"
+                        <a href="#about"
                             class="magnetic-btn group inline-flex min-h-12 items-center rounded-full bg-accent px-6 py-3 text-sm font-bold text-background transition-colors hover:bg-primary md:px-7"><span
                                 class="btn-content inline-flex items-center gap-1.5">
-                                <span>Explore My Work</span>
+                                <span>Get to know me</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
                                     stroke-linejoin="round"
@@ -128,7 +131,7 @@
         <div ref="scrollIndicator"
             class="absolute bottom-7 right-[var(--page-gutter)] hidden items-center gap-3 text-[0.65rem] uppercase tracking-[0.18em] text-secondary md:flex"
             aria-hidden="true">
-            <span>Scroll to explore</span><span class="block h-px w-12 bg-white/20"><span
+            <span>Scroll to meet me</span><span class="block h-px w-12 bg-white/20"><span
                     class="scroll-pulse block h-px w-1/2 bg-accent"></span></span>
         </div>
     </section>
@@ -137,11 +140,15 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import gsap from 'gsap'
+import ScrollTrigger from 'gsap/ScrollTrigger'
 import { initMagneticButtons } from '../animations/magnetic'
 import { motion, reduceMotion } from '../animations/motion'
 import GitHubIcon from '../components/GitHubIcon.vue'
 
+gsap.registerPlugin(ScrollTrigger)
+
 const sectionEl = ref<HTMLElement | null>(null)
+const heroContentWrapper = ref<HTMLElement | null>(null)
 const line1 = ref<HTMLElement | null>(null)
 const line2 = ref<HTMLElement | null>(null)
 const line3 = ref<HTMLElement | null>(null)
@@ -151,9 +158,26 @@ const ctaRow = ref<HTMLElement | null>(null)
 const socialRow = ref<HTMLElement | null>(null)
 const scrollIndicator = ref<HTMLElement | null>(null)
 const canvas = ref<HTMLCanvasElement | null>(null)
+const currentTime = ref('')
+let timer: ReturnType<typeof setInterval> | null = null
 let context: gsap.Context | null = null
 let animationFrameId = 0
 let removeResize: (() => void) | null = null
+
+const updateClock = () => {
+    try {
+        currentTime.value = new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Asia/Makassar',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        }).format(new Date())
+    } catch {
+        const now = new Date()
+        currentTime.value = now.toTimeString().slice(0, 8)
+    }
+}
 
 type Particle = { x: number; y: number; radius: number; speed: number; alpha: number }
 
@@ -181,7 +205,7 @@ const initParticles = () => {
             particle.y -= particle.speed
             if (particle.y < -4) particle.y = window.innerHeight + 4
             ctx.beginPath(); ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2)
-            ctx.fillStyle = `rgba(106, 227, 255, ${particle.alpha})`; ctx.fill()
+            ctx.fillStyle = `rgba(226, 224, 217, ${particle.alpha})`; ctx.fill()
         })
         animationFrameId = requestAnimationFrame(render)
     }
@@ -191,6 +215,9 @@ const initParticles = () => {
 }
 
 onMounted(() => {
+    updateClock()
+    timer = setInterval(updateClock, 1000)
+
     const lines = [line1.value, line2.value, line3.value]
     if (!reduceMotion()) {
         context = gsap.context(() => {
@@ -201,13 +228,47 @@ onMounted(() => {
                 .from(ctaRow.value, { y: motion.distance.small, opacity: 0, duration: motion.duration.base, clearProps: 'all' }, 0.58)
                 .from(socialRow.value, { y: 14, opacity: 0, duration: motion.duration.base, clearProps: 'all' }, 0.68)
                 .from(scrollIndicator.value, { opacity: 0, duration: motion.duration.base, clearProps: 'all' }, 0.82)
+
+            // Scroll-driven Parallax Depth
+            if (heroContentWrapper.value && sectionEl.value) {
+                gsap.to(heroContentWrapper.value, {
+                    yPercent: -12,
+                    opacity: 0.25,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: sectionEl.value,
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: true,
+                    }
+                })
+            }
+
+            if (scrollIndicator.value && sectionEl.value) {
+                gsap.to(scrollIndicator.value, {
+                    opacity: 0,
+                    y: 20,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: sectionEl.value,
+                        start: 'top top',
+                        end: '25% top',
+                        scrub: true,
+                    }
+                })
+            }
         }, sectionEl.value || undefined)
         initMagneticButtons('.magnetic-btn')
     }
     initParticles()
 })
 
-onUnmounted(() => { context?.revert(); cancelAnimationFrame(animationFrameId); removeResize?.() })
+onUnmounted(() => {
+    if (timer) clearInterval(timer)
+    context?.revert()
+    cancelAnimationFrame(animationFrameId)
+    removeResize?.()
+})
 </script>
 
 <style scoped>

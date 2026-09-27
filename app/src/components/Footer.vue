@@ -1,5 +1,5 @@
 <template>
-    <footer class="py-12 bg-[#0B0D10] border-t border-white/5">
+    <footer class="py-12 bg-background border-t border-white/10">
         <div class="max-w-[1350px] mx-auto px-6">
             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-10">
 
@@ -37,9 +37,12 @@
                             <li><router-link to="/projects"
                                     class="text-secondary hover:text-white transition-colors">Projects</router-link>
                             </li>
+                            <li><a href="/#process" class="text-secondary hover:text-white transition-colors">How I Work</a></li>
                             <li><a href="/#experience" class="text-secondary hover:text-white transition-colors">Experience</a></li>
                             <li><a href="/#skills" class="text-secondary hover:text-white transition-colors">Skills</a>
                             </li>
+                            <li><a href="/#education" class="text-secondary hover:text-white transition-colors">Education</a></li>
+                            <li><router-link to="/blog" class="text-secondary hover:text-white transition-colors">Blog</router-link></li>
                         </ul>
                     </div>
                 </div>
@@ -49,7 +52,7 @@
             <div
                 class="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-xs text-white/20 gap-4">
                 <p>&copy; 2026 Gung Dika. All rights reserved.</p>
-                <p>Built with Vue, GSAP, and NestJS.</p>
+                <p>Designed and built by Gung Dika.</p>
             </div>
         </div>
     </footer>

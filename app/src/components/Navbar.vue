@@ -18,9 +18,11 @@ let sectionObserver: MutationObserver | null = null
 const onScroll = () => { isScrolled.value = window.scrollY > 20 }
 
 const navLinks = [
-    { href: '#home', label: 'Home' }, { href: '/projects', label: 'Projects' },
+    { href: '#home', label: 'Home' }, { href: '#about', label: 'About' },
+    { href: '/projects', label: 'Projects' },
+    { href: '#process', label: 'Process' },
     { href: '#experience', label: 'Experience' }, { href: '#skills', label: 'Skills' },
-    { href: '#about', label: 'About' }, { href: '#education', label: 'Education' },
+    { href: '#education', label: 'Education' },
     { href: '/blog', label: 'Blog' },
 ]
 
@@ -66,7 +68,7 @@ const handleKeydown = (event: KeyboardEvent) => {
 const handleNavClick = async (href: string) => {
     if (isMobileMenuOpen.value) await closeMenu(false)
     if (!href.startsWith('#')) { await router.push(href); return }
-    if (route.path !== '/') await router.push('/')
+    if (route.path !== '/') { await router.push({ path: '/', hash: href }); return }
     await nextTick()
     requestAnimationFrame(() => document.querySelector(href)?.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth' }))
 }
@@ -74,7 +76,7 @@ const handleNavClick = async (href: string) => {
 const isActive = (href: string) => {
     if (href.startsWith('#')) return route.path === '/' && activeSection.value === href.slice(1)
     const section = href.slice(1)
-    return route.path.startsWith(href) || (route.path === '/' && activeSection.value === section)
+    return route.path.startsWith(href) || (href === '/projects' && route.path.startsWith('/project/')) || (route.path === '/' && activeSection.value === section)
 }
 
 onMounted(() => {
@@ -94,20 +96,20 @@ onUnmounted(() => { window.removeEventListener('scroll', onScroll); window.remov
     <header class="fixed left-0 top-0 z-50 w-full border-b transition-[height,background-color,border-color] duration-300" :class="isScrolled ? 'h-18 border-white/5 bg-background/90 backdrop-blur-lg' : 'h-22 border-transparent bg-transparent'">
         <div class="section-shell flex h-full items-center justify-between">
             <router-link to="/" class="relative z-[60] font-heading text-xl font-bold tracking-tight text-primary transition-colors hover:text-accent">Gung Dika<span class="text-accent">.</span></router-link>
-            <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
-                <a v-for="link in navLinks" :key="link.href" :href="link.href" @click.prevent="handleNavClick(link.href)"
+            <nav class="hidden items-center gap-1 xl:flex" aria-label="Primary navigation">
+                <a v-for="link in navLinks" :key="link.href" :href="link.href.startsWith('#') ? `/${link.href}` : link.href" @click.prevent="handleNavClick(link.href)"
                     class="relative inline-flex min-h-11 items-center px-3 text-sm font-medium transition-colors" :class="isActive(link.href) ? 'text-primary' : 'text-secondary hover:text-primary'" :aria-current="isActive(link.href) ? 'page' : undefined">
                     {{ link.label }}<span class="absolute bottom-1.5 left-3 right-3 h-px origin-left bg-accent transition-transform" :class="isActive(link.href) ? 'scale-x-100' : 'scale-x-0'"></span>
                 </a>
-                <a href="#contact" @click.prevent="handleNavClick('#contact')" class="ml-3 inline-flex min-h-11 items-center rounded-full bg-accent px-5 text-sm font-bold text-background transition-colors hover:bg-primary">Contact</a>
+                <a href="/#contact" @click.prevent="handleNavClick('#contact')" class="ml-3 inline-flex min-h-11 items-center rounded-full bg-accent px-5 text-sm font-bold text-background transition-colors hover:bg-primary">Contact</a>
             </nav>
-            <button ref="menuButton" type="button" @click="toggleMenu" class="relative z-[60] grid min-h-11 min-w-11 place-items-center rounded-full border border-white/10 text-primary lg:hidden" aria-label="Open navigation menu" aria-controls="mobile-menu" :aria-expanded="isMobileMenuOpen">
+            <button ref="menuButton" type="button" @click="toggleMenu" class="relative z-[60] grid min-h-11 min-w-11 place-items-center rounded-full border border-white/10 text-primary xl:hidden" aria-label="Open navigation menu" aria-controls="mobile-menu" :aria-expanded="isMobileMenuOpen">
                 <span class="sr-only">Menu</span><span class="flex w-5 flex-col gap-1.5"><span class="h-px w-full bg-current"></span><span class="h-px w-3 self-end bg-current"></span></span>
             </button>
         </div>
 
         <Teleport to="body">
-            <div v-if="isMobileMenuOpen" class="fixed inset-0 z-[70]">
+            <div v-if="isMobileMenuOpen" class="public-portfolio fixed inset-0 z-[70]">
                 <div ref="backdrop" @click="closeMenu()" class="absolute inset-0 bg-black/70"></div>
                 <div ref="sidebar" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation menu" class="absolute right-0 top-0 flex h-[100svh] w-full max-w-[28rem] flex-col overflow-y-auto overscroll-contain border-l border-white/10 bg-background px-6 pb-7 pt-5 sm:px-8">
                     <div class="flex min-h-14 shrink-0 items-center justify-between border-b border-white/10">
@@ -115,12 +117,12 @@ onUnmounted(() => { window.removeEventListener('scroll', onScroll); window.remov
                         <button ref="closeButton" type="button" @click="closeMenu()" class="grid min-h-11 min-w-11 place-items-center rounded-full border border-white/10 text-2xl text-primary hover:text-accent" aria-label="Close navigation menu">×</button>
                     </div>
                     <nav class="my-auto flex flex-col py-6" aria-label="Mobile navigation">
-                        <a v-for="(link, index) in navLinks" :key="link.href" :href="link.href" @click.prevent="handleNavClick(link.href)" class="sidebar-link group flex min-h-13 items-center justify-between border-b border-white/8 py-2 font-heading text-[clamp(1.45rem,7vw,2.1rem)] font-bold transition-colors" :class="isActive(link.href) ? 'text-primary' : 'text-secondary hover:text-primary'">
+                        <a v-for="(link, index) in navLinks" :key="link.href" :href="link.href.startsWith('#') ? `/${link.href}` : link.href" @click.prevent="handleNavClick(link.href)" class="sidebar-link group flex min-h-13 items-center justify-between border-b border-white/8 py-2 font-heading text-[clamp(1.45rem,7vw,2.1rem)] font-bold transition-colors" :class="isActive(link.href) ? 'text-primary' : 'text-secondary hover:text-primary'">
                             <span>{{ link.label }}</span><span class="font-body text-[0.65rem] font-medium text-secondary">0{{ index + 1 }}</span>
                         </a>
                     </nav>
                     <div class="sidebar-footer shrink-0 border-t border-white/10 pt-5">
-                        <a href="#contact" @click.prevent="handleNavClick('#contact')" class="flex min-h-12 w-full items-center justify-center rounded-full bg-accent px-6 font-bold text-background">Start a conversation</a>
+                        <a href="/#contact" @click.prevent="handleNavClick('#contact')" class="flex min-h-12 w-full items-center justify-center rounded-full bg-accent px-6 font-bold text-background">Start a conversation</a>
                         <div class="mt-5 flex items-center justify-between text-xs text-secondary"><span>© 2026 Gung Dika</span><span class="flex gap-4"><a href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer" class="hover:text-primary">GitHub</a><a href="https://www.linkedin.com/in/gungdikaebs/" target="_blank" rel="noopener noreferrer" class="hover:text-primary">LinkedIn</a></span></div>
                     </div>
                 </div>

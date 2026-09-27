@@ -1,23 +1,13 @@
 <template>
-    <div class="min-h-screen relative pt-32 pb-20 overflow-hidden">
-
-        <!-- Background Elements -->
-        <div class="absolute inset-0 pointer-events-none">
-            <div
-                class="absolute inset-0 bg-[radial-gradient(#ffffff15_1px,transparent_1px)] [background-size:20px_20px] opacity-20">
-            </div>
-            <div class="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px]">
-            </div>
-            <div class="absolute bottom-[10%] left-[-5%] w-[300px] h-[300px] bg-primary/5 rounded-full blur-[80px]">
-            </div>
-        </div>
+    <div>
+    <main class="min-h-screen relative pt-32 pb-20 overflow-hidden">
 
         <div v-if="loading" class="min-h-[50vh] flex flex-col items-center justify-center">
             <div class="w-10 h-10 border-4 border-accent/30 border-t-accent rounded-full animate-spin mb-4"></div>
-            <p class="text-secondary font-mono text-sm">Loading Project...</p>
+            <p class="text-secondary font-mono text-sm">Loading project...</p>
         </div>
 
-        <div v-else-if="project" class="w-full max-w-[1100px] mx-auto px-6 relative z-10">
+        <div v-else-if="project" class="section-shell relative z-10">
 
             <!-- Breadcrumb / Back -->
             <router-link to="/projects"
@@ -28,15 +18,14 @@
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
-                Back to Projects
+                All projects
             </router-link>
 
             <!-- Header -->
-            <div class="mb-16">
+            <div class="mb-16 border-t border-white/25 pt-6">
                 <!-- Meta -->
-                <div class="flex flex-wrap gap-4 items-center mb-6 text-sm font-mono text-accent">
-                    <span class="px-3 py-1 border border-accent/20 bg-accent/5 rounded-full">{{ getCategory()
-                    }}</span>
+                <div class="flex flex-wrap gap-4 items-center mb-8 text-xs font-mono uppercase tracking-[0.15em] text-secondary">
+                    <span>{{ getCategory() }}</span>
                     <span class="w-1 h-1 bg-white/20 rounded-full"></span>
                     <span>{{ project.year }}</span>
                     <template v-if="project.role">
@@ -45,14 +34,14 @@
                     </template>
                 </div>
 
-                <h1 class="font-heading font-bold text-4xl md:text-6xl text-white mb-8 leading-tight">
+                <h1 class="max-w-5xl font-heading font-bold text-[clamp(3.5rem,8vw,7rem)] tracking-[-0.07em] text-white mb-10 leading-[0.98]">
                     {{ project.title }}
                 </h1>
 
                 <!-- Tech Stack -->
                 <div class="flex flex-wrap gap-2.5">
                     <span v-for="tech in getTechStack(project)" :key="tech.id"
-                        class="inline-flex items-center gap-2 px-3 py-1.5 bg-surface border border-white/10 rounded-lg text-sm text-secondary hover:text-white hover:border-accent/40 transition-colors">
+                        class="inline-flex items-center gap-2 px-3 py-1.5 border border-white/20 text-sm text-secondary transition-colors hover:text-white hover:border-white/50">
                         <TechIcon v-if="tech.svgContent" :svg-content="tech.svgContent" class="h-4 w-4" />
                         <span>{{ tech.name }}</span>
                     </span>
@@ -60,9 +49,9 @@
             </div>
 
             <!-- Main Image -->
-            <div class="w-full aspect-[4/3] rounded-3xl overflow-hidden mb-16 border border-white/10 relative group">
-                <img :src="getImageUrl(project.imageUrl)" :alt="project.title" class="w-full h-full object-cover" />
-                <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-60"></div>
+            <div class="w-full aspect-[4/3] overflow-hidden mb-16 border border-white/15 bg-surface relative group">
+                <img v-if="project.imageUrl && !heroImageFailed" :src="getImageUrl(project.imageUrl)" :alt="project.title" class="w-full h-full object-cover" @error="heroImageFailed = true" />
+                <div v-else class="flex h-full flex-col justify-between p-8 md:p-12"><span class="font-mono text-xs uppercase tracking-widest text-secondary">Project archive / {{ project.year }}</span><span class="max-w-[12ch] font-heading text-4xl font-semibold leading-tight text-primary md:text-7xl">{{ project.title }}</span></div>
             </div>
 
             <!-- Content Grid -->
@@ -70,20 +59,20 @@
 
                 <!-- Description -->
                 <div class="space-y-12" :class="hasProjectLinks ? 'md:col-span-2' : ''">
-                    <section v-for="section in caseStudySections" :key="section.label">
-                        <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent">{{ section.label }}</p>
-                        <h2 class="mt-4 font-heading text-2xl font-bold text-white">{{ section.title }}</h2>
+                    <section v-for="section in caseStudySections" :key="section.label" class="border-t border-white/20 pt-5">
+                        <p class="font-mono text-xs uppercase tracking-[0.2em] text-secondary">{{ section.label }}</p>
+                        <h2 class="mt-6 font-heading text-2xl font-bold text-white md:text-3xl">{{ section.title }}</h2>
                         <p class="mt-4 text-secondary text-lg leading-relaxed whitespace-pre-line">{{ section.content }}</p>
                     </section>
                 </div>
 
                 <!-- Sidebar / Links -->
                 <div v-if="hasProjectLinks">
-                    <h2 class="font-heading font-bold text-2xl text-white mb-6">Visit</h2>
+                    <h2 class="font-heading font-bold text-2xl text-white mb-6">Explore further</h2>
                     <div class="space-y-4">
                         <a v-if="project.projectUrl" :href="project.projectUrl" target="_blank"
                             rel="noopener noreferrer"
-                            class="flex items-center justify-between p-4 bg-surface border border-white/10 rounded-xl hover:border-accent/50 hover:bg-white/5 transition-all group">
+                            class="flex items-center justify-between border-t border-white/25 py-4 transition-colors hover:text-white group">
                             <span class="font-medium text-white">Live Demo</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -93,9 +82,9 @@
                                 <polyline points="7 7 17 7 17 17"></polyline>
                             </svg>
                         </a>
-                        <a v-if="project.sourceCodeUrl" :href="project.sourceCodeUrl" target="_blank"
+                        <a v-if="isUsableSourceUrl(project.sourceCodeUrl)" :href="project.sourceCodeUrl" target="_blank"
                             rel="noopener noreferrer"
-                            class="flex items-center justify-between p-4 bg-surface border border-white/10 rounded-xl hover:border-accent/50 hover:bg-white/5 transition-all group">
+                            class="flex items-center justify-between border-t border-white/25 py-4 transition-colors hover:text-white group">
                             <span class="inline-flex items-center gap-3 font-medium text-white">
                                 <GitHubIcon class="h-5 w-5 text-secondary transition-colors group-hover:text-accent" />
                                 View Code on GitHub
@@ -110,8 +99,8 @@
             <section v-if="project.galleryImages?.length" class="mt-24 border-t border-white/10 pt-16">
                 <div class="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                     <div>
-                        <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">Product Preview</p>
-                        <h2 class="font-heading text-3xl font-bold text-white md:text-4xl">Selected Screens</h2>
+                        <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">Project gallery</p>
+                        <h2 class="font-heading text-3xl font-bold text-white md:text-4xl">A closer look</h2>
                     </div>
                     <span class="w-fit rounded-full border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-secondary">
                         {{ project.galleryImages.length }} screenshots
@@ -121,7 +110,7 @@
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <button v-for="(image, index) in project.galleryImages" :key="image.id || image.imageUrl"
                         type="button" @click="openGallery(Number(index))"
-                        class="group relative overflow-hidden rounded-2xl border border-white/10 bg-surface text-left transition-colors hover:border-accent/40"
+                        class="group relative overflow-hidden border border-white/15 bg-surface text-left transition-colors hover:border-white/50"
                         :class="index === 0 && project.galleryImages.length > 2 ? 'md:col-span-2' : ''"
                         :aria-label="`Open screenshot ${Number(index) + 1} of ${project.galleryImages.length}`">
                         <div class="aspect-video overflow-hidden">
@@ -148,8 +137,8 @@
 
         <!-- Loading / Not Found Fallback -->
         <div v-else class="min-h-[50vh] flex flex-col items-center justify-center">
-            <h2 class="font-heading font-bold text-2xl text-white mb-4">Project Not Found</h2>
-            <router-link to="/projects" class="text-accent hover:underline">Back to Projects</router-link>
+            <h2 class="font-heading font-bold text-2xl text-white mb-4">Project not found</h2>
+            <router-link to="/projects" class="text-accent hover:underline">Browse projects</router-link>
         </div>
 
         <Teleport to="body">
@@ -182,6 +171,8 @@
             </div>
         </Teleport>
 
+    </main>
+    <Footer />
     </div>
 </template>
 
@@ -191,10 +182,12 @@ import { useRoute } from 'vue-router'
 import { useProjects } from '../composables/useProjects'
 import TechIcon from '../components/TechIcon.vue'
 import GitHubIcon from '../components/GitHubIcon.vue'
+import Footer from '../components/Footer.vue'
 
 const route = useRoute()
 const { project, loading, fetchProject } = useProjects()
 const selectedGalleryIndex = ref<number | null>(null)
+const heroImageFailed = ref(false)
 
 interface TechItem {
     id: string
@@ -209,7 +202,15 @@ const currentGalleryImage = computed(() => {
     return project.value?.galleryImages?.[selectedGalleryIndex.value] || null
 })
 
-const hasProjectLinks = computed(() => Boolean(project.value?.projectUrl || project.value?.sourceCodeUrl))
+const isUsableSourceUrl = (value?: string | null) => {
+    if (!value) return false
+    try {
+        const url = new URL(value)
+        return (url.protocol === 'http:' || url.protocol === 'https:') && url.pathname.replace(/\//g, '').length > 0
+    } catch { return false }
+}
+
+const hasProjectLinks = computed(() => Boolean(project.value?.projectUrl || isUsableSourceUrl(project.value?.sourceCodeUrl)))
 
 const caseStudySections = computed(() => {
     if (!project.value) return []
@@ -298,6 +299,7 @@ onMounted(async () => {
 // watch route to refetch if params change (e.g. related projects)
 watch(() => route.params.id, async (newId) => {
     closeGallery()
+    heroImageFailed.value = false
     if (newId) {
         await fetchProject(newId as string)
         window.scrollTo(0, 0)

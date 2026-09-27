@@ -1,87 +1,76 @@
 <template>
-    <div class="pt-32 pb-20 min-h-screen">
-        <div class="w-full max-w-[1350px] mx-auto px-6">
-            <h1 class="font-heading font-bold text-5xl md:text-6xl text-primary mb-12">
-                All <span class="text-accent">Projects.</span>
-            </h1>
+    <main class="min-h-screen pt-32">
+        <div class="section-shell pb-28">
+            <header class="border-t border-white/25 pt-5 pb-16 md:pb-24">
+                <div class="flex items-center justify-between gap-4 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-secondary">
+                    <span>Projects / Archive</span><span>Selected work and experiments</span>
+                </div>
+                <h1 class="mt-12 max-w-4xl font-heading text-[clamp(3.7rem,9vw,8rem)] font-bold leading-[0.94] tracking-[-0.07em] text-primary">Selected <span class="font-normal italic">projects.</span></h1>
+                <p class="mt-8 max-w-2xl text-base leading-relaxed text-secondary md:text-lg">Explore the work behind each project: the brief, my contribution, and the choices made along the way.</p>
+            </header>
 
-
-            <!-- Loading State -->
-            <div v-if="loading" class="min-h-[50vh] flex flex-col items-center justify-center">
-                <div class="w-10 h-10 border-4 border-accent/30 border-t-accent rounded-full animate-spin mb-4"></div>
-                <p class="text-secondary font-mono text-sm">Loading Projects...</p>
-            </div>
-
-            <!-- Projects Grid -->
-            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <article v-for="project in projects" :key="project.id"
-                    class="group bg-surface border border-white/5 rounded-2xl overflow-hidden hover:border-accent/30 transition-colors duration-300 flex flex-col h-full">
-                    <router-link :to="'/project/' + project.id"
-                        class="block aspect-[4/3] overflow-hidden relative bg-white/5">
-                        <img v-if="project.imageUrl" :src="getImageUrl(project.imageUrl)" :alt="project.title"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                        <div v-else class="w-full h-full flex items-center justify-center">
-                            <span class="text-white/20 font-heading text-xl">{{ project.title }}</span>
+            <div v-if="loading" class="border-t border-white/20 py-16 font-mono text-xs uppercase tracking-widest text-secondary" role="status">Loading projects...</div>
+            <div v-else-if="projects.length" class="border-t border-white/25">
+                <article v-for="(project, index) in projects" :key="project.id" class="group grid gap-7 border-b border-white/25 py-10 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)] md:gap-12 md:py-14">
+                    <router-link :to="'/project/' + project.id" class="relative block aspect-[4/3] overflow-hidden border border-white/10 bg-surface" :aria-label="`Open ${project.title} case study`">
+                        <img v-if="project.imageUrl && !failedImages.has(project.id)" :src="getImageUrl(project.imageUrl)" :alt="project.title" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]" @error="markImageFailed(project.id)" />
+                        <div v-else class="flex h-full w-full flex-col justify-between p-6 md:p-8" aria-hidden="true">
+                            <span class="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-secondary">Project archive / {{ formatIndex(index) }}</span>
+                            <span class="max-w-[13ch] font-heading text-3xl font-semibold leading-tight tracking-tight text-primary md:text-4xl">{{ project.title }}</span>
                         </div>
+                        <span class="absolute right-5 top-5 grid h-10 w-10 place-items-center border border-white/30 bg-background/80 text-primary" aria-hidden="true">↗</span>
                     </router-link>
-                    <div class="p-6 flex flex-col flex-1">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <span class="text-accent text-xs font-mono uppercase tracking-wider mb-2 block">{{
-                                    getCategory(project) }}</span>
-                                <h2
-                                    class="font-heading font-bold text-2xl text-white group-hover:text-accent transition-colors">
-                                    {{ project.title }}</h2>
+                    <div class="flex min-w-0 flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-4 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-secondary">
+                                <span>{{ formatIndex(index) }} / {{ getCategory(project) }}</span><span>{{ project.year }}</span>
                             </div>
-                            <span class="text-secondary text-sm font-mono border border-white/10 px-2 py-1 rounded">{{
-                                project.year }}</span>
+                            <h2 class="mt-7 max-w-[14ch] font-heading text-[clamp(2.2rem,4.2vw,4.5rem)] font-bold leading-[1.03] tracking-[-0.055em] text-primary"><router-link :to="'/project/' + project.id" class="hover:underline hover:decoration-white/40 hover:underline-offset-8">{{ project.title }}</router-link></h2>
+                            <p class="mt-6 max-w-xl text-base leading-relaxed text-secondary">{{ project.contribution || project.description }}</p>
                         </div>
-                        <p class="text-secondary text-sm mb-6 line-clamp-3 flex-1">{{ project.description }}</p>
-                        <div class="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3">
-                            <router-link :to="'/project/' + project.id"
-                                class="inline-flex items-center gap-2 text-sm text-white font-medium hover:text-accent transition-colors">
-                                View project <span class="transition-transform group-hover:translate-x-1">→</span>
-                            </router-link>
-                            <a v-if="project.sourceCodeUrl" :href="project.sourceCodeUrl" target="_blank"
-                                rel="noopener noreferrer"
-                                class="inline-flex items-center gap-2 text-sm font-medium text-secondary transition-colors hover:text-accent"
-                                :aria-label="`View ${project.title} source code on GitHub (opens in a new tab)`">
-                                <GitHubIcon class="h-4 w-4 shrink-0" />
-                                <span>View Code</span>
-                                <span aria-hidden="true">↗</span>
-                            </a>
+                        <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm">
+                            <router-link :to="'/project/' + project.id" class="inline-flex min-h-11 items-center gap-3 border-b border-white/50 text-primary transition-colors hover:border-white">Explore project <span aria-hidden="true">↗</span></router-link>
+                            <a v-if="isUsableSourceUrl(project.sourceCodeUrl)" :href="project.sourceCodeUrl" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center gap-2 text-secondary transition-colors hover:text-primary" :aria-label="`View ${project.title} source code (opens in a new tab)`"><GitHubIcon class="h-4 w-4" /> View code <span aria-hidden="true">↗</span></a>
                         </div>
                     </div>
                 </article>
             </div>
+            <div v-else class="border-t border-white/25 py-20 text-secondary">No projects published yet.</div>
         </div>
         <Footer />
-    </div>
+    </main>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import Footer from '../components/Footer.vue'
 import { useProjects } from '../composables/useProjects'
 import GitHubIcon from '../components/GitHubIcon.vue'
 
 const { projects, loading, fetchProjects } = useProjects()
+const failedImages = ref(new Set<string>())
+
+const markImageFailed = (id: string) => {
+    failedImages.value = new Set([...failedImages.value, id])
+}
+
+const isUsableSourceUrl = (value?: string | null) => {
+    if (!value) return false
+    try {
+        const url = new URL(value)
+        return (url.protocol === 'http:' || url.protocol === 'https:') && url.pathname.replace(/\//g, '').length > 0
+    } catch { return false }
+}
 
 const getImageUrl = (path: string) => {
-    if (!path) return '';
-    if (path.startsWith('http')) return path;
-    let baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    baseUrl = baseUrl.replace(/^["']|["']$/g, ''); // remove accidental quotes
-    baseUrl = baseUrl.replace(/\/+$/, ''); // remove trailing slashes
-    const safePath = path.startsWith('/') ? path : `/${path}`;
-    return `${baseUrl}${safePath}`;
+    if (path.startsWith('http')) return path
+    let baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+    baseUrl = baseUrl.replace(/^["']|["']$/g, '').replace(/\/+$/, '')
+    return `${baseUrl}${path.startsWith('/') ? path : `/${path}`}`
 }
 
-const getCategory = (proj: any) => {
-    return proj.category || '';
-}
+const getCategory = (project: { category?: string }) => project.category || 'Project'
+const formatIndex = (index: number) => index < 9 ? `0${index + 1}` : String(index + 1)
 
-onMounted(() => {
-    fetchProjects()
-})
+onMounted(fetchProjects)
 </script>
