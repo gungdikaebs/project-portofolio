@@ -30,6 +30,7 @@
                         </div>
                         <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 text-sm">
                             <router-link :to="'/project/' + project.id" class="inline-flex min-h-11 items-center gap-3 border-b border-white/50 text-primary transition-colors hover:border-white">Explore project <span aria-hidden="true">↗</span></router-link>
+                            <a v-if="project.projectUrl" :href="project.projectUrl" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center gap-2 text-secondary transition-colors hover:text-primary" :aria-label="`Open ${project.title} live demo (opens in a new tab)`">Live demo <span aria-hidden="true">↗</span></a>
                             <a v-if="isUsableSourceUrl(project.sourceCodeUrl)" :href="project.sourceCodeUrl" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center gap-2 text-secondary transition-colors hover:text-primary" :aria-label="`View ${project.title} source code (opens in a new tab)`"><GitHubIcon class="h-4 w-4" /> View code <span aria-hidden="true">↗</span></a>
                         </div>
                     </div>
