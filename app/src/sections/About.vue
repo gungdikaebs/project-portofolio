@@ -17,7 +17,7 @@
                         <!-- Profile Image or Placeholder -->
                         <img v-if="profile && profile.imageUrl"
                             :src="getFileUrl(profile.imageUrl)" alt="Gung Dika, Full-Stack Developer"
-                            class="w-full h-full object-cover grayscale" />
+                            class="w-full h-full object-cover" />
                         <div v-else
                             class="w-full h-full bg-surface border border-white/5 flex items-center justify-center text-secondary relative">
                             <span class="z-20">[Profile Image Placeholder]</span>
