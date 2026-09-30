@@ -3,8 +3,8 @@
 
         <div class="section-shell relative z-10">
             <!-- Scroll Line Divider -->
-            <div class="scroll-divider-wrapper mb-12 h-px w-full overflow-hidden bg-white/5 md:mb-16">
-                <div class="about-scroll-line h-full w-full bg-gradient-to-r from-accent/60 via-white/20 to-white/5 origin-left"></div>
+            <div class="scroll-divider-wrapper mb-12 h-px w-full overflow-hidden bg-primary/5 md:mb-16">
+                <div class="about-scroll-line h-full w-full bg-gradient-to-r from-accent/60 via-primary/20 to-primary/5 origin-left"></div>
             </div>
 
             <div class="grid grid-cols-1 items-center gap-12 md:grid-cols-2 lg:gap-20">
@@ -13,13 +13,13 @@
                 <div class="about-image-wrapper relative order-2 md:order-1">
                     <!-- Main Image Frame with Parallax -->
                     <div ref="imageFrame"
-                        class="relative aspect-[4/5] max-h-[42rem] w-full overflow-hidden border border-white/10 bg-surface">
+                        class="relative aspect-[4/5] max-h-[42rem] w-full overflow-hidden border border-primary/10 bg-surface">
                         <!-- Profile Image or Placeholder -->
                         <img v-if="profile && profile.imageUrl"
                             :src="getFileUrl(profile.imageUrl)" alt="Gung Dika, Full-Stack Developer"
                             class="w-full h-full object-cover" />
                         <div v-else
-                            class="w-full h-full bg-surface border border-white/5 flex items-center justify-center text-secondary relative">
+                            class="w-full h-full bg-surface border border-primary/5 flex items-center justify-center text-secondary relative">
                             <span class="z-20">[Profile Image Placeholder]</span>
                             <!-- Animated Pattern Background -->
                             <div
@@ -55,9 +55,9 @@
                     </div>
 
                     <!-- Interactive Stats with animated counter -->
-                    <div v-if="profile && (profile.yearsExperience > 0 || profile.projectsDone > 0)" class="mt-4 grid grid-cols-2 gap-8 border-t border-white/10 pt-8">
+                    <div v-if="profile && (profile.yearsExperience > 0 || profile.projectsDone > 0)" class="mt-4 grid grid-cols-2 gap-8 border-t border-primary/10 pt-8">
                         <div v-if="profile.yearsExperience > 0" class="stat-item">
-                            <h3 class="font-heading font-bold text-5xl text-white flex items-baseline">
+                            <h3 class="font-heading font-bold text-5xl text-primary flex items-baseline">
                                 {{ profile.yearsExperience }}+
                             </h3>
                             <p class="text-xs text-secondary mt-2 tracking-widest uppercase font-mono">Years Experience</p>
@@ -71,9 +71,9 @@
                     </div>
 
                     <!-- Download CV Button -->
-                    <div ref="cvBtn" class="mt-8 border-white/5 border-t pt-10">
+                    <div ref="cvBtn" class="mt-8 border-primary/5 border-t pt-10">
                         <a v-if="profile && profile.cvUrl" :href="getFileUrl(profile.cvUrl)" target="_blank" rel="noopener noreferrer"
-                            class="magnetic-btn inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-accent transition-all duration-300 group">
+                            class="magnetic-btn inline-flex items-center gap-3 px-8 py-4 bg-primary text-background font-bold rounded-full hover:bg-accent transition-all duration-300 group">
                             <span class="group-hover:-translate-y-0.5 transition-transform">Download CV</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -83,7 +83,7 @@
                                 <line x1="12" y1="15" x2="12" y2="3" />
                             </svg>
                         </a>
-                        <span v-else class="text-gray-500 text-sm">CV available upon request</span>
+                        <span v-else class="text-secondary text-sm">CV available upon request</span>
                     </div>
                 </div>
 

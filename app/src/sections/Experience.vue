@@ -4,8 +4,8 @@
 
             <!-- Header -->
             <div class="mb-16 grid gap-5 md:grid-cols-[0.7fr_1.3fr] md:items-end md:mb-20">
-                <div class="scroll-divider-wrapper mb-6 h-px w-full overflow-hidden bg-white/5 md:col-span-2">
-                    <div class="experience-scroll-line h-full w-full bg-gradient-to-r from-accent/60 via-white/20 to-white/5 origin-left"></div>
+                <div class="scroll-divider-wrapper mb-6 h-px w-full overflow-hidden bg-primary/5 md:col-span-2">
+                    <div class="experience-scroll-line h-full w-full bg-gradient-to-r from-accent/60 via-primary/20 to-primary/5 origin-left"></div>
                 </div>
                 <span class="section-kicker">04 / Experience</span>
                 <div><h2 class="font-heading text-4xl font-bold leading-[1.05] tracking-tight text-primary md:text-6xl">Where I've contributed<span class="text-accent">.</span></h2>
@@ -16,14 +16,14 @@
             <div v-if="loading" class="space-y-8" aria-busy="true">
                 <EditorialLoader label="experience" variant="section" message="Tracing professional experience." />
                 <div v-for="item in 2" :key="item"
-                    class="border border-white/5 bg-surface/40 p-8">
-                    <div class="editorial-skeleton mb-4 h-7 w-2/5 bg-white/5" :style="{ '--editorial-delay': `${item * 0.15}s` }"></div>
-                    <div class="editorial-skeleton mb-6 h-5 w-1/4 bg-white/5" :style="{ '--editorial-delay': `${item * 0.15 + 0.1}s` }"></div>
-                    <div class="editorial-skeleton h-4 w-full bg-white/5" :style="{ '--editorial-delay': `${item * 0.15 + 0.2}s` }"></div>
+                    class="border border-primary/5 bg-surface/40 p-8">
+                    <div class="editorial-skeleton mb-4 h-7 w-2/5 bg-primary/5" :style="{ '--editorial-delay': `${item * 0.15}s` }"></div>
+                    <div class="editorial-skeleton mb-6 h-5 w-1/4 bg-primary/5" :style="{ '--editorial-delay': `${item * 0.15 + 0.1}s` }"></div>
+                    <div class="editorial-skeleton h-4 w-full bg-primary/5" :style="{ '--editorial-delay': `${item * 0.15 + 0.2}s` }"></div>
                 </div>
             </div>
 
-            <div v-else class="timeline relative ml-1 space-y-14 border-l border-white/10 lg:ml-[32%] lg:space-y-20">
+            <div v-else class="timeline relative ml-1 space-y-14 border-l border-primary/10 lg:ml-[32%] lg:space-y-20">
                 <!-- Active Scroll-driven Progress Line (GPU accelerated) -->
                 <div ref="timelineProgressBar"
                     class="timeline-progress-line absolute -left-[1px] top-0 h-full w-[2px] bg-accent origin-top scale-y-0 will-change-transform"
@@ -43,19 +43,19 @@
                         <!-- Role & Company -->
                         <div class="max-w-3xl">
                             <h3
-                                class="font-heading font-bold text-2xl md:text-3xl text-white mb-2 group-hover:text-accent transition-colors">
+                                class="font-heading font-bold text-2xl md:text-3xl text-primary mb-2 group-hover:text-accent transition-colors">
                                 {{ job.role }}
                             </h3>
                             <h4 class="font-body text-lg text-primary mb-6">{{ job.company }}</h4>
 
                             <ul class="mb-7 space-y-3 text-secondary leading-relaxed">
-                                <li v-for="(point, pointIndex) in descriptionPoints(job.description)" :key="pointIndex" class="flex gap-3"><span class="mt-[0.7em] h-px w-3 shrink-0 bg-white/30"></span><span>{{ point }}</span></li>
+                                <li v-for="(point, pointIndex) in descriptionPoints(job.description)" :key="pointIndex" class="flex gap-3"><span class="mt-[0.7em] h-px w-3 shrink-0 bg-primary/30"></span><span>{{ point }}</span></li>
                             </ul>
 
                             <!-- Tech Stack Used -->
                             <div v-if="job.technologies?.length" class="flex flex-wrap gap-2.5">
                                 <span v-for="tech in job.technologies" :key="tech"
-                                    class="border border-white/10 bg-surface px-3 py-1 text-xs text-secondary transition-colors hover:border-accent/40 hover:text-accent">
+                                    class="border border-primary/10 bg-surface px-3 py-1 text-xs text-secondary transition-colors hover:border-accent/40 hover:text-accent">
                                     {{ tech }}
                                 </span>
                             </div>
@@ -168,12 +168,14 @@ const refreshAnimations = () => {
                     start: 'top 75%',
                     end: 'bottom 25%',
                     onEnter: () => {
-                        gsap.to(dot, { backgroundColor: '#E2E0D9', scale: 1.2, duration: 0.3 })
-                        if (date) gsap.to(date, { color: '#E2E0D9', duration: 0.3 })
+                        dot.classList.add('is-active')
+                        date?.classList.add('is-active')
+                        gsap.to(dot, { scale: 1.2, duration: 0.3 })
                     },
                     onLeaveBack: () => {
-                        gsap.to(dot, { backgroundColor: '#9AA0AA', scale: 1, duration: 0.3 })
-                        if (date) gsap.to(date, { color: '#9AA0AA', duration: 0.3 })
+                        dot.classList.remove('is-active')
+                        date?.classList.remove('is-active')
+                        gsap.to(dot, { scale: 1, duration: 0.3 })
                     }
                 })
             }
@@ -192,5 +194,10 @@ onUnmounted(() => context?.revert())
 </script>
 
 <style scoped>
-/* Timeline styles handled via GSAP */
+.timeline-dot.is-active {
+    background-color: var(--color-accent);
+}
+.job-date.is-active {
+    color: var(--color-accent);
+}
 </style>

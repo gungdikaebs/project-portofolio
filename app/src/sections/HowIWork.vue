@@ -1,14 +1,14 @@
 <template>
-    <section id="process" ref="sectionEl" class="relative bg-[#151616] text-primary" aria-labelledby="process-heading">
+    <section id="process" ref="sectionEl" class="relative bg-section text-primary" aria-labelledby="process-heading">
         <div class="section-shell">
-            <header class="process-intro border-b border-white/15 pb-14 pt-28 md:pb-20 md:pt-40">
-                <div class="flex items-center justify-between gap-6 border-t border-white/15 pt-4 font-mono text-[0.68rem] uppercase tracking-[0.16em] text-secondary">
+            <header class="process-intro border-b border-primary/15 pb-14 pt-28 md:pb-20 md:pt-40">
+                <div class="flex items-center justify-between gap-6 border-t border-primary/15 pt-4 font-mono text-[0.68rem] uppercase tracking-[0.16em] text-secondary">
                     <span>03 / Process</span>
                     <span>From question to delivery</span>
                 </div>
                 <div class="mt-16 grid gap-9 lg:mt-24 lg:grid-cols-[minmax(0,1.4fr)_minmax(16rem,0.6fr)] lg:items-end lg:gap-16">
                     <h2 id="process-heading" class="max-w-[9ch] font-heading text-[clamp(4rem,10vw,9rem)] font-bold leading-[0.9] tracking-[-0.075em]">How I<br><span class="italic font-normal">work.</span></h2>
-                    <p class="max-w-sm border-l border-white/25 pl-5 text-base leading-relaxed text-secondary md:text-lg">From the first conversation to handoff, I make the problem, decisions, and next steps visible.</p>
+                    <p class="max-w-sm border-l border-primary/25 pl-5 text-base leading-relaxed text-secondary md:text-lg">From the first conversation to handoff, I make the problem, decisions, and next steps visible.</p>
                 </div>
             </header>
 
@@ -17,16 +17,16 @@
                     <div class="sticky top-28 flex h-[calc(100svh-9rem)] max-h-[43rem] min-h-[31rem] flex-col justify-between py-14">
                         <div>
                             <span class="font-mono text-[0.7rem] uppercase tracking-[0.17em] text-secondary">Currently / {{ currentStep.phase }}</span>
-                            <div class="mt-7 overflow-hidden border-b border-white/15 pb-6" aria-hidden="true">
+                            <div class="mt-7 overflow-hidden border-b border-primary/15 pb-6" aria-hidden="true">
                                 <span class="block font-heading text-[clamp(7rem,15vw,14rem)] font-bold leading-none tracking-[-0.11em]">{{ currentStep.number }}</span>
                             </div>
                             <p class="mt-6 max-w-xs font-heading text-2xl font-semibold leading-tight tracking-tight">{{ currentStep.title }}<span class="font-normal">.</span></p>
                         </div>
 
                         <nav aria-label="Workflow stages" class="max-w-sm">
-                            <ol class="border-t border-white/15">
+                            <ol class="border-t border-primary/15">
                                 <li v-for="(step, index) in steps" :key="step.number">
-                                    <button type="button" class="flex min-h-11 w-full items-center justify-between gap-4 border-b border-white/15 text-left font-mono text-[0.7rem] uppercase tracking-[0.12em] transition-colors hover:text-primary" :class="activeIndex === index ? 'text-primary' : 'text-secondary'" :aria-label="`Jump to ${step.title}`" :aria-current="activeIndex === index ? 'step' : undefined" @click="scrollToStep(index)">
+                                    <button type="button" class="flex min-h-11 w-full items-center justify-between gap-4 border-b border-primary/15 text-left font-mono text-[0.7rem] uppercase tracking-[0.12em] transition-colors hover:text-primary" :class="activeIndex === index ? 'text-primary' : 'text-secondary'" :aria-label="`Jump to ${step.title}`" :aria-current="activeIndex === index ? 'step' : undefined" @click="scrollToStep(index)">
                                         <span>{{ step.number }} / {{ step.title }}</span>
                                         <span v-if="activeIndex === index" aria-hidden="true">↗</span>
                                     </button>
@@ -37,7 +37,7 @@
                 </div>
 
                 <ol class="process-steps">
-                    <li v-for="(step, index) in steps" :id="`process-step-${index + 1}`" :key="step.number" class="process-step grid min-h-[19rem] gap-5 border-b border-white/15 py-12 sm:min-h-[22rem] sm:py-16 lg:min-h-[27rem] lg:content-center lg:py-20">
+                    <li v-for="(step, index) in steps" :id="`process-step-${index + 1}`" :key="step.number" class="process-step grid min-h-[19rem] gap-5 border-b border-primary/15 py-12 sm:min-h-[22rem] sm:py-16 lg:min-h-[27rem] lg:content-center lg:py-20">
                         <div class="flex items-center justify-between gap-6 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-secondary">
                             <span>{{ step.number }} / 06</span>
                             <span>{{ step.phase }}</span>
@@ -53,7 +53,7 @@
                 <span class="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-secondary">Next / In practice</span>
                 <div class="flex flex-col items-start gap-7 sm:flex-row sm:items-end sm:justify-between">
                     <p class="max-w-xl font-heading text-2xl font-semibold leading-snug tracking-tight md:text-3xl">The result: a product people can use and a codebase others can continue.</p>
-                    <a href="#experience" class="inline-flex min-h-11 shrink-0 items-center gap-3 border-b border-white/40 text-sm font-medium transition-colors hover:border-primary hover:text-secondary">See my experience <span aria-hidden="true">↗</span></a>
+                    <a href="#experience" class="inline-flex min-h-11 shrink-0 items-center gap-3 border-b border-primary/40 text-sm font-medium transition-colors hover:border-primary hover:text-secondary">See my experience <span aria-hidden="true">↗</span></a>
                 </div>
             </div>
         </div>

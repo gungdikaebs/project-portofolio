@@ -7,12 +7,14 @@
     --color-primary: var(--color-text-primary);
     --color-secondary: var(--color-text-secondary);
     --color-accent: var(--color-accent);
+    --color-section: var(--portfolio-section);
 
     --font-heading: 'Sora', sans-serif;
     --font-body: 'Inter', sans-serif;
 }
 
 :root {
+    color-scheme: dark;
     /* Colors */
     --color-background: #0B0D10;
     --color-surface: #11141A;
@@ -35,12 +37,28 @@
 }
 
 /* Public-facing editorial palette. Admin routes retain the existing theme. */
+html[data-portfolio],
 .public-portfolio {
+    color-scheme: dark;
     --color-background: #101111;
     --color-surface: #191a1a;
     --color-text-primary: #eeede8;
     --color-text-secondary: #a5a6a3;
     --color-accent: #e2e0d9;
+    --portfolio-section: #151616;
+    --navbar-shadow: 0 12px 40px rgb(0 0 0 / 24%);
+}
+
+html[data-portfolio][data-theme="light"],
+html[data-theme="light"] .public-portfolio {
+    color-scheme: light;
+    --color-background: #f5f4ef;
+    --color-surface: #eae9e3;
+    --color-text-primary: #202421;
+    --color-text-secondary: #60665f;
+    --color-accent: #303a31;
+    --portfolio-section: #eeede7;
+    --navbar-shadow: 0 12px 40px rgb(32 36 33 / 10%);
 }
 
 .public-portfolio .spotlight-card::before {
@@ -93,8 +111,8 @@ a {
     background: linear-gradient(
         108deg,
         transparent 28%,
-        rgb(238 237 232 / 9%) 47%,
-        rgb(238 237 232 / 15%) 50%,
+        color-mix(in srgb, var(--color-text-primary) 9%, transparent) 47%,
+        color-mix(in srgb, var(--color-text-primary) 15%, transparent) 50%,
         transparent 68%
     );
     content: '';

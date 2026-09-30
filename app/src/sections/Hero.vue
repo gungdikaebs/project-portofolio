@@ -9,11 +9,11 @@
             <div class="max-w-[74rem]">
                 <div ref="availability" class="mb-6 flex flex-wrap items-center gap-x-5 gap-y-2 md:mb-8">
                     <span class="inline-flex items-center gap-3 text-sm font-medium tracking-wide text-primary">
-                        <span class="h-px w-7 bg-white/45" aria-hidden="true"></span>
+                        <span class="h-px w-7 bg-primary/45" aria-hidden="true"></span>
                         Available for opportunities
                     </span>
                     <span v-if="currentTime"
-                        class="hidden items-center gap-2 border-l border-white/15 pl-4 font-mono text-[0.62rem] uppercase tracking-[0.13em] text-secondary sm:inline-flex">
+                        class="hidden items-center gap-2 border-l border-primary/15 pl-4 font-mono text-[0.62rem] uppercase tracking-[0.13em] text-secondary sm:inline-flex">
                         <span>Local time</span>
                         <span class="text-primary">{{ currentTime }}</span>
                         <span>WITA</span>
@@ -24,13 +24,13 @@
                     class="text-balance font-heading text-[clamp(2.75rem,11vw,6.9rem)] font-bold leading-[0.98] tracking-[-0.055em] text-primary">
                     <span class="block overflow-hidden"><span ref="line1" class="block">Web products,</span></span>
                     <span class="block overflow-hidden"><span ref="line2" class="block text-secondary">from
-                            interface</span></span>
+                            <span class="italic">interface</span></span></span>
                     <span class="block overflow-hidden"><span ref="line3" class="block">to deployment<span
                                 class="text-accent">.</span></span></span>
                 </h1>
 
                 <div ref="supporting"
-                    class="mt-7 grid max-w-4xl gap-5 border-l border-white/15 pl-5 md:mt-9 md:grid-cols-[1fr_auto] md:items-end md:gap-12 md:pl-7">
+                    class="mt-7 grid max-w-4xl gap-5 border-l border-primary/15 pl-5 md:mt-9 md:grid-cols-[1fr_auto] md:items-end md:gap-12 md:pl-7">
                     <p class="max-w-2xl text-base leading-relaxed text-secondary md:text-lg">
                         I build web products primarily with Vue, Laravel, and MySQL. Docker keeps my development
                         workflow consistent; I also use Next.js, NestJS, and PostgreSQL when they fit the project.
@@ -54,7 +54,7 @@
                                 </svg>
                             </span></a>
                         <a href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer"
-                            class="magnetic-btn group inline-flex min-h-12 items-center rounded-full border border-white/20 px-6 py-3 text-sm font-medium text-primary transition-colors hover:border-accent hover:text-accent md:px-7"><span
+                            class="magnetic-btn group inline-flex min-h-12 items-center rounded-full border border-primary/20 px-6 py-3 text-sm font-medium text-primary transition-colors hover:border-accent hover:text-accent md:px-7"><span
                                 class="btn-content inline-flex items-center gap-2">
                                 <GitHubIcon
                                     class="h-4 w-4 transition-transform duration-300 ease-out group-hover:scale-110 group-hover:-rotate-12" />
@@ -66,7 +66,7 @@
                     <div ref="socialRow" class="flex flex-wrap items-center gap-4 text-secondary">
                         <div class="flex items-center gap-2.5">
                             <a href="https://www.linkedin.com/in/gungdikaebs/" target="_blank" rel="noopener noreferrer"
-                                class="magnetic-btn group/icon relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-surface/80 text-secondary transition-[border-color,background-color,color] duration-200 hover:border-accent/40 hover:bg-surface hover:text-accent"
+                                class="magnetic-btn group/icon relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/10 bg-surface/80 text-secondary transition-[border-color,background-color,color] duration-200 hover:border-accent/40 hover:bg-surface hover:text-accent"
                                 aria-label="LinkedIn" title="LinkedIn">
                                 <span class="btn-content flex items-center justify-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -82,12 +82,12 @@
                                 </span>
                                 <!-- Tooltip -->
                                 <span
-                                    class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded border border-white/10 bg-[#11141A] px-2 py-0.5 font-mono text-[10px] text-primary opacity-0 shadow-lg transition-all duration-200 group-hover/icon:-translate-y-1 group-hover/icon:opacity-100 z-20">
+                                    class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded border border-primary/10 bg-surface px-2 py-0.5 font-mono text-[10px] text-primary opacity-0 shadow-lg transition-all duration-200 group-hover/icon:-translate-y-1 group-hover/icon:opacity-100 z-20">
                                     LinkedIn
                                 </span>
                             </a>
                             <a href="https://www.instagram.com/gungdikaebs/" target="_blank" rel="noopener noreferrer"
-                                class="magnetic-btn group/icon relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-surface/80 text-secondary transition-[border-color,background-color,color] duration-200 hover:border-accent/40 hover:bg-surface hover:text-accent"
+                                class="magnetic-btn group/icon relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/10 bg-surface/80 text-secondary transition-[border-color,background-color,color] duration-200 hover:border-accent/40 hover:bg-surface hover:text-accent"
                                 aria-label="Instagram" title="Instagram">
                                 <span class="btn-content flex items-center justify-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -101,12 +101,12 @@
                                 </span>
                                 <!-- Tooltip -->
                                 <span
-                                    class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded border border-white/10 bg-[#11141A] px-2 py-0.5 font-mono text-[10px] text-primary opacity-0 shadow-lg transition-all duration-200 group-hover/icon:-translate-y-1 group-hover/icon:opacity-100 z-20">
+                                    class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded border border-primary/10 bg-surface px-2 py-0.5 font-mono text-[10px] text-primary opacity-0 shadow-lg transition-all duration-200 group-hover/icon:-translate-y-1 group-hover/icon:opacity-100 z-20">
                                     Instagram
                                 </span>
                             </a>
                             <a href="mailto:gungdika85@gmail.com"
-                                class="magnetic-btn group/icon relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-surface/80 text-secondary transition-[border-color,background-color,color] duration-200 hover:border-accent/40 hover:bg-surface hover:text-accent"
+                                class="magnetic-btn group/icon relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/10 bg-surface/80 text-secondary transition-[border-color,background-color,color] duration-200 hover:border-accent/40 hover:bg-surface hover:text-accent"
                                 aria-label="Email" title="Email">
                                 <span class="btn-content flex items-center justify-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -119,7 +119,7 @@
                                 </span>
                                 <!-- Tooltip -->
                                 <span
-                                    class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded border border-white/10 bg-[#11141A] px-2 py-0.5 font-mono text-[10px] text-primary opacity-0 shadow-lg transition-all duration-200 group-hover/icon:-translate-y-1 group-hover/icon:opacity-100 z-20">
+                                    class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded border border-primary/10 bg-surface px-2 py-0.5 font-mono text-[10px] text-primary opacity-0 shadow-lg transition-all duration-200 group-hover/icon:-translate-y-1 group-hover/icon:opacity-100 z-20">
                                     Email
                                 </span>
                             </a>
@@ -132,19 +132,20 @@
         <div ref="scrollIndicator"
             class="absolute bottom-7 right-[var(--page-gutter)] hidden items-center gap-3 text-[0.65rem] uppercase tracking-[0.18em] text-secondary md:flex"
             aria-hidden="true">
-            <span>Scroll to meet me</span><span class="block h-px w-12 bg-white/20"><span
+            <span>Scroll to meet me</span><span class="block h-px w-12 bg-primary/20"><span
                     class="scroll-pulse block h-px w-1/2 bg-accent"></span></span>
         </div>
     </section>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { initMagneticButtons } from '../animations/magnetic'
 import { motion, reduceMotion } from '../animations/motion'
 import GitHubIcon from '../components/GitHubIcon.vue'
+import { useTheme } from '../composables/useTheme'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -164,6 +165,13 @@ let timer: ReturnType<typeof setInterval> | null = null
 let context: gsap.Context | null = null
 let animationFrameId = 0
 let removeResize: (() => void) | null = null
+const { theme } = useTheme()
+let particleColor = ''
+
+const updateParticleColor = () => {
+    if (sectionEl.value) particleColor = getComputedStyle(sectionEl.value).getPropertyValue('--color-accent').trim()
+}
+watch(theme, updateParticleColor, { flush: 'post' })
 
 const updateClock = () => {
     try {
@@ -186,6 +194,7 @@ const initParticles = () => {
     const element = canvas.value
     const ctx = element?.getContext('2d')
     if (!element || !ctx || reduceMotion()) return
+    updateParticleColor()
     let particles: Particle[] = []
     const resize = () => {
         const ratio = Math.min(window.devicePixelRatio || 1, 2)
@@ -206,7 +215,10 @@ const initParticles = () => {
             particle.y -= particle.speed
             if (particle.y < -4) particle.y = window.innerHeight + 4
             ctx.beginPath(); ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2)
-            ctx.fillStyle = `rgba(226, 224, 217, ${particle.alpha})`; ctx.fill()
+            ctx.fillStyle = particleColor
+            ctx.globalAlpha = particle.alpha
+            ctx.fill()
+            ctx.globalAlpha = 1
         })
         animationFrameId = requestAnimationFrame(render)
     }
@@ -274,7 +286,7 @@ onUnmounted(() => {
 
 <style scoped>
 .hero-grid {
-    background-image: linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px), linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+    background-image: linear-gradient(to right, color-mix(in srgb, var(--color-text-primary) 3.5%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in srgb, var(--color-text-primary) 3.5%, transparent) 1px, transparent 1px);
     background-size: 48px 48px;
     mask-image: linear-gradient(to bottom, black 0%, rgb(0 0 0 / 0.85) 55%, transparent 100%);
 }

@@ -2,7 +2,9 @@ import { createApp } from 'vue'
 import './styles/globals.css'
 import App from './App.vue'
 import router from './router'
+import { initializeTheme } from './composables/useTheme'
 
+initializeTheme()
 const app = createApp(App)
 
 // Disable native browser scroll restoration to let Vue Router/Lenis handle it

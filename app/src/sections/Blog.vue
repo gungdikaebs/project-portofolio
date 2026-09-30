@@ -3,8 +3,8 @@
         <div class="section-shell relative z-10">
 
             <!-- Scroll Line Divider -->
-            <div class="scroll-divider-wrapper mb-16 h-px w-full overflow-hidden bg-white/5 md:mb-20">
-                <div class="blog-scroll-line h-full w-full bg-gradient-to-r from-accent/60 via-white/20 to-white/5 origin-left"></div>
+            <div class="scroll-divider-wrapper mb-16 h-px w-full overflow-hidden bg-primary/5 md:mb-20">
+                <div class="blog-scroll-line h-full w-full bg-gradient-to-r from-accent/60 via-primary/20 to-primary/5 origin-left"></div>
             </div>
 
             <!-- Section Header -->
@@ -22,9 +22,9 @@
                 <!-- Desktop View All Button -->
                 <div class="hidden md:block reveal-blog-text">
                     <router-link to="/blog"
-                        class="magnetic-btn group relative inline-flex items-center gap-3 px-8 py-4 bg-surface border border-white/10 rounded-full overflow-hidden transition-all duration-300 hover:border-accent/40">
-                        <span class="relative z-10 font-heading font-bold text-sm text-white group-hover:text-accent transition-colors">Read All Articles</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="relative z-10 text-white group-hover:text-accent transition-colors group-hover:translate-x-1 duration-300">
+                        class="magnetic-btn group relative inline-flex items-center gap-3 px-8 py-4 bg-surface border border-primary/10 rounded-full overflow-hidden transition-all duration-300 hover:border-accent/40">
+                        <span class="relative z-10 font-heading font-bold text-sm text-primary group-hover:text-accent transition-colors">Read All Articles</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="relative z-10 text-primary group-hover:text-accent transition-colors group-hover:translate-x-1 duration-300">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
                         </svg>
@@ -37,11 +37,11 @@
                 <EditorialLoader label="latest articles" variant="section" message="Gathering recent writing." />
                 <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
                     <div v-for="i in 3" :key="i" class="col-span-1 flex flex-col gap-6">
-                        <div class="editorial-skeleton aspect-[16/10] w-full bg-white/5" :style="{ '--editorial-delay': `${i * 0.12}s` }"></div>
+                        <div class="editorial-skeleton aspect-[16/10] w-full bg-primary/5" :style="{ '--editorial-delay': `${i * 0.12}s` }"></div>
                         <div class="flex flex-col gap-3">
-                            <div class="editorial-skeleton h-4 w-1/3 bg-white/5" :style="{ '--editorial-delay': `${i * 0.12 + 0.1}s` }"></div>
-                            <div class="editorial-skeleton mt-2 h-8 w-full bg-white/5" :style="{ '--editorial-delay': `${i * 0.12 + 0.2}s` }"></div>
-                            <div class="editorial-skeleton h-8 w-3/4 bg-white/5" :style="{ '--editorial-delay': `${i * 0.12 + 0.3}s` }"></div>
+                            <div class="editorial-skeleton h-4 w-1/3 bg-primary/5" :style="{ '--editorial-delay': `${i * 0.12 + 0.1}s` }"></div>
+                            <div class="editorial-skeleton mt-2 h-8 w-full bg-primary/5" :style="{ '--editorial-delay': `${i * 0.12 + 0.2}s` }"></div>
+                            <div class="editorial-skeleton h-8 w-3/4 bg-primary/5" :style="{ '--editorial-delay': `${i * 0.12 + 0.3}s` }"></div>
                         </div>
                     </div>
                 </div>
@@ -53,24 +53,24 @@
 
                     <!-- Image Container -->
                     <router-link :to="'/blog/' + post.slug"
-                        class="block w-full aspect-[16/10] overflow-hidden relative cursor-pointer bg-surface border border-white/10 hover:border-white/35 transition-colors duration-500">
+                        class="block w-full aspect-[16/10] overflow-hidden relative cursor-pointer bg-surface border border-primary/10 hover:border-primary/35 transition-colors duration-500">
                         <!-- Image -->
                         <div class="w-full h-full relative overflow-hidden">
                             <img v-if="post.coverImage" :src="getImageUrl(post.coverImage)" :alt="post.title"
                                 class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                             <div v-else class="w-full h-full bg-surface flex items-center justify-center">
-                                <span class="text-white/10 font-heading text-4xl font-bold opacity-30">BLOG</span>
+                                <span class="text-primary/10 font-heading text-4xl font-bold opacity-30">BLOG</span>
                             </div>
                         </div>
 
-                        <span class="absolute right-4 top-4 grid h-10 w-10 place-items-center border border-white/30 bg-background/80 text-primary" aria-hidden="true">↗</span>
+                        <span class="absolute right-4 top-4 grid h-10 w-10 place-items-center border border-primary/30 bg-background/80 text-primary" aria-hidden="true">↗</span>
                     </router-link>
 
                     <!-- Content -->
                     <div class="flex flex-col gap-3">
                         <div class="flex justify-between items-center text-sm font-mono text-secondary">
                             <span class="text-secondary" v-if="post.category">{{ post.category.name }}</span>
-                            <span v-else class="text-white/30 truncate">Uncategorized</span>
+                            <span v-else class="text-secondary truncate">Uncategorized</span>
                             <span>{{ formatDate(post.publishedAt || post.createdAt) }}</span>
                         </div>
                         
@@ -88,7 +88,7 @@
             <!-- Mobile Only View All Button -->
             <div v-if="featuredBlogs.length > 0" class="md:hidden mt-12 flex justify-center">
                 <router-link to="/blog"
-                    class="inline-flex items-center gap-2 px-8 py-3 bg-surface border border-white/10 rounded-full text-white font-bold hover:bg-white/5 transition-colors">
+                    class="inline-flex items-center gap-2 px-8 py-3 bg-surface border border-primary/10 rounded-full text-primary font-bold hover:bg-primary/5 transition-colors">
                     Read All Articles
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

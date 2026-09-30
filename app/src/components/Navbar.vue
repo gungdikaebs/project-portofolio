@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import gsap from 'gsap'
 import { motion, reduceMotion } from '../animations/motion'
+import ThemeToggle from './ThemeToggle.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -99,42 +100,45 @@ onUnmounted(() => { window.removeEventListener('scroll', onScroll); window.remov
 </script>
 
 <template>
-    <header class="fixed inset-x-0 top-0 z-50 flex w-full justify-center border-b transition-[height,padding,background-color,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" :class="isScrolled ? 'h-18 border-white/5 bg-background/90 backdrop-blur-lg xl:h-[77px] xl:border-transparent xl:bg-transparent xl:px-6 xl:pt-3 xl:backdrop-blur-none' : 'h-22 border-transparent bg-transparent'">
-        <div class="section-shell flex h-full items-center justify-between transition-[height,max-width,padding,background-color,border-color,border-radius,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" :class="isScrolled ? 'xl:h-16 xl:rounded-full xl:border xl:border-white/10 xl:bg-background/90 xl:px-8 xl:shadow-[0_12px_40px_rgba(0,0,0,0.24)] xl:backdrop-blur-xl' : undefined" :style="{ maxWidth: isScrolled ? '1120px' : '100%' }">
+    <header class="fixed inset-x-0 top-0 z-50 flex w-full justify-center border-b transition-[height,padding,background-color,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" :class="isScrolled ? 'h-18 border-primary/5 bg-background/90 backdrop-blur-lg xl:h-[77px] xl:border-transparent xl:bg-transparent xl:px-6 xl:pt-3 xl:backdrop-blur-none' : 'h-22 border-transparent bg-transparent'">
+        <div class="section-shell flex h-full items-center justify-between transition-[height,max-width,padding,background-color,border-color,border-radius,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" :class="isScrolled ? 'xl:h-16 xl:rounded-full xl:border xl:border-primary/10 xl:bg-background/90 xl:px-8 xl:shadow-[var(--navbar-shadow)] xl:backdrop-blur-xl' : undefined" :style="{ maxWidth: isScrolled ? '1120px' : '100%' }">
             <router-link to="/" class="relative z-[60] font-heading text-xl font-bold tracking-tight text-primary transition-colors hover:text-accent">Gung Dika<span class="text-accent">.</span></router-link>
-            <nav class="hidden items-center gap-2 xl:flex" aria-label="Primary navigation">
-                <a v-for="link in navLinks" :key="link.href" :href="link.href.startsWith('#') ? `/${link.href}` : link.href" @click.prevent="handleNavClick(link.href)"
-                    class="group relative inline-flex min-h-11 items-center px-2 text-sm font-medium transition-colors" :class="isActive(link.href) ? 'text-primary' : 'text-secondary hover:text-primary'" :aria-current="isActive(link.href) ? 'page' : undefined">
-                    {{ link.label }}
-                    <span class="absolute bottom-1 left-2 right-2 h-px origin-left bg-white/75 transition-transform duration-300" :class="isActive(link.href) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'"></span>
-                </a>
-                <a href="/#contact" @click.prevent="handleNavClick('#contact')"
-                    class="group ml-3 inline-flex min-h-11 items-center gap-2 border-l border-white/15 pl-5 text-sm font-semibold text-secondary transition-colors hover:text-primary"
-                    :class="isActive('#contact') ? 'text-primary' : undefined"
-                    :aria-current="isActive('#contact') ? 'page' : undefined">
-                    <span>Contact</span>
-                    <span class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true">↗</span>
-                </a>
-            </nav>
-            <button ref="menuButton" type="button" @click="toggleMenu" class="relative z-[60] grid min-h-11 min-w-11 place-items-center rounded-full border border-white/10 text-primary xl:hidden" aria-label="Open navigation menu" aria-controls="mobile-menu" :aria-expanded="isMobileMenuOpen">
-                <span class="sr-only">Menu</span><span class="flex w-5 flex-col gap-1.5"><span class="h-px w-full bg-current"></span><span class="h-px w-3 self-end bg-current"></span></span>
-            </button>
+            <div class="flex items-center gap-2 xl:gap-4">
+                <nav class="hidden items-center gap-2 xl:flex" aria-label="Primary navigation">
+                    <a v-for="link in navLinks" :key="link.href" :href="link.href.startsWith('#') ? `/${link.href}` : link.href" @click.prevent="handleNavClick(link.href)"
+                        class="group relative inline-flex min-h-11 items-center px-2 text-sm font-medium transition-colors" :class="isActive(link.href) ? 'text-primary' : 'text-secondary hover:text-primary'" :aria-current="isActive(link.href) ? 'page' : undefined">
+                        {{ link.label }}
+                        <span class="absolute bottom-1 left-2 right-2 h-px origin-left bg-primary/75 transition-transform duration-300" :class="isActive(link.href) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'"></span>
+                    </a>
+                    <a href="/#contact" @click.prevent="handleNavClick('#contact')"
+                        class="group ml-3 inline-flex min-h-11 items-center gap-2 border-l border-primary/15 pl-5 text-sm font-semibold text-secondary transition-colors hover:text-primary"
+                        :class="isActive('#contact') ? 'text-primary' : undefined"
+                        :aria-current="isActive('#contact') ? 'page' : undefined">
+                        <span>Contact</span>
+                        <span class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true">↗</span>
+                    </a>
+                </nav>
+                <ThemeToggle />
+                <button ref="menuButton" type="button" @click="toggleMenu" class="relative z-[60] grid min-h-11 min-w-11 place-items-center rounded-full border border-primary/10 text-primary xl:hidden" aria-label="Open navigation menu" aria-controls="mobile-menu" :aria-expanded="isMobileMenuOpen">
+                    <span class="sr-only">Menu</span><span class="flex w-5 flex-col gap-1.5"><span class="h-px w-full bg-current"></span><span class="h-px w-3 self-end bg-current"></span></span>
+                </button>
+            </div>
         </div>
 
         <Teleport to="body">
             <div v-if="isMobileMenuOpen" class="public-portfolio fixed inset-0 z-[70]">
                 <div ref="backdrop" @click="closeMenu()" class="absolute inset-0 bg-black/70"></div>
-                <div ref="sidebar" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation menu" class="absolute right-0 top-0 flex h-[100svh] w-full max-w-[28rem] flex-col overflow-y-auto overscroll-contain border-l border-white/10 bg-background px-6 pb-7 pt-5 sm:px-8">
-                    <div class="flex min-h-14 shrink-0 items-center justify-between border-b border-white/10">
+                <div ref="sidebar" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation menu" class="absolute right-0 top-0 flex h-[100svh] w-full max-w-[28rem] flex-col overflow-y-auto overscroll-contain border-l border-primary/10 bg-background px-6 pb-7 pt-5 sm:px-8">
+                    <div class="flex min-h-14 shrink-0 items-center justify-between border-b border-primary/10">
                         <span class="section-kicker">Navigation</span>
-                        <button ref="closeButton" type="button" @click="closeMenu()" class="grid min-h-11 min-w-11 place-items-center rounded-full border border-white/10 text-2xl text-primary hover:text-accent" aria-label="Close navigation menu">×</button>
+                        <button ref="closeButton" type="button" @click="closeMenu()" class="grid min-h-11 min-w-11 place-items-center rounded-full border border-primary/10 text-2xl text-primary hover:text-accent" aria-label="Close navigation menu">×</button>
                     </div>
                     <nav class="my-auto flex flex-col py-6" aria-label="Mobile navigation">
-                        <a v-for="(link, index) in navLinks" :key="link.href" :href="link.href.startsWith('#') ? `/${link.href}` : link.href" @click.prevent="handleNavClick(link.href)" class="sidebar-link group flex min-h-13 items-center justify-between border-b border-white/8 py-2 font-heading text-[clamp(1.45rem,7vw,2.1rem)] font-bold transition-colors" :class="isActive(link.href) ? 'text-primary' : 'text-secondary hover:text-primary'">
+                        <a v-for="(link, index) in navLinks" :key="link.href" :href="link.href.startsWith('#') ? `/${link.href}` : link.href" @click.prevent="handleNavClick(link.href)" class="sidebar-link group flex min-h-13 items-center justify-between border-b border-primary/8 py-2 font-heading text-[clamp(1.45rem,7vw,2.1rem)] font-bold transition-colors" :class="isActive(link.href) ? 'text-primary' : 'text-secondary hover:text-primary'">
                             <span>{{ link.label }}</span><span class="font-body text-[0.65rem] font-medium text-secondary">0{{ index + 1 }}</span>
                         </a>
                     </nav>
-                    <div class="sidebar-footer shrink-0 border-t border-white/10 pt-5">
+                    <div class="sidebar-footer shrink-0 border-t border-primary/10 pt-5">
                         <a href="/#contact" @click.prevent="handleNavClick('#contact')" class="flex min-h-12 w-full items-center justify-center rounded-full bg-accent px-6 font-bold text-background">Start a conversation</a>
                         <div class="mt-5 flex items-center justify-between text-xs text-secondary"><span>© 2026 Gung Dika</span><span class="flex gap-4"><a href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer" class="hover:text-primary">GitHub</a><a href="https://www.linkedin.com/in/gungdikaebs/" target="_blank" rel="noopener noreferrer" class="hover:text-primary">LinkedIn</a></span></div>
                     </div>

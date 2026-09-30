@@ -6,6 +6,7 @@ import Navbar from './components/Navbar.vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { reduceMotion } from './animations/motion'
+import { updateThemeColor } from './composables/useTheme'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -15,6 +16,11 @@ const showNavbar = computed(() => {
   // Hide navbar on login and admin routes
   return route.path !== '/login' && !route.path.startsWith('/admin')
 })
+
+watch(showNavbar, (isPublic) => {
+  document.documentElement.toggleAttribute('data-portfolio', isPublic)
+  updateThemeColor()
+}, { immediate: true })
 
 // Lenis Setup
 let lenis: Lenis | null = null
@@ -81,7 +87,7 @@ onUnmounted(() => {
 <template>
   <main class="relative bg-background min-h-screen" :class="{ 'public-portfolio': showNavbar }">
     <!-- Top Scroll Progress Bar -->
-    <div class="fixed top-0 left-0 right-0 h-[2px] z-[100] pointer-events-none bg-white/5">
+    <div class="fixed top-0 left-0 right-0 h-[2px] z-[100] pointer-events-none bg-primary/5">
       <div ref="progressBar" class="h-full bg-accent origin-left scale-x-0 will-change-transform"></div>
     </div>
 

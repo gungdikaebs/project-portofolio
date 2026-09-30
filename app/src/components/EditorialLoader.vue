@@ -52,7 +52,7 @@ const registrationMarks = Array.from({ length: 9 }, (_, index) => index)
 }
 
 .editorial-loader--page {
-    border-top: 1px solid rgb(238 237 232 / 25%);
+    border-top: 1px solid color-mix(in srgb, var(--color-text-primary) 25%, transparent);
     padding-block: clamp(2rem, 6vw, 4rem);
 }
 
@@ -119,7 +119,7 @@ const registrationMarks = Array.from({ length: 9 }, (_, index) => index)
     inset-inline: 0;
     top: 50%;
     height: 1px;
-    background: rgb(238 237 232 / 14%);
+    background: color-mix(in srgb, var(--color-text-primary) 14%, transparent);
     content: '';
 }
 
@@ -127,12 +127,12 @@ const registrationMarks = Array.from({ length: 9 }, (_, index) => index)
     z-index: 1;
     width: 1px;
     height: 0.35rem;
-    background: rgb(238 237 232 / 24%);
+    background: color-mix(in srgb, var(--color-text-primary) 24%, transparent);
 }
 
 .editorial-loader__mark--major {
     height: 0.7rem;
-    background: rgb(238 237 232 / 48%);
+    background: color-mix(in srgb, var(--color-text-primary) 48%, transparent);
 }
 
 .editorial-loader__beam {
@@ -143,7 +143,7 @@ const registrationMarks = Array.from({ length: 9 }, (_, index) => index)
     width: clamp(3rem, 12vw, 8rem);
     height: 2px;
     background: var(--color-text-primary);
-    box-shadow: 0 0 14px rgb(238 237 232 / 22%);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--color-text-primary) 22%, transparent);
     animation: editorial-loader-scan 2.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 

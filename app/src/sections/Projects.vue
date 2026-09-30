@@ -1,7 +1,7 @@
 <template>
     <section id="projects" ref="sectionEl" class="relative overflow-hidden py-[var(--section-space)]">
         <div class="section-shell relative z-10">
-            <header class="projects-heading mb-16 grid gap-7 border-t border-white/10 pt-6 md:mb-20 md:grid-cols-[0.7fr_1.3fr] md:items-start">
+            <header class="projects-heading mb-16 grid gap-7 border-t border-primary/10 pt-6 md:mb-20 md:grid-cols-[0.7fr_1.3fr] md:items-start">
                 <div><span class="section-kicker">02 / Selected work</span></div>
                 <div>
                     <h2
@@ -14,11 +14,11 @@
             <div v-if="loading" class="space-y-20" aria-busy="true">
                 <EditorialLoader label="selected projects" variant="section" message="Preparing selected work." />
                 <div v-for="item in 3" :key="item" class="grid gap-7 md:grid-cols-[1.25fr_0.75fr]">
-                    <div class="editorial-skeleton aspect-[4/3] bg-white/5" :style="{ '--editorial-delay': `${item * 0.12}s` }"></div>
+                    <div class="editorial-skeleton aspect-[4/3] bg-primary/5" :style="{ '--editorial-delay': `${item * 0.12}s` }"></div>
                     <div class="space-y-5 py-4">
-                        <div class="editorial-skeleton h-4 w-1/4 bg-white/5" :style="{ '--editorial-delay': `${item * 0.12}s` }"></div>
-                        <div class="editorial-skeleton h-10 w-3/4 bg-white/5" :style="{ '--editorial-delay': `${item * 0.12 + 0.1}s` }"></div>
-                        <div class="editorial-skeleton h-20 bg-white/5" :style="{ '--editorial-delay': `${item * 0.12 + 0.2}s` }"></div>
+                        <div class="editorial-skeleton h-4 w-1/4 bg-primary/5" :style="{ '--editorial-delay': `${item * 0.12}s` }"></div>
+                        <div class="editorial-skeleton h-10 w-3/4 bg-primary/5" :style="{ '--editorial-delay': `${item * 0.12 + 0.1}s` }"></div>
+                        <div class="editorial-skeleton h-20 bg-primary/5" :style="{ '--editorial-delay': `${item * 0.12 + 0.2}s` }"></div>
                     </div>
                 </div>
             </div>
@@ -28,21 +28,21 @@
                     class="project-story group relative py-12 md:py-20"
                     @mousemove="handleMouseMove">
                     <!-- Scroll Line Divider -->
-                    <div class="scroll-divider-wrapper mb-10 h-px w-full overflow-hidden bg-white/5 md:mb-16">
-                        <div class="project-scroll-line h-full w-full bg-gradient-to-r from-accent/60 via-white/20 to-white/5 origin-left"></div>
+                    <div class="scroll-divider-wrapper mb-10 h-px w-full overflow-hidden bg-primary/5 md:mb-16">
+                        <div class="project-scroll-line h-full w-full bg-gradient-to-r from-accent/60 via-primary/20 to-primary/5 origin-left"></div>
                     </div>
 
                     <div class="grid gap-7 md:grid-cols-12 md:gap-12 items-center">
                         <router-link :to="'/project/' + project.id"
-                            class="project-media spotlight-card relative block aspect-[4/3] md:aspect-[16/11] overflow-hidden bg-surface md:col-span-7 border border-white/5 hover:border-accent/30 transition-colors duration-500"
+                            class="project-media spotlight-card relative block aspect-[4/3] md:aspect-[16/11] overflow-hidden bg-surface md:col-span-7 border border-primary/5 hover:border-accent/30 transition-colors duration-500"
                             :class="index % 2 ? 'md:order-2' : ''">
                             <img v-if="project.imageUrl" :src="getImageUrl(project.imageUrl)" :alt="project.title"
                                 class="project-image absolute inset-0 -top-[10%] h-[120%] w-full object-cover transition-transform duration-700 ease-out will-change-transform" />
                             <div v-else
-                                class="grid h-full place-items-center border border-white/5 text-2xl font-bold text-white/20">
+                                class="grid h-full place-items-center border border-primary/5 text-2xl font-bold text-primary/20">
                                 {{ project.title }}</div>
                             <span
-                                class="absolute right-5 top-5 grid h-12 w-12 place-items-center rounded-full border border-white/10 bg-background/90 text-lg text-primary backdrop-blur transition-all duration-300 group-hover:scale-110 group-hover:bg-accent group-hover:text-background"
+                                class="absolute right-5 top-5 grid h-12 w-12 place-items-center rounded-full border border-primary/10 bg-background/90 text-lg text-primary backdrop-blur transition-all duration-300 group-hover:scale-110 group-hover:bg-accent group-hover:text-background"
                                 aria-hidden="true">
                                 <span class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
                             </span>
@@ -65,7 +65,7 @@
                                         {{ project.title }}
                                     </router-link>
                                 </h3>
-                                <div class="mt-6 border-l border-white/15 pl-5">
+                                <div class="mt-6 border-l border-primary/15 pl-5">
                                     <span
                                         class="mb-2 block text-[0.65rem] font-medium uppercase tracking-[0.16em] text-secondary">Contribution</span>
                                     <p class="line-clamp-3 text-base leading-relaxed text-secondary">{{ project.contribution ||
@@ -80,16 +80,16 @@
                                         <li v-for="tech in getTechStack(project)" :key="tech.id"
                                             class="group/tech relative">
                                             <div v-if="tech.svgContent"
-                                                class="grid h-9 w-9 place-items-center rounded-lg border border-white/10 bg-surface text-secondary transition-all duration-200 hover:scale-105 hover:border-accent/40 hover:text-accent"
+                                                class="grid h-9 w-9 place-items-center rounded-lg border border-primary/10 bg-surface text-secondary transition-all duration-200 hover:scale-105 hover:border-accent/40 hover:text-accent"
                                                 :title="tech.name" :aria-label="tech.name">
                                                 <TechIcon :svg-content="tech.svgContent" class="h-4 w-4" />
                                             </div>
                                             <span v-else
-                                                class="inline-block rounded-md border border-white/10 bg-surface px-2.5 py-1 text-xs text-secondary">
+                                                class="inline-block rounded-md border border-primary/10 bg-surface px-2.5 py-1 text-xs text-secondary">
                                                 {{ tech.name }}
                                             </span>
                                             <span v-if="tech.svgContent"
-                                                class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-[#11141A] border border-white/15 px-2 py-0.5 font-mono text-[10px] text-primary opacity-0 shadow-lg transition-opacity duration-150 group-hover/tech:opacity-100 z-20">
+                                                class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-surface border border-primary/15 px-2 py-0.5 font-mono text-[10px] text-primary opacity-0 shadow-lg transition-opacity duration-150 group-hover/tech:opacity-100 z-20">
                                                 {{ tech.name }}
                                             </span>
                                         </li>
@@ -97,17 +97,17 @@
                                 </div>
                                 <div class="flex flex-wrap items-center gap-6 text-sm font-medium">
                                     <router-link :to="'/project/' + project.id"
-                                        class="inline-flex items-center gap-1.5 text-primary underline decoration-white/20 underline-offset-8 transition-colors hover:text-accent hover:decoration-accent">
+                                        class="inline-flex items-center gap-1.5 text-primary underline decoration-primary/20 underline-offset-8 transition-colors hover:text-accent hover:decoration-accent">
                                         <span>Explore project</span>
                                         <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
                                     </router-link>
                                     <a v-if="project.projectUrl" :href="project.projectUrl" target="_blank"
                                         rel="noopener noreferrer"
-                                        class="text-secondary underline decoration-white/20 underline-offset-8 transition-colors hover:text-accent">Live
+                                        class="text-secondary underline decoration-primary/20 underline-offset-8 transition-colors hover:text-accent">Live
                                         Demo ↗</a>
                                     <a v-if="project.sourceCodeUrl" :href="project.sourceCodeUrl" target="_blank"
                                         rel="noopener noreferrer"
-                                        class="inline-flex items-center gap-2 text-secondary underline decoration-white/20 underline-offset-8 transition-colors hover:text-accent"
+                                        class="inline-flex items-center gap-2 text-secondary underline decoration-primary/20 underline-offset-8 transition-colors hover:text-accent"
                                         :aria-label="`View ${project.title} source code on GitHub (opens in a new tab)`">
                                         <GitHubIcon class="h-4 w-4 shrink-0" />
                                         <span>View Code</span>
@@ -120,7 +120,7 @@
                 </article>
             </div>
 
-            <div v-else class="border-y border-white/10 py-16">
+            <div v-else class="border-y border-primary/10 py-16">
                 <h3 class="font-heading text-2xl font-bold text-primary">No published projects yet.</h3>
                 <p class="mt-3 max-w-xl text-secondary">My public repositories are still available on GitHub.</p><a
                     href="https://github.com/gungdikaebs" target="_blank" rel="noopener noreferrer"
@@ -129,7 +129,7 @@
             </div>
 
             <div v-if="displayedProjects.length" class="mt-12 flex justify-end"><router-link to="/projects"
-                    class="inline-flex min-h-12 items-center gap-3 rounded-full border border-white/15 px-6 text-sm font-bold text-primary transition-colors hover:border-accent hover:text-accent">View
+                    class="inline-flex min-h-12 items-center gap-3 rounded-full border border-primary/15 px-6 text-sm font-bold text-primary transition-colors hover:border-accent hover:text-accent">View
                     all projects <span aria-hidden="true">→</span></router-link></div>
         </div>
     </section>

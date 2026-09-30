@@ -9,6 +9,23 @@
   <meta name="description"
     content="Portfolio of Gung Dika, a Full-Stack Developer in Bali building maintainable web applications with Vue, NestJS, PostgreSQL, and Prisma." />
   <meta name="theme-color" content="#0B0D10" />
+  <script>
+    (() => {
+      const root = document.documentElement;
+      let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      try {
+        const saved = localStorage.getItem('portfolio-theme');
+        if (saved === 'dark' || saved === 'light') theme = saved;
+      } catch { /* Render the system theme when storage is unavailable. */ }
+      root.dataset.theme = theme;
+      if (!/^\/(admin|login)(\/|$)/.test(location.pathname)) root.setAttribute('data-portfolio', '');
+    })();
+  </script>
+  <style>
+    html { background: #0B0D10; color-scheme: dark; }
+    html[data-portfolio] { background: #101111; }
+    html[data-portfolio][data-theme="light"] { background: #f5f4ef; color-scheme: light; }
+  </style>
   <link rel="canonical" href="https://gungdikaebs.cloud/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://gungdikaebs.cloud/" />

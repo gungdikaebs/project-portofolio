@@ -3,8 +3,8 @@
         <div class="section-shell relative z-10">
 
             <!-- Scroll Line Divider -->
-            <div class="scroll-divider-wrapper mb-16 h-px w-full overflow-hidden bg-white/5 md:mb-20">
-                <div class="education-scroll-line h-full w-full bg-gradient-to-r from-accent/60 via-white/20 to-white/5 origin-left"></div>
+            <div class="scroll-divider-wrapper mb-16 h-px w-full overflow-hidden bg-primary/5 md:mb-20">
+                <div class="education-scroll-line h-full w-full bg-gradient-to-r from-accent/60 via-primary/20 to-primary/5 origin-left"></div>
             </div>
 
             <!-- Header -->
@@ -20,7 +20,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
                 <div v-for="edu in education" :key="edu.id"
-                    class="edu-card spotlight-card bg-surface border border-white/10 p-8 relative overflow-hidden group hover:border-accent/30 transition-colors duration-300"
+                    class="edu-card spotlight-card bg-surface border border-primary/10 p-8 relative overflow-hidden group hover:border-accent/30 transition-colors duration-300"
                     @mousemove="handleCardMouseMove">
 
                     <div class="relative z-10">
@@ -29,7 +29,7 @@
                             {{ edu.startYear }} - {{ edu.endYear ? edu.endYear : 'Present' }}
                         </span>
 
-                        <h3 class="font-heading font-bold text-2xl text-white mb-2">
+                        <h3 class="font-heading font-bold text-2xl text-primary mb-2">
                             {{ normalizeDegree(edu.degree) }}
                         </h3>
 
@@ -60,7 +60,7 @@
 
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                     <article v-for="cert in visibleCertifications" :key="cert.id"
-                        class="cert-card bg-surface border border-white/10 p-7 relative overflow-hidden group hover:border-white/35 transition-colors duration-300 flex min-h-[300px] flex-col justify-between">
+                        class="cert-card bg-surface border border-primary/10 p-7 relative overflow-hidden group hover:border-primary/35 transition-colors duration-300 flex min-h-[300px] flex-col justify-between">
 
                         <div>
                             <div class="flex justify-between items-start mb-4">
@@ -77,7 +77,7 @@
                                 </svg>
                             </div>
 
-                            <h4 class="font-heading font-bold text-xl text-white mb-1">
+                            <h4 class="font-heading font-bold text-xl text-primary mb-1">
                                 {{ cert.name }}
                             </h4>
                             <p class="text-accent text-sm mb-4 font-mono">{{ cert.issuer }}</p>
@@ -88,9 +88,9 @@
                         </div>
 
                         <!-- Optional Credential Attachment -->
-                        <div v-if="cert.credentialUrl" class="border-t border-white/5 pt-4">
+                        <div v-if="cert.credentialUrl" class="border-t border-primary/5 pt-4">
                             <a :href="getCredentialUrl(cert.credentialUrl)" target="_blank" rel="noopener noreferrer"
-                                class="inline-flex items-center gap-2 text-sm text-white hover:text-accent transition-colors group/link">
+                                class="inline-flex items-center gap-2 text-sm text-primary hover:text-accent transition-colors group/link">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round">
@@ -114,7 +114,7 @@
 
                 <div v-if="certifications.length > initialCertificationLimit" class="mt-10 flex justify-center">
                     <button type="button" @click="toggleCertifications" :aria-expanded="showAllCertifications"
-                        class="inline-flex items-center gap-3 rounded-full border border-white/10 bg-surface px-7 py-3.5 font-heading font-bold text-white transition-all hover:border-accent/40 hover:text-accent">
+                        class="inline-flex items-center gap-3 rounded-full border border-primary/10 bg-surface px-7 py-3.5 font-heading font-bold text-primary transition-all hover:border-accent/40 hover:text-accent">
                         {{ showAllCertifications ? 'Show Fewer' : `Show All ${certifications.length} Certificates` }}
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"

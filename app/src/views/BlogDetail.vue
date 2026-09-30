@@ -8,8 +8,8 @@
 
         <article v-else-if="blog" class="w-full max-w-[800px] mx-auto px-6 relative z-10">
             <!-- Header -->
-            <header class="mb-14 reveal-content border-t border-white/25 pt-6">
-                <router-link to="/blog" class="inline-flex items-center gap-2 text-secondary hover:text-white transition-colors mb-10 group font-mono text-sm uppercase tracking-wider">
+            <header class="mb-14 reveal-content border-t border-primary/25 pt-6">
+                <router-link to="/blog" class="inline-flex items-center gap-2 text-secondary hover:text-primary transition-colors mb-10 group font-mono text-sm uppercase tracking-wider">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-1 transition-transform">
                         <line x1="19" y1="12" x2="5" y2="12"></line>
                         <polyline points="12 19 5 12 12 5"></polyline>
@@ -22,33 +22,33 @@
                     <span>{{ formatDate(blog.publishedAt || blog.createdAt) }}</span>
                 </div>
 
-                <h1 class="font-heading font-bold text-[clamp(2.8rem,7vw,5.7rem)] tracking-[-0.06em] text-white leading-[1.02] mb-8">
+                <h1 class="font-heading font-bold text-[clamp(2.8rem,7vw,5.7rem)] tracking-[-0.06em] text-primary leading-[1.02] mb-8">
                     {{ blog.title }}
                 </h1>
             </header>
 
             <!-- Cover Image -->
-            <div class="w-full aspect-[21/9] md:aspect-[3/1] overflow-hidden bg-surface mb-16 reveal-content border border-white/15">
+            <div class="w-full aspect-[21/9] md:aspect-[3/1] overflow-hidden bg-surface mb-16 reveal-content border border-primary/15">
                 <img v-if="blog.coverImage" :src="getImageUrl(blog.coverImage)" :alt="blog.title" class="w-full h-full object-cover" />
                 <div v-else class="w-full h-full flex items-center justify-center">
-                    <span class="text-white/10 font-heading text-6xl font-bold opacity-30">BLOG</span>
+                    <span class="text-primary/10 font-heading text-6xl font-bold opacity-30">BLOG</span>
                 </div>
             </div>
 
             <!-- Content HTML -->
-            <div class="prose prose-invert prose-lg max-w-none prose-headings:font-heading prose-headings:text-white prose-a:text-accent hover:prose-a:text-accent/80 prose-img:border prose-img:border-white/10 prose-hr:border-white/10 reveal-content custom-prose" v-html="blog.content">
+            <div class="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-primary prose-a:text-accent hover:prose-a:text-accent/80 prose-img:border prose-img:border-primary/10 prose-hr:border-primary/10 reveal-content custom-prose" v-html="blog.content">
             </div>
             
             <!-- Footer -->
-            <div class="mt-24 pt-8 border-t border-white/10 flex justify-between items-center reveal-content">
-                <router-link to="/blog" class="text-secondary hover:text-white transition-colors font-mono text-sm uppercase">← Back to Articles</router-link>
+            <div class="mt-24 pt-8 border-t border-primary/10 flex justify-between items-center reveal-content">
+                <router-link to="/blog" class="text-secondary hover:text-primary transition-colors font-mono text-sm uppercase">← Back to Articles</router-link>
             </div>
         </article>
 
         <div v-else class="w-full max-w-[800px] mx-auto px-6 relative z-10 pt-32 text-center">
-            <h1 class="text-4xl font-heading font-bold text-white mb-6">Article not found</h1>
+            <h1 class="text-4xl font-heading font-bold text-primary mb-6">Article not found</h1>
             <p class="text-secondary mb-8">The article you are looking for does not exist or has been removed.</p>
-            <router-link to="/blog" class="inline-flex items-center justify-center bg-accent text-black font-bold px-8 py-3 rounded-full hover:bg-white transition-colors">
+            <router-link to="/blog" class="inline-flex items-center justify-center bg-accent text-background font-bold px-8 py-3 rounded-full hover:bg-primary transition-colors">
                 Browse articles
             </router-link>
         </div>
@@ -110,6 +110,15 @@ onMounted(async () => {
 
 <style>
 /* Custom typography styles to override/extend Tailwind prose */
+.custom-prose {
+    color: var(--color-text-secondary);
+}
+.custom-prose a {
+    color: var(--color-accent);
+}
+.custom-prose hr {
+    border-color: color-mix(in srgb, var(--color-text-primary) 15%, transparent);
+}
 .custom-prose p {
     color: var(--color-text-secondary);
     line-height: 1.8;
@@ -125,7 +134,7 @@ onMounted(async () => {
 }
 .custom-prose blockquote {
     border-left-color: var(--color-accent);
-    background: rgba(255, 255, 255, 0.02);
+    background: color-mix(in srgb, var(--color-text-primary) 3%, transparent);
     padding: 1rem 1.5rem;
     border-radius: 0;
     color: var(--color-text-primary);
@@ -133,11 +142,12 @@ onMounted(async () => {
 }
 .custom-prose pre {
     background-color: var(--color-surface);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-primary);
+    border: 1px solid color-mix(in srgb, var(--color-text-primary) 10%, transparent);
 }
 .custom-prose code {
     color: var(--color-accent);
-    background: rgba(255, 255, 255, 0.08);
+    background: color-mix(in srgb, var(--color-text-primary) 8%, transparent);
     padding: 0.2em 0.4em;
     border-radius: 0;
     font-weight: 400;
