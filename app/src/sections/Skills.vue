@@ -14,7 +14,12 @@
                 <p class="max-w-lg text-base leading-relaxed text-secondary md:justify-self-end">Vue, Laravel, and MySQL are my core stack. I use Docker to keep development repeatable and choose other tools to fit the problem.</p>
             </div>
 
-            <div v-if="loading" class="grid gap-px bg-white/10 sm:grid-cols-2 lg:grid-cols-4" aria-label="Loading skills"><div v-for="item in 4" :key="item" class="h-64 animate-pulse bg-surface"></div></div>
+            <div v-if="loading" class="space-y-5" aria-busy="true">
+                <EditorialLoader label="toolkit" variant="section" message="Organising the tools behind the work." />
+                <div class="grid gap-px bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+                    <div v-for="item in 4" :key="item" class="editorial-skeleton h-64 bg-surface" :style="{ '--editorial-delay': `${item * 0.12}s` }"></div>
+                </div>
+            </div>
             <div v-else-if="displayCategories.length" class="skills-grid grid gap-px overflow-hidden border border-white/10 bg-white/10">
                 <article v-for="(category, index) in displayCategories" :key="category.id"
                     class="skill-group spotlight-card min-h-64 bg-background p-6 transition-colors duration-300 hover:bg-surface/50 md:p-8"
@@ -45,6 +50,7 @@ import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useSkills } from '../composables/useSkills'
 import { motion, reduceMotion } from '../animations/motion'
+import EditorialLoader from '../components/EditorialLoader.vue'
 
 gsap.registerPlugin(ScrollTrigger)
 const sectionEl = ref<HTMLElement | null>(null)

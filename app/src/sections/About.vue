@@ -43,11 +43,9 @@
                     </div>
 
                     <!-- Bio Text -->
-                    <div class="flex flex-col gap-6 text-secondary text-lg leading-relaxed font-body max-w-xl">
-                        <p ref="para1">
-                            <span v-if="loading">Loading bio...</span>
-                            <span v-else-if="profile" class="whitespace-pre-line">{{ profile.bio }}</span>
-                        </p>
+                    <div ref="para1" class="flex max-w-xl flex-col gap-6 font-body text-lg leading-relaxed text-secondary">
+                        <EditorialLoader v-if="loading" label="profile" variant="section" message="Fetching profile details." />
+                        <p v-else-if="profile" class="whitespace-pre-line">{{ profile.bio }}</p>
                     </div>
 
                     <div v-if="profile?.availableForHi"
@@ -99,6 +97,7 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useProfile } from '../composables/useProfile'
+import EditorialLoader from '../components/EditorialLoader.vue'
 import { motion, reduceMotion } from '../animations/motion'
 import { initMagneticButtons } from '../animations/magnetic'
 

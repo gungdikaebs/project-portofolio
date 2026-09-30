@@ -15,7 +15,13 @@ const menuButton = ref<HTMLButtonElement | null>(null)
 const closeButton = ref<HTMLButtonElement | null>(null)
 let observer: IntersectionObserver | null = null
 let sectionObserver: MutationObserver | null = null
-const onScroll = () => { isScrolled.value = window.scrollY > 20 }
+const compactAt = 48
+const expandAt = 8
+const onScroll = () => {
+    const scrollY = window.scrollY
+    if (!isScrolled.value && scrollY > compactAt) isScrolled.value = true
+    else if (isScrolled.value && scrollY < expandAt) isScrolled.value = false
+}
 
 const navLinks = [
     { href: '#home', label: 'Home' }, { href: '#about', label: 'About' },
@@ -93,15 +99,22 @@ onUnmounted(() => { window.removeEventListener('scroll', onScroll); window.remov
 </script>
 
 <template>
-    <header class="fixed left-0 top-0 z-50 w-full border-b transition-[height,background-color,border-color] duration-300" :class="isScrolled ? 'h-18 border-white/5 bg-background/90 backdrop-blur-lg' : 'h-22 border-transparent bg-transparent'">
-        <div class="section-shell flex h-full items-center justify-between">
+    <header class="fixed inset-x-0 top-0 z-50 flex w-full justify-center border-b transition-[height,padding,background-color,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" :class="isScrolled ? 'h-18 border-white/5 bg-background/90 backdrop-blur-lg xl:h-[77px] xl:border-transparent xl:bg-transparent xl:px-6 xl:pt-3 xl:backdrop-blur-none' : 'h-22 border-transparent bg-transparent'">
+        <div class="section-shell flex h-full items-center justify-between transition-[height,max-width,padding,background-color,border-color,border-radius,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" :class="isScrolled ? 'xl:h-16 xl:rounded-full xl:border xl:border-white/10 xl:bg-background/90 xl:px-8 xl:shadow-[0_12px_40px_rgba(0,0,0,0.24)] xl:backdrop-blur-xl' : undefined" :style="{ maxWidth: isScrolled ? '1120px' : '100%' }">
             <router-link to="/" class="relative z-[60] font-heading text-xl font-bold tracking-tight text-primary transition-colors hover:text-accent">Gung Dika<span class="text-accent">.</span></router-link>
-            <nav class="hidden items-center gap-1 xl:flex" aria-label="Primary navigation">
+            <nav class="hidden items-center gap-2 xl:flex" aria-label="Primary navigation">
                 <a v-for="link in navLinks" :key="link.href" :href="link.href.startsWith('#') ? `/${link.href}` : link.href" @click.prevent="handleNavClick(link.href)"
-                    class="relative inline-flex min-h-11 items-center px-3 text-sm font-medium transition-colors" :class="isActive(link.href) ? 'text-primary' : 'text-secondary hover:text-primary'" :aria-current="isActive(link.href) ? 'page' : undefined">
-                    {{ link.label }}<span class="absolute bottom-1.5 left-3 right-3 h-px origin-left bg-accent transition-transform" :class="isActive(link.href) ? 'scale-x-100' : 'scale-x-0'"></span>
+                    class="group relative inline-flex min-h-11 items-center px-2 text-sm font-medium transition-colors" :class="isActive(link.href) ? 'text-primary' : 'text-secondary hover:text-primary'" :aria-current="isActive(link.href) ? 'page' : undefined">
+                    {{ link.label }}
+                    <span class="absolute bottom-1 left-2 right-2 h-px origin-left bg-white/75 transition-transform duration-300" :class="isActive(link.href) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'"></span>
                 </a>
-                <a href="/#contact" @click.prevent="handleNavClick('#contact')" class="ml-3 inline-flex min-h-11 items-center rounded-full bg-accent px-5 text-sm font-bold text-background transition-colors hover:bg-primary">Contact</a>
+                <a href="/#contact" @click.prevent="handleNavClick('#contact')"
+                    class="group ml-3 inline-flex min-h-11 items-center gap-2 border-l border-white/15 pl-5 text-sm font-semibold text-secondary transition-colors hover:text-primary"
+                    :class="isActive('#contact') ? 'text-primary' : undefined"
+                    :aria-current="isActive('#contact') ? 'page' : undefined">
+                    <span>Contact</span>
+                    <span class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true">↗</span>
+                </a>
             </nav>
             <button ref="menuButton" type="button" @click="toggleMenu" class="relative z-[60] grid min-h-11 min-w-11 place-items-center rounded-full border border-white/10 text-primary xl:hidden" aria-label="Open navigation menu" aria-controls="mobile-menu" :aria-expanded="isMobileMenuOpen">
                 <span class="sr-only">Menu</span><span class="flex w-5 flex-col gap-1.5"><span class="h-px w-full bg-current"></span><span class="h-px w-3 self-end bg-current"></span></span>

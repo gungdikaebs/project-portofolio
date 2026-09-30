@@ -1,122 +1,90 @@
 <template>
     <section id="contact" ref="sectionEl" class="py-[var(--section-space)] relative overflow-hidden bg-background">
         <div class="section-shell relative z-10">
-
-            <!-- Scroll Line Divider -->
             <div class="scroll-divider-wrapper mb-16 h-px w-full overflow-hidden bg-white/5 md:mb-20">
-                <div class="contact-scroll-line h-full w-full bg-gradient-to-r from-accent/60 via-white/20 to-white/5 origin-left"></div>
+                <div class="contact-scroll-line h-full w-full origin-left bg-gradient-to-r from-white/35 via-white/15 to-white/5"></div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-start">
-
-                <!-- Left: CTA -->
+            <div class="grid items-start gap-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-24">
                 <div>
-                    <span class="section-kicker mb-6 block contact-kicker">08 / Contact</span>
-                    <h2
-                        class="contact-heading mb-10 max-w-[12ch] font-heading text-5xl font-bold leading-[1.02] tracking-tight text-primary md:text-7xl">
-                        Let's build something useful<span class="text-accent">.</span>
+                    <span class="section-kicker contact-kicker mb-6 block">08 / Contact</span>
+                    <h2 class="contact-heading mb-8 max-w-[11ch] font-heading text-5xl font-bold leading-[0.98] tracking-[-0.055em] text-primary md:text-7xl">
+                        Have a role or project in mind<span class="text-accent">?</span>
                     </h2>
-
-                    <p class="contact-copy mb-10 max-w-xl text-lg leading-relaxed text-secondary">
-                        Hiring a developer or planning a web product? Tell me what you need. Reach me by email or WhatsApp.
+                    <p class="contact-copy max-w-xl text-lg leading-relaxed text-secondary">
+                        Tell me what you’re hiring for or what you’re building. A few details are enough to start a conversation.
                     </p>
 
-                    <div class="contact-links flex flex-col gap-8">
-                        <div class="flex flex-wrap items-center gap-3 md:gap-6">
-                            <!-- Magnetic Email Button -->
-                            <a href="mailto:gungdika85@gmail.com"
-                                class="magnetic-btn group relative inline-flex max-w-full items-center gap-3 md:gap-4 px-5 py-3 md:px-8 md:py-4 bg-white text-black rounded-full overflow-hidden transition-transform duration-300 hover:scale-[1.02] active:scale-95">
-                                <span class="relative z-10 break-all font-bold text-sm md:text-lg">gungdika85@gmail.com</span>
-                                <div
-                                    class="relative z-10 w-6 h-6 md:w-8 md:h-8 bg-black text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-300">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="w-3 h-3 md:w-4 md:h-4">
-                                        <line x1="7" y1="17" x2="17" y2="7"></line>
-                                        <polyline points="7 7 17 7 17 17"></polyline>
-                                    </svg>
-                                </div>
+                    <div class="contact-links mt-12 border-y border-white/20">
+                        <div class="grid min-h-20 grid-cols-[5.5rem_minmax(0,1fr)_2.75rem] items-center gap-3 border-b border-white/15 py-4 sm:grid-cols-[7rem_minmax(0,1fr)_3rem] sm:gap-5">
+                            <span class="font-mono text-[0.62rem] uppercase tracking-[0.15em] text-secondary">Email</span>
+                            <a href="mailto:gungdika85@gmail.com" class="group flex min-w-0 items-center justify-between gap-3 text-base font-medium text-primary transition-colors hover:text-white sm:text-lg md:text-xl">
+                                <span class="break-all">gungdika85@gmail.com</span>
+                                <span class="shrink-0 text-secondary transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" aria-hidden="true">↗</span>
                             </a>
-
-                            <!-- Copy Email Button -->
-                            <button @click="copyEmail"
-                                class="magnetic-btn w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/10 flex items-center justify-center text-secondary hover:text-white hover:border-white hover:bg-white/5 transition-all active:scale-90 shrink-0"
-                                aria-label="Copy Email">
-                                <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="md:w-5 md:h-5">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <button type="button" @click="copyEmail"
+                                class="flex h-10 w-10 items-center justify-center border border-white/15 text-secondary transition-colors hover:border-white/50 hover:text-primary focus-visible:outline-offset-2 sm:h-11 sm:w-11"
+                                :aria-label="copied ? 'Email copied to clipboard' : 'Copy email address'"
+                                :title="copied ? 'Copied' : 'Copy email address'">
+                                <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                                    <rect x="9" y="9" width="13" height="13" rx="2"></rect>
                                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                                 </svg>
-                                <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="text-accent md:w-5 md:h-5">
+                                <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-primary">
                                     <polyline points="20 6 9 17 4 12"></polyline>
                                 </svg>
                             </button>
-                            <span class="sr-only" aria-live="polite">{{ copied ? 'Email copied to clipboard' : '' }}</span>
                         </div>
 
-                        <!-- Phone / WhatsApp Button -->
-                        <div class="flex items-center gap-6">
-                            <a href="https://wa.me/6281237397984" target="_blank" rel="noopener noreferrer"
-                                class="magnetic-btn group relative inline-flex items-center gap-3 md:gap-4 px-5 py-3 md:px-8 md:py-4 bg-white/5 border border-white/10 text-white rounded-full overflow-hidden transition-all duration-300 hover:bg-white hover:text-black hover:scale-105 active:scale-95">
-                                <span class="relative z-10 font-bold text-sm md:text-lg">+62 812 3739 7984</span>
-                                <div
-                                    class="relative z-10 w-6 h-6 md:w-8 md:h-8 bg-white/10 group-hover:bg-black group-hover:text-white text-white rounded-full flex items-center justify-center transition-colors duration-300">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="w-3 h-3 md:w-4 md:h-4">
-                                        <path
-                                             d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
-                                        </path>
-                                    </svg>
-                                </div>
-                            </a>
-                        </div>
+                        <a href="https://wa.me/6281237397984" target="_blank" rel="noopener noreferrer"
+                            class="group grid min-h-20 grid-cols-[5.5rem_minmax(0,1fr)_2.75rem] items-center gap-3 py-4 text-primary transition-colors hover:text-white sm:grid-cols-[7rem_minmax(0,1fr)_3rem] sm:gap-5"
+                            aria-label="Message Gung Dika on WhatsApp (opens in a new tab)">
+                            <span class="font-mono text-[0.62rem] uppercase tracking-[0.15em] text-secondary">WhatsApp</span>
+                            <span class="flex min-w-0 items-center justify-between gap-3 text-base font-medium sm:text-lg md:text-xl">
+                                <span>+62 812 3739 7984</span>
+                                <span class="shrink-0 text-secondary transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" aria-hidden="true">↗</span>
+                            </span>
+                            <span aria-hidden="true"></span>
+                        </a>
                     </div>
+                    <span class="sr-only" aria-live="polite">{{ copied ? 'Email copied to clipboard' : '' }}</span>
                 </div>
 
-                <!-- Right: Contact Form -->
-                <div
-                    class="contact-form bg-surface/50 border border-white/15 p-6 sm:p-8 md:p-10 mt-10 lg:mt-0"
-                    @mousemove="handleFormMouseMove">
-                    <h3 class="font-heading font-bold text-2xl text-white mb-3">Start with a short brief</h3>
-                    <p class="mb-8 text-sm leading-relaxed text-secondary">This form prepares your message and opens WhatsApp; it does not submit data to this site.</p>
-                    <form @submit.prevent="submitForm" class="flex flex-col gap-6">
-                        <!-- Group: Name -->
-                        <div class="flex flex-col gap-2">
-                            <label for="name"
-                                class="text-sm font-mono text-secondary uppercase tracking-wider">Name</label>
-                            <input type="text" id="name" required v-model="formData.name"
-                                autocomplete="name" class="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors placeholder:text-white/30 invalid:not-placeholder-shown:border-red-400"
-                                placeholder="John Doe">
+                <div class="contact-form mt-2 border-t border-white/25 pt-5 lg:mt-0">
+                    <div class="mb-7 flex items-center justify-between gap-4 font-mono text-[0.62rem] uppercase tracking-[0.15em] text-secondary">
+                        <span>Message / WhatsApp</span>
+                        <span>01 — 03</span>
+                    </div>
+                    <h3 class="mb-3 font-heading text-2xl font-bold text-primary md:text-3xl">Start with a short brief</h3>
+                    <p class="mb-8 max-w-md text-sm leading-relaxed text-secondary">Your message opens in WhatsApp so you can review it before sending.</p>
+
+                    <form @submit.prevent="submitForm" class="flex flex-col gap-3">
+                        <div class="contact-field group flex flex-col gap-2 border-b border-white/15 py-3 transition-colors focus-within:border-white/60">
+                            <label for="name" class="font-mono text-[0.62rem] uppercase tracking-[0.15em] text-secondary">Name</label>
+                            <input type="text" id="name" required v-model="formData.name" autocomplete="name"
+                                class="w-full bg-transparent text-base text-primary placeholder:text-white/30 focus:outline-none sm:text-lg"
+                                placeholder="Your name">
                         </div>
 
-                        <div class="flex flex-col gap-2">
-                            <label for="email"
-                                class="text-sm font-mono text-secondary uppercase tracking-wider">Email</label>
-                            <input type="email" id="email" required v-model="formData.email"
-                                autocomplete="email" class="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors placeholder:text-white/30 invalid:not-placeholder-shown:border-red-400"
-                                placeholder="john@company.com">
+                        <div class="contact-field group flex flex-col gap-2 border-b border-white/15 py-3 transition-colors focus-within:border-white/60">
+                            <label for="email" class="font-mono text-[0.62rem] uppercase tracking-[0.15em] text-secondary">Email</label>
+                            <input type="email" id="email" required v-model="formData.email" autocomplete="email"
+                                class="w-full bg-transparent text-base text-primary placeholder:text-white/30 focus:outline-none sm:text-lg"
+                                placeholder="you@company.com">
                         </div>
 
-                        <div class="flex flex-col gap-2">
-                            <label for="message"
-                                class="text-sm font-mono text-secondary uppercase tracking-wider">Message</label>
+                        <div class="contact-field group flex flex-col gap-2 border-b border-white/15 py-3 transition-colors focus-within:border-white/60">
+                            <label for="message" class="font-mono text-[0.62rem] uppercase tracking-[0.15em] text-secondary">What would you like to discuss?</label>
                             <textarea id="message" rows="4" required v-model="formData.message"
-                                class="bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors resize-none placeholder:text-white/30"
-                                placeholder="What are you building, and where do you need help?"></textarea>
+                                class="w-full resize-y bg-transparent text-base leading-relaxed text-primary placeholder:text-white/30 focus:outline-none sm:text-lg"
+                                placeholder="A little context about the role or project…"></textarea>
                         </div>
 
-                        <button type="submit"
-                            class="self-start inline-flex items-center justify-center gap-2 bg-accent text-black font-bold px-8 py-4 rounded-full hover:bg-white transition-colors mt-2 group">
-                            Continue on WhatsApp
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform">
-                                <line x1="22" y1="2" x2="11" y2="13"></line>
-                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        <button type="submit" class="group mt-5 inline-flex min-h-14 w-full items-center justify-between gap-4 bg-white px-5 font-semibold text-black transition-colors hover:bg-primary focus-visible:outline-offset-4">
+                            <span>Continue in WhatsApp</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 transition-transform group-hover:translate-x-1">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
                             </svg>
                         </button>
                     </form>
@@ -131,7 +99,6 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { motion, reduceMotion } from '../animations/motion'
-import { initMagneticButtons } from '../animations/magnetic'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -143,14 +110,6 @@ const formData = ref({
     email: '',
     message: ''
 })
-
-const handleFormMouseMove = (e: MouseEvent) => {
-    const card = e.currentTarget as HTMLElement
-    if (!card) return
-    const rect = card.getBoundingClientRect()
-    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`)
-    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`)
-}
 
 const copyEmail = async () => {
     await navigator.clipboard.writeText('gungdika85@gmail.com')
@@ -189,8 +148,6 @@ onMounted(() => {
         gsap.from('.contact-copy, .contact-links', { opacity: 0, y: motion.distance.small, stagger: motion.stagger.base, duration: motion.duration.base, ease: motion.ease.enter, scrollTrigger: { trigger: '.contact-heading', start: 'top 70%' } })
         gsap.from('.contact-form', { x: motion.distance.large, opacity: 0, duration: motion.duration.slow, ease: motion.ease.enter, scrollTrigger: { trigger: '.contact-form', start: 'top 82%' } })
     }, sectionEl.value || undefined)
-
-    initMagneticButtons('.magnetic-btn')
 })
 
 onUnmounted(() => context?.revert())

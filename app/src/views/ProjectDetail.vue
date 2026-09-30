@@ -2,9 +2,8 @@
     <div>
     <main class="min-h-screen relative pt-32 pb-20 overflow-hidden">
 
-        <div v-if="loading" class="min-h-[50vh] flex flex-col items-center justify-center">
-            <div class="w-10 h-10 border-4 border-accent/30 border-t-accent rounded-full animate-spin mb-4"></div>
-            <p class="text-secondary font-mono text-sm">Loading project...</p>
+        <div v-if="loading" class="section-shell flex min-h-[50vh] items-center">
+            <EditorialLoader label="project" message="Preparing the case study." />
         </div>
 
         <div v-else-if="project" class="section-shell relative z-10">
@@ -183,6 +182,7 @@ import { useProjects } from '../composables/useProjects'
 import TechIcon from '../components/TechIcon.vue'
 import GitHubIcon from '../components/GitHubIcon.vue'
 import Footer from '../components/Footer.vue'
+import EditorialLoader from '../components/EditorialLoader.vue'
 
 const route = useRoute()
 const { project, loading, fetchProject } = useProjects()

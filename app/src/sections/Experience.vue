@@ -13,12 +13,13 @@
             </div>
 
             <!-- Experience Timeline -->
-            <div v-if="loading" class="space-y-8" aria-label="Loading experience">
+            <div v-if="loading" class="space-y-8" aria-busy="true">
+                <EditorialLoader label="experience" variant="section" message="Tracing professional experience." />
                 <div v-for="item in 2" :key="item"
-                    class="animate-pulse border border-white/5 bg-surface/40 p-8">
-                    <div class="mb-4 h-7 w-2/5 rounded bg-white/5"></div>
-                    <div class="mb-6 h-5 w-1/4 rounded bg-white/5"></div>
-                    <div class="h-4 w-full rounded bg-white/5"></div>
+                    class="border border-white/5 bg-surface/40 p-8">
+                    <div class="editorial-skeleton mb-4 h-7 w-2/5 bg-white/5" :style="{ '--editorial-delay': `${item * 0.15}s` }"></div>
+                    <div class="editorial-skeleton mb-6 h-5 w-1/4 bg-white/5" :style="{ '--editorial-delay': `${item * 0.15 + 0.1}s` }"></div>
+                    <div class="editorial-skeleton h-4 w-full bg-white/5" :style="{ '--editorial-delay': `${item * 0.15 + 0.2}s` }"></div>
                 </div>
             </div>
 
@@ -75,6 +76,7 @@ import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useExperience } from '../composables/useExperience'
 import { motion, reduceMotion } from '../animations/motion'
+import EditorialLoader from '../components/EditorialLoader.vue'
 
 gsap.registerPlugin(ScrollTrigger)
 

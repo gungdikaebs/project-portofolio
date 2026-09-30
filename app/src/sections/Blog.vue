@@ -33,14 +33,16 @@
             </div>
 
             <!-- Blog Grid -->
-            <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Skeleton Loader -->
-                <div v-for="i in 3" :key="i" class="col-span-1 animate-pulse flex flex-col gap-6">
-                    <div class="w-full aspect-[16/10] bg-white/5"></div>
-                    <div class="flex flex-col gap-3">
-                        <div class="w-1/3 h-4 bg-white/5 rounded"></div>
-                        <div class="w-full h-8 bg-white/5 rounded mt-2"></div>
-                        <div class="w-3/4 h-8 bg-white/5 rounded"></div>
+            <div v-if="loading" class="space-y-5" aria-busy="true">
+                <EditorialLoader label="latest articles" variant="section" message="Gathering recent writing." />
+                <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    <div v-for="i in 3" :key="i" class="col-span-1 flex flex-col gap-6">
+                        <div class="editorial-skeleton aspect-[16/10] w-full bg-white/5" :style="{ '--editorial-delay': `${i * 0.12}s` }"></div>
+                        <div class="flex flex-col gap-3">
+                            <div class="editorial-skeleton h-4 w-1/3 bg-white/5" :style="{ '--editorial-delay': `${i * 0.12 + 0.1}s` }"></div>
+                            <div class="editorial-skeleton mt-2 h-8 w-full bg-white/5" :style="{ '--editorial-delay': `${i * 0.12 + 0.2}s` }"></div>
+                            <div class="editorial-skeleton h-8 w-3/4 bg-white/5" :style="{ '--editorial-delay': `${i * 0.12 + 0.3}s` }"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -105,6 +107,7 @@ import { onMounted, nextTick } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useBlog } from '../composables/useBlog'
+import EditorialLoader from '../components/EditorialLoader.vue'
 
 gsap.registerPlugin(ScrollTrigger)
 

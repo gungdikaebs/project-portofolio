@@ -2,16 +2,8 @@
     <div>
     <main class="pt-32 pb-32 min-h-screen relative">
 
-        <div v-if="loading" class="w-full max-w-[800px] mx-auto px-6 relative z-10 pt-10">
-            <div class="animate-pulse flex flex-col gap-8">
-                <div class="w-32 h-6 bg-white/5 rounded"></div>
-                <div class="w-full h-16 bg-white/5 rounded"></div>
-                <div class="w-3/4 h-16 bg-white/5 rounded"></div>
-                <div class="w-full aspect-[21/9] bg-white/5 mt-8"></div>
-                <div class="flex flex-col gap-4 mt-12">
-                    <div class="w-full h-4 bg-white/5 rounded" v-for="i in 10" :key="i"></div>
-                </div>
-            </div>
+        <div v-if="loading" class="mx-auto flex min-h-[50vh] w-full max-w-[800px] items-start px-6 relative z-10 pt-10">
+            <EditorialLoader label="article" message="Setting the page for reading." />
         </div>
 
         <article v-else-if="blog" class="w-full max-w-[800px] mx-auto px-6 relative z-10">
@@ -72,6 +64,7 @@ import gsap from 'gsap'
 import { useBlog } from '../composables/useBlog'
 import { reduceMotion } from '../animations/motion'
 import Footer from '../components/Footer.vue'
+import EditorialLoader from '../components/EditorialLoader.vue'
 
 const route = useRoute()
 const { blog, loading, fetchBlogBySlug } = useBlog()

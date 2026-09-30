@@ -62,7 +62,7 @@
                                 <div class="absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-300 shadow-sm"
                                     :class="form.availableForHi ? 'translate-x-6 bg-green-500' : 'bg-gray-400'"></div>
                             </div>
-                            <span class="text-sm font-medium text-gray-300">Available for "Say Hi"</span>
+                            <span class="text-sm font-medium text-gray-300">Available for opportunities</span>
                         </div>
                     </div>
 
@@ -77,8 +77,7 @@
                 <div class="bg-[#11141A] p-6 rounded-2xl border border-white/5 space-y-4">
                     <h3 class="text-xl font-bold text-white mb-2">Profile Image</h3>
 
-                    <div v-if="form.imageUrl"
-                        class="relative group rounded-xl overflow-hidden">
+                    <div v-if="form.imageUrl" class="relative group rounded-xl overflow-hidden">
                         <img :src="getFileUrl(form.imageUrl)" alt="Profile"
                             class="w-full aspect-[4/5] object-cover rounded-xl" />
                         <div
@@ -101,8 +100,7 @@
                         <span class="text-xs text-gray-500">Upload Profile Image</span>
                         <span class="text-[10px] text-gray-600 mt-1">JPG, PNG, WebP</span>
                     </div>
-                    <input type="file" ref="imageInput" class="hidden" accept="image/*"
-                        @change="handleImageUpload">
+                    <input type="file" ref="imageInput" class="hidden" accept="image/*" @change="handleImageUpload">
                 </div>
 
                 <!-- CV Upload -->

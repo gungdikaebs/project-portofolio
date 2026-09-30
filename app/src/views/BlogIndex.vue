@@ -8,7 +8,9 @@
                 <p class="mt-8 max-w-2xl text-base leading-relaxed text-secondary md:text-lg">Notes on web development, lessons from shipped work, and tools I am currently exploring.</p>
             </header>
 
-            <div v-if="loading" class="border-t border-white/25 py-16 font-mono text-xs uppercase tracking-widest text-secondary" role="status">Loading articles...</div>
+            <div v-if="loading" class="border-t border-white/25 pt-8">
+                <EditorialLoader label="article index" message="Gathering the latest writing." />
+            </div>
             <div v-else-if="blogs.length" class="border-t border-white/25">
                 <article v-for="(post, index) in blogs" :key="post.id" class="group grid gap-6 border-b border-white/25 py-10 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1fr)] md:gap-12 md:py-12">
                     <router-link :to="'/blog/' + post.slug" class="relative block aspect-[16/10] overflow-hidden border border-white/10 bg-surface" :aria-label="`Read ${post.title}`">
@@ -36,6 +38,7 @@
 import { onMounted, ref } from 'vue'
 import { useBlog } from '../composables/useBlog'
 import Footer from '../components/Footer.vue'
+import EditorialLoader from '../components/EditorialLoader.vue'
 
 const { blogs, loading, fetchBlogs } = useBlog()
 const failedImages = ref(new Set<string>())

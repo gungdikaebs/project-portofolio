@@ -9,7 +9,9 @@
                 <p class="mt-8 max-w-2xl text-base leading-relaxed text-secondary md:text-lg">Explore the work behind each project: the brief, my contribution, and the choices made along the way.</p>
             </header>
 
-            <div v-if="loading" class="border-t border-white/20 py-16 font-mono text-xs uppercase tracking-widest text-secondary" role="status">Loading projects...</div>
+            <div v-if="loading" class="border-t border-white/20 pt-8">
+                <EditorialLoader label="project archive" message="Gathering selected work." />
+            </div>
             <div v-else-if="projects.length" class="border-t border-white/25">
                 <article v-for="(project, index) in projects" :key="project.id" class="group grid gap-7 border-b border-white/25 py-10 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)] md:gap-12 md:py-14">
                     <router-link :to="'/project/' + project.id" class="relative block aspect-[4/3] overflow-hidden border border-white/10 bg-surface" :aria-label="`Open ${project.title} case study`">
@@ -47,6 +49,7 @@ import { onMounted, ref } from 'vue'
 import Footer from '../components/Footer.vue'
 import { useProjects } from '../composables/useProjects'
 import GitHubIcon from '../components/GitHubIcon.vue'
+import EditorialLoader from '../components/EditorialLoader.vue'
 
 const { projects, loading, fetchProjects } = useProjects()
 const failedImages = ref(new Set<string>())

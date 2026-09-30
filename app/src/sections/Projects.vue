@@ -11,13 +11,14 @@
                 </div>
             </header>
 
-            <div v-if="loading" class="space-y-20" aria-label="Loading projects" aria-live="polite">
-                <div v-for="item in 3" :key="item" class="grid animate-pulse gap-7 md:grid-cols-[1.25fr_0.75fr]">
-                    <div class="aspect-[4/3] bg-white/5"></div>
+            <div v-if="loading" class="space-y-20" aria-busy="true">
+                <EditorialLoader label="selected projects" variant="section" message="Preparing selected work." />
+                <div v-for="item in 3" :key="item" class="grid gap-7 md:grid-cols-[1.25fr_0.75fr]">
+                    <div class="editorial-skeleton aspect-[4/3] bg-white/5" :style="{ '--editorial-delay': `${item * 0.12}s` }"></div>
                     <div class="space-y-5 py-4">
-                        <div class="h-4 w-1/4 bg-white/5"></div>
-                        <div class="h-10 w-3/4 bg-white/5"></div>
-                        <div class="h-20 bg-white/5"></div>
+                        <div class="editorial-skeleton h-4 w-1/4 bg-white/5" :style="{ '--editorial-delay': `${item * 0.12}s` }"></div>
+                        <div class="editorial-skeleton h-10 w-3/4 bg-white/5" :style="{ '--editorial-delay': `${item * 0.12 + 0.1}s` }"></div>
+                        <div class="editorial-skeleton h-20 bg-white/5" :style="{ '--editorial-delay': `${item * 0.12 + 0.2}s` }"></div>
                     </div>
                 </div>
             </div>
@@ -142,6 +143,7 @@ import { useProjects } from '../composables/useProjects'
 import { motion, reduceMotion } from '../animations/motion'
 import TechIcon from '../components/TechIcon.vue'
 import GitHubIcon from '../components/GitHubIcon.vue'
+import EditorialLoader from '../components/EditorialLoader.vue'
 
 gsap.registerPlugin(ScrollTrigger)
 const sectionEl = ref<HTMLElement | null>(null)

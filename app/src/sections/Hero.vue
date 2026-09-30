@@ -4,26 +4,27 @@
         <div class="hero-grid absolute inset-0 -z-10" aria-hidden="true"></div>
         <canvas ref="canvas" class="absolute inset-0 z-0 pointer-events-none opacity-40" aria-hidden="true"></canvas>
 
-        <div ref="heroContentWrapper" class="hero-content-wrapper section-shell relative z-10 py-12 md:py-20 will-change-transform">
+        <div ref="heroContentWrapper"
+            class="hero-content-wrapper section-shell relative z-10 py-12 md:py-20 will-change-transform">
             <div class="max-w-[74rem]">
-                <div ref="availability" class="mb-6 md:mb-8 flex flex-wrap items-center gap-3">
-                    <span
-                        class="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/[0.04] px-3.5 py-1.5 text-[0.68rem] font-medium uppercase tracking-[0.15em] text-accent">
-                        <span class="relative flex h-2 w-2">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
-                        </span>
-                        Open to developer opportunities
+                <div ref="availability" class="mb-6 flex flex-wrap items-center gap-x-5 gap-y-2 md:mb-8">
+                    <span class="inline-flex items-center gap-3 text-sm font-medium tracking-wide text-primary">
+                        <span class="h-px w-7 bg-white/45" aria-hidden="true"></span>
+                        Available for opportunities
                     </span>
-                    <span v-if="currentTime" class="hidden sm:inline-flex items-center font-mono text-[0.68rem] tracking-[0.14em] text-secondary">
-                        BALI, ID (WITA) · <span class="ml-1 text-primary">{{ currentTime }}</span>
+                    <span v-if="currentTime"
+                        class="hidden items-center gap-2 border-l border-white/15 pl-4 font-mono text-[0.62rem] uppercase tracking-[0.13em] text-secondary sm:inline-flex">
+                        <span>Local time</span>
+                        <span class="text-primary">{{ currentTime }}</span>
+                        <span>WITA</span>
                     </span>
                 </div>
 
                 <h1
                     class="text-balance font-heading text-[clamp(2.75rem,11vw,6.9rem)] font-bold leading-[0.98] tracking-[-0.055em] text-primary">
                     <span class="block overflow-hidden"><span ref="line1" class="block">Web products,</span></span>
-                    <span class="block overflow-hidden"><span ref="line2" class="block text-secondary">from interface</span></span>
+                    <span class="block overflow-hidden"><span ref="line2" class="block text-secondary">from
+                            interface</span></span>
                     <span class="block overflow-hidden"><span ref="line3" class="block">to deployment<span
                                 class="text-accent">.</span></span></span>
                 </h1>
@@ -34,8 +35,8 @@
                         I build web products primarily with Vue, Laravel, and MySQL. Docker keeps my development
                         workflow consistent; I also use Next.js, NestJS, and PostgreSQL when they fit the project.
                     </p>
-                    <p class="text-xs uppercase tracking-[0.14em] text-secondary">Bali, Indonesia<br><span
-                            class="text-primary">Available full-time</span></p>
+                    <p class="text-xs uppercase tracking-[0.14em] text-secondary">Based in<br><span
+                            class="text-primary">Bali, Indonesia</span></p>
                 </div>
 
                 <div class="mt-8 flex flex-col gap-5 md:mt-10">
